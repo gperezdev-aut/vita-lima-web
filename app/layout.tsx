@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { site } from "@/content/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.domain),
-  title: { default: "Vita Lima Spa | Masajes en Lima", template: "%s | Vita Lima Spa" },
-  description: "Masajes y experiencias de bienestar en San Borja, Miraflores y a domicilio. Reserva por WhatsApp.",
+  metadataBase: new URL("https://nueva.vitalimaspa.com"),
+  title: { default: "Vita Lima Spa | Masajes y bienestar en Lima", template: "%s | Vita Lima Spa" },
+  description: "Masajes de relajación y bienestar en San Borja, Miraflores y a domicilio. Reserva tu experiencia en Vita Lima Spa.",
   openGraph: { title: "Vita Lima Spa", description: "Regálate una pausa. Tu cuerpo la necesita.", type: "website", locale: "es_PE" },
-  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

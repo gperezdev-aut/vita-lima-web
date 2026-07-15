@@ -1,26 +1,20 @@
-export const site = {
-  name: "Vita Lima Spa",
-  domain: "https://vitalimaspa.com",
-  whatsappDisplay: "+51 907 308 415",
-  whatsappDigits: "51907308415",
-  email: "info@vitalimaspa.com",
-  instagram: "https://www.instagram.com/vitalimaperu/",
-  facebook: "https://www.facebook.com/vitalimaperu",
-};
+export const whatsappNumber = "51907308415";
+export const whatsappDisplay = "+51 907 308 415";
+export const contactEmail = "info@vitalimaspa.com";
 
 export const services = [
-  { name: "Relax Vital", duration: "60 min", price: "S/70", copy: "Una pausa suave para bajar revoluciones, respirar mejor y recuperar calma." },
-  { name: "Espalda Libre", duration: "45 min", price: "S/58", copy: "Atención focalizada en espalda, cuello y hombros para aliviar la tensión del día." },
-  { name: "Alivio Integral", duration: "60 min", price: "S/80", copy: "Trabajo corporal completo para quienes sienten carga muscular y buscan bienestar profundo." },
-  { name: "Terapia Vita", duration: "60 min", price: "S/80", copy: "Sesión personalizada según tus zonas de mayor tensión y nivel de presión preferido." },
-  { name: "Balance Plus", duration: "70 min", price: "S/88", copy: "Una experiencia más completa para soltar tensión y regalarte tiempo de calidad." },
+  { name: "Relax Vital", duration: "60 min", price: "S/70", description: "Una pausa profunda para reducir tensión y recuperar ligereza." },
+  { name: "Espalda Libre", duration: "45 min", price: "S/58", description: "Trabajo focalizado en espalda, cuello y hombros cargados." },
+  { name: "Alivio Integral", duration: "60 min", price: "S/80", description: "Atención completa para músculos cansados y estrés acumulado." },
+  { name: "Terapia Vita", duration: "60 min", price: "S/80", description: "Sesión personalizada según las necesidades de tu cuerpo." },
+  { name: "Balance Plus", duration: "70 min", price: "S/88", description: "Una experiencia extendida para relajarte con más calma." }
 ];
 
-export const faqs = [
-  ["¿Cómo reservo?", "Puedes enviar el formulario de esta página o escribirnos directamente por WhatsApp. Nuestro equipo confirmará sede, fecha, horario y disponibilidad."],
-  ["¿Se solicita adelanto?", "Sí. La reserva se confirma luego de coordinar el adelanto correspondiente con nuestro equipo."],
-  ["¿Atienden a parejas?", "Sí. Contamos con experiencias para dos personas, sujetas a disponibilidad de sede y terapeutas."],
-  ["¿Realizan masajes a domicilio?", "Sí. Atendemos con reserva previa y confirmamos cobertura, horario y tarifa según el distrito."],
-  ["¿Puedo regalar una sesión?", "Sí. Tenemos Gift Cards para distintas experiencias y ocasiones especiales."],
-  ["¿Cómo elijo el masaje adecuado?", "Cuéntanos qué necesitas y te orientaremos. La intensidad siempre debe adaptarse a tu comodidad."],
+export const faq = [
+  ["¿Cómo puedo reservar?", "Puedes enviarnos tu solicitud desde el formulario o escribirnos directamente por WhatsApp."],
+  ["¿Atienden a parejas?", "Sí. Coordinamos experiencias para dos personas según disponibilidad de sede y terapeutas."],
+  ["¿Tienen Gift Cards?", "Sí. Puedes regalar una experiencia y coordinar el servicio y la dedicatoria por WhatsApp."],
+  ["¿Realizan masajes a domicilio?", "Sí. La disponibilidad y el recargo dependen de la zona, el horario y la duración elegida."],
+  ["¿Puedo reprogramar mi cita?", "Sí, aplican las condiciones de reserva comunicadas al momento de confirmar tu atención."],
+  ["¿Qué servicio me recomiendan?", "Cuéntanos cómo te sientes y te orientaremos hacia la experiencia más adecuada."],
 ];
