@@ -1,6 +1,6 @@
 {
-  "name": "vita-lima-web-premium-v1",
-  "version": "1.0.0",
+  "name": "vita-lima-web-premium-v2",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

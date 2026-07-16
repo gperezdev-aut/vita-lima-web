@@ -1,41 +1,28 @@
-# Vita Lima Web Premium V1
+# Vita Lima Web Premium V2 — instalación
 
-Proyecto completo Next.js + Docker listo para reemplazar el contenido del repositorio `vita-lima-web`.
+Esta versión reemplaza la V1 e incorpora una composición visual más profesional, nuevas imágenes generadas para servicios y experiencias, fotografías reales del local, galería ampliada y mejoras responsive.
 
-## Antes de subir
-1. Haz una copia de seguridad del repositorio actual.
-2. No subas `.env.local` a GitHub.
-3. Conserva `vitalimaspa.com` en Wix. Este proyecto sigue usando `nueva.vitalimaspa.com`.
-
-## Subir a GitHub desde la web
+## Subir a GitHub
 1. Descomprime el ZIP.
-2. Abre el repositorio `gperezdev-aut/vita-lima-web`.
-3. Elimina los archivos actuales del repositorio o sube este contenido en la raíz.
-4. Confirma que `app`, `components`, `content`, `public`, `Dockerfile`, `docker-compose.yml` y `package.json` queden en la raíz.
-5. Crea `.env.local` solamente en Contabo copiando `.env.example`.
+2. Entra a la carpeta `vita-lima-web-premium-v2`.
+3. Sube **todo el contenido interno** a la raíz del repositorio `vita-lima-web`.
+4. Confirma el commit con: `feat: install Vita Lima Web Premium V2`.
 
-## Desplegar en Contabo
+## Actualizar Contabo
 ```bash
 cd /opt/vita-lima-web
-
-cp -a . ../backups/vita-lima-web-antes-premium-$(date +%Y%m%d_%H%M%S)
-
+git stash
 git pull origin main
-
-cat > .env.local <<'EOF'
-NEXT_PUBLIC_SITE_URL=https://nueva.vitalimaspa.com
-NEXT_PUBLIC_WHATSAPP=51907308415
-EOF
-
-docker compose down
-docker compose up -d --build
-
-docker compose ps
-curl -I http://127.0.0.1:3001
-curl -I https://nueva.vitalimaspa.com
+git stash pop
 ```
 
-## Importante
-- Las fotos incluidas provienen del material real recibido de San Borja.
-- Publica fotos con clientes o personal solo cuando exista autorización de uso de imagen.
-- Los enlaces de Google y Tripadvisor son marcadores. Deben reemplazarse por las fichas oficiales cuando se tengan las URLs.
+Si el archivo `docker-compose.yml` entra en conflicto, conserva la versión del servidor que usa la red `n8n_default`.
+
+Después ejecuta:
+```bash
+docker compose down
+docker compose up -d --build
+docker compose ps
+```
+
+Abre `https://nueva.vitalimaspa.com` y presiona `Ctrl + Shift + R`.
