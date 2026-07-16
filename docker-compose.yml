@@ -9,3 +9,11 @@ services:
       - .env.local
     ports:
       - "127.0.0.1:3001:3000"
+    networks:
+      - default
+      - nginx_proxy
+
+networks:
+  nginx_proxy:
+    external: true
+    name: n8n_default
