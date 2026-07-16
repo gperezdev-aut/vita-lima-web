@@ -1,12 +1,12 @@
-# Vita Lima Web Premium V2 — instalación
+# Vita Lima Web Premium V3 — instalación
 
-Esta versión reemplaza la V1 e incorpora una composición visual más profesional, nuevas imágenes generadas para servicios y experiencias, fotografías reales del local, galería ampliada y mejoras responsive.
+Esta versión cambia de verdad la portada, la distribución y las imágenes usadas en cada sección.
 
 ## Subir a GitHub
 1. Descomprime el ZIP.
-2. Entra a la carpeta `vita-lima-web-premium-v2`.
-3. Sube **todo el contenido interno** a la raíz del repositorio `vita-lima-web`.
-4. Confirma el commit con: `feat: install Vita Lima Web Premium V2`.
+2. Entra a la carpeta `vita-lima-web-premium-v3`.
+3. Sube TODO el contenido interior a la raíz del repositorio y reemplaza los archivos anteriores.
+4. Commit sugerido: `feat: install Vita Lima Web Premium V3`.
 
 ## Actualizar Contabo
 ```bash
@@ -14,15 +14,10 @@ cd /opt/vita-lima-web
 git stash
 git pull origin main
 git stash pop
-```
-
-Si el archivo `docker-compose.yml` entra en conflicto, conserva la versión del servidor que usa la red `n8n_default`.
-
-Después ejecuta:
-```bash
 docker compose down
 docker compose up -d --build
 docker compose ps
+curl -I https://nueva.vitalimaspa.com
 ```
 
-Abre `https://nueva.vitalimaspa.com` y presiona `Ctrl + Shift + R`.
+Después abre la web en incógnito o pulsa `Ctrl + Shift + R`.
