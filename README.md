@@ -1,3 +1,8 @@
-# Vita Lima Spa — Web Premium V1
+# Vita Lima Web Premium V4
 
-Sitio público desarrollado con Next.js, responsive, optimizado para WhatsApp y desplegable mediante Docker en Contabo.
+Versión enfocada en autenticidad visual:
+- Solo fotografías reales suministradas por Vita Lima.
+- Sin fachadas, letreros ni Gift Cards inventadas por IA.
+- Mejor recorte y jerarquía visual.
+- Servicios, sedes, galería, formulario y enlaces WhatsApp.
+- Responsive y compatible con Docker/Contabo.
