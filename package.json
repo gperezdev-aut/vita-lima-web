@@ -1,6 +1,6 @@
 {
-  "name": "vita-lima-web-signature-v7-ux",
-  "version": "7.0.0",
+  "name": "vita-lima-web-signature-v8-premium",
+  "version": "8.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
