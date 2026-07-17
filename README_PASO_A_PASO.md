@@ -1,16 +1,18 @@
-# Vita Lima Web Premium V4 — instalación
+# Vita Lima Web Premium V5
 
-Esta versión reemplaza las imágenes generadas de la V3 por fotografías reales y optimizadas.
+## Qué cambia en V5
+- Portada inmersiva con fotografía real y estética premium.
+- Servicios en formato editorial, no como plantilla genérica.
+- Sección de experiencia, parejas, Gift Cards y corporativo.
+- Sedes con imágenes y accesos a Google Maps.
+- Galería real más elegante y responsive.
+- Reserva por WhatsApp y formulario conservados.
 
-## Subir a GitHub
-1. Descomprime el ZIP.
-2. Sube todo su contenido a la raíz del repositorio `vita-lima-web` reemplazando los archivos existentes.
-3. Confirma el commit con el mensaje: `feat: install Vita Lima Web Premium V4`.
+## Subir al servidor
 
-## Actualizar Contabo
 ```bash
 cd /opt/vita-lima-web
-git stash push -u -m "backup antes de V4"
+git stash push -u -m "backup antes de V5"
 git pull origin main
 docker compose down
 docker compose up -d --build
@@ -18,7 +20,4 @@ docker compose ps
 curl -I https://nueva.vitalimaspa.com
 ```
 
-El resultado esperado es `HTTP/1.1 200 OK`.
-
-## Si el navegador conserva la versión anterior
-Usa `Ctrl + F5` o abre una ventana de incógnito.
+Debe aparecer `HTTP/1.1 200 OK`.
