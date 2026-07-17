@@ -1,6 +1,6 @@
 {
-  "name": "vita-lima-web-signature-v5",
-  "version": "5.0.0",
+  "name": "vita-lima-web-signature-v6",
+  "version": "6.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

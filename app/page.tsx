@@ -113,7 +113,30 @@ export default function HomePage() {
 
         <section id="preguntas" className="section signatureFaq"><div><p className="eyebrow">Antes de reservar</p><h2>Lo esencial, sin letra pequeña.</h2></div><div className="faqList"><details><summary>¿Cómo puedo reservar?</summary><p>Desde el formulario o escribiéndonos directamente por WhatsApp.</p></details><details><summary>¿Atienden a parejas?</summary><p>Sí, coordinamos la atención para dos personas según sede y disponibilidad.</p></details><details><summary>¿Tienen Gift Cards?</summary><p>Sí, puedes regalar una experiencia y añadir una dedicatoria personalizada.</p></details><details><summary>¿Realizan masajes a domicilio?</summary><p>Sí, sujeto a zona, horario y disponibilidad.</p></details><details><summary>¿Puedo reprogramar?</summary><p>Sí, según las condiciones comunicadas al confirmar la reserva.</p></details></div></section>
       </main>
-      <footer><div className="brand footerBrand"><span className="brandMark">✦</span><span><strong>Vita Lima Spa</strong><small>Bienestar que se siente</small></span></div><div><strong>Contacto</strong><a href={`tel:${site.whatsappDisplay}`}>{site.whatsappDisplay}</a><a href={`mailto:${site.email}`}>{site.email}</a></div><div><strong>Información</strong><a href="/politica-de-privacidad">Política de privacidad</a><a href="/terminos-y-condiciones">Términos y condiciones</a></div></footer>
+      <footer className="premiumFooter">
+        <div className="footerIdentity">
+          <Image src="/images/brand/logo-vita-lima-white.png" alt="Vita Lima Spa" width={665} height={300} />
+          <p>Masajes y experiencias de bienestar en San Borja y Miraflores.</p>
+        </div>
+        <div>
+          <strong>Contacto</strong>
+          <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noreferrer">{site.whatsappDisplay}</a>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+          <a href="#reserva">Solicitar una reserva</a>
+        </div>
+        <div>
+          <strong>Sedes</strong>
+          <a href="#sedes">San Borja</a>
+          <a href="#sedes">Miraflores</a>
+          <a href="#resenas">Reseñas verificables</a>
+        </div>
+        <div>
+          <strong>Información</strong>
+          <a href="/politica-de-privacidad">Política de privacidad</a>
+          <a href="/terminos-y-condiciones">Términos y condiciones</a>
+          <span className="footerNote">© 2026 Vita Lima Spa</span>
+        </div>
+      </footer>
       <WhatsAppButton />
     </>
   );
