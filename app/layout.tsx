@@ -7,8 +7,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://nueva.vitalimaspa.com"),
   openGraph: {
     title: "Vita Lima Spa",
-    description: "Bienestar que se siente.",
-    images: ["/images/hero/hero-san-borja.webp"]
+    description: "Es momento de volver a ti. Masajes y bienestar premium en Lima.",
+    images: ["/images/signature/hero.webp"]
   }
 };
 

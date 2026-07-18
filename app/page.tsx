@@ -4,27 +4,33 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import ReserveForm from "@/components/ReserveForm";
 
 const services = [
-  { name: "Relax Vital", duration: "60 min", price: "S/70", desc: "Una pausa profunda para bajar el ritmo y respirar.", image: "/images/signature/facial.webp", icon: "✦" },
-  { name: "Espalda Libre", duration: "45 min", price: "S/58", desc: "Movilidad y alivio para espalda, cuello y hombros.", image: "/images/signature/electro.webp", icon: "◌" },
-  { name: "Alivio Integral", duration: "60 min", price: "S/80", desc: "Atención completa para músculos cansados y tensión acumulada.", image: "/images/signature/cupping.webp", icon: "◉" },
-  { name: "Terapia Vita", duration: "60 min", price: "S/80", desc: "Una sesión personalizada según lo que tu cuerpo necesita.", image: "/images/signature/ambience.webp", icon: "◇" },
-  { name: "Balance Plus", duration: "70 min", price: "S/88", desc: "Más tiempo para desconectar, descansar y renovarte.", image: "/images/signature/facial-room.webp", icon: "∞" },
+  { name: "Relax Vital", duration: "60 min", price: "S/70", desc: "Una pausa envolvente para soltar la tensión y recuperar calma.", image: "/images/signature/facial.webp", tag: "Más elegido" },
+  { name: "Espalda Libre", duration: "45 min", price: "S/58", desc: "Alivio focalizado para espalda, cuello y hombros cargados.", image: "/images/signature/electro.webp", tag: "Alivio focalizado" },
+  { name: "Alivio Integral", duration: "60 min", price: "S/80", desc: "Trabajo completo para músculos cansados y tensión acumulada.", image: "/images/signature/cupping.webp", tag: "Terapéutico" },
+  { name: "Terapia Vita", duration: "60 min", price: "S/80", desc: "Una sesión personalizada según lo que tu cuerpo necesita hoy.", image: "/images/signature/ambience.webp", tag: "Personalizado" },
+  { name: "Balance Plus", duration: "70 min", price: "S/88", desc: "Más tiempo para desconectar, respirar y renovarte con calma.", image: "/images/signature/facial-room.webp", tag: "Experiencia extendida" },
 ];
 
-const benefits = [
-  ["♙", "Atención personalizada"],
-  ["❧", "Aromaterapia y productos premium"],
-  ["⌂", "Ambientes privados"],
-  ["◷", "Horarios flexibles"],
-  ["✓", "Atención segura y cercana"],
-  ["★", "Opiniones públicas verificables"],
+const reviews = [
+  { quote: "Me encantó el ambiente, el aroma y el profesionalismo. Fue una experiencia realmente relajante.", author: "María Claudia N.", source: "Google", rating: "5.0" },
+  { quote: "La atención fue excelente y el masaje me ayudó muchísimo. El lugar transmite tranquilidad desde que llegas.", author: "Carla A.", source: "Google", rating: "5.0" },
+  { quote: "Un servicio muy profesional, limpio y acogedor. Definitivamente volvería.", author: "Milagritos C.", source: "Tripadvisor", rating: "5.0" },
 ];
 
-const steps = [
-  ["01", "Cuéntanos qué necesitas", "Escríbenos por WhatsApp o completa el formulario."],
-  ["02", "Te orientamos", "Revisamos sede, servicio y disponibilidad."],
-  ["03", "Confirmamos", "Coordinamos horario y condiciones de tu reserva."],
-  ["04", "Disfrutas tu pausa", "Llegas a Vita Lima y nosotros nos ocupamos del resto."],
+const experiences = [
+  { kicker: "Para compartir", title: "Una pausa para dos", text: "Un momento íntimo de descanso, calma y conexión.", image: "/images/signature/couple-room.webp", cta: "Ver experiencia para dos" },
+  { kicker: "Para sorprender", title: "Gift Cards", text: "Regala bienestar con una experiencia cuidada de principio a fin.", image: "/images/signature/buddha.webp", cta: "Solicitar Gift Card" },
+  { kicker: "Para tu equipo", title: "Bienestar corporativo", text: "Pausas profesionales de relajación para empresas y eventos.", image: "/images/signature/room-wide.webp", cta: "Solicitar propuesta" },
+  { kicker: "Donde estés", title: "Masajes a domicilio", text: "Llevamos la experiencia Vita Lima a tu espacio, previa coordinación.", image: "/images/signature/facial.webp", cta: "Consultar disponibilidad" },
+];
+
+const faqs = [
+  ["¿Cómo reservo?", "Completa el formulario o escríbenos por WhatsApp. Nuestro equipo confirma sede, horario y condiciones."],
+  ["¿Trabajan con adelanto?", "Sí. Para una persona se solicita S/10; para dos personas, el 50 %."],
+  ["¿Puedo reprogramar?", "Sí, avisando con al menos 24 horas de anticipación."],
+  ["¿Atienden parejas?", "Sí. Contamos con experiencias para dos, sujetas a disponibilidad de sede y horario."],
+  ["¿Tienen Gift Cards?", "Sí. Se abonan al 100 % y coordinamos contigo la presentación y entrega."],
+  ["¿Atienden a domicilio?", "Sí. Ofrecemos opciones de 1 y 2 horas, previa coordinación y según zona."],
 ];
 
 export default function HomePage() {
@@ -35,154 +41,169 @@ export default function HomePage() {
         <Image className="heroImage" src="/images/signature/hero.webp" alt="Ambiente de Vita Lima Spa" fill priority sizes="100vw" />
         <div className="heroShade" />
         <div className="heroContent shell">
-          <p className="eyebrow heroEyebrow">Masajes terapéuticos y experiencias de bienestar</p>
-          <h1>Tu momento<br />de volver a ti.</h1>
-          <p className="heroLead">Relájate, desconecta y recupera energía en San Borja y Miraflores.</p>
+          <p className="eyebrow heroEyebrow">Spa boutique · San Borja & Miraflores</p>
+          <h1>Es momento<br />de volver a ti.</h1>
+          <p className="heroLead">Experiencias de masaje creadas con técnica, cuidado y una atención verdaderamente personalizada.</p>
           <div className="heroButtons">
-            <a className="button orangeButton" href="#reserva">Reservar por WhatsApp <span>→</span></a>
-            <a className="button ghostButton" href="#servicios">Conocer experiencias <span>↓</span></a>
+            <a className="button orangeButton" href="#reserva">Agendar mi momento <span>→</span></a>
+            <a className="button ghostButton" href="#servicios">Descubrir experiencias</a>
+          </div>
+          <div className="heroTrust" aria-label="Indicadores de confianza">
+            <div><strong>4.7</strong><span>Google · 226 opiniones</span></div>
+            <div><strong>4.8</strong><span>Tripadvisor · 399 opiniones</span></div>
+            <div><strong>2</strong><span>Sedes en Lima</span></div>
           </div>
         </div>
       </section>
 
-      <section className="benefitStrip" aria-label="Beneficios de Vita Lima">
-        <div className="benefitGrid shell">
-          {benefits.map(([icon, text]) => (
-            <div className="benefitItem" key={text}><span>{icon}</span><strong>{text}</strong></div>
-          ))}
+      <section className="signatureStrip">
+        <div className="shell signatureGrid">
+          <div><span>01</span><strong>Atención personalizada</strong><p>Cada sesión parte de lo que tu cuerpo necesita.</p></div>
+          <div><span>02</span><strong>Ambientes privados</strong><p>Espacios creados para desconectar con calma.</p></div>
+          <div><span>03</span><strong>Profesionales del bienestar</strong><p>Técnica, cuidado y trato cercano en cada visita.</p></div>
+          <div><span>04</span><strong>Opiniones verificables</strong><p>Más de 600 experiencias compartidas públicamente.</p></div>
         </div>
       </section>
 
       <section id="servicios" className="section servicesSection">
         <div className="shell">
-          <div className="sectionTop compactTop">
-            <div><p className="eyebrow">Nuestros masajes</p><h2>Elige la pausa que necesitas hoy.</h2></div>
-            <a className="textLink" href="#reserva">Ver todos los servicios →</a>
+          <div className="sectionTop editorialTop">
+            <div><p className="eyebrow">Experiencias Vita Lima</p><h2>El bienestar se siente distinto cuando está hecho para ti.</h2></div>
+            <p className="sectionIntro">Cinco experiencias diseñadas para aliviar tensión, recuperar energía y regalarte una pausa de calidad.</p>
           </div>
           <div className="serviceGrid">
             {services.map((service) => (
               <article className="serviceCard" key={service.name}>
-                <div className="serviceImageWrap">
-                  <Image src={service.image} alt={service.name} fill sizes="(max-width: 800px) 82vw, 20vw" />
-                  <span className="serviceIcon">{service.icon}</span>
-                </div>
-                <div className="serviceBody">
-                  <h3>{service.name}</h3>
-                  <p>{service.desc}</p>
-                  <div className="serviceMeta"><span>{service.duration}</span><strong>{service.price}</strong></div>
-                  <a href="#reserva">Reservar →</a>
-                </div>
+                <a href="#reserva" className="serviceCardLink" aria-label={`Reservar ${service.name}`}>
+                  <div className="serviceImageWrap">
+                    <Image src={service.image} alt={service.name} fill sizes="(max-width: 800px) 82vw, 20vw" />
+                    <span className="serviceTag">{service.tag}</span>
+                  </div>
+                  <div className="serviceBody">
+                    <div className="serviceHeading"><h3>{service.name}</h3><span>{service.duration}</span></div>
+                    <p>{service.desc}</p>
+                    <div className="serviceFooter"><strong>{service.price}</strong><span>Elegir experiencia →</span></div>
+                  </div>
+                </a>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="brandStorySection">
+        <div className="shell brandStoryLayout">
+          <div className="brandStoryImage"><Image src="/images/signature/room-stone.webp" alt="Cabina de Vita Lima Spa" fill sizes="(max-width: 900px) 100vw, 50vw" /></div>
+          <div className="brandStoryCopy">
+            <p className="eyebrow">Nuestra forma de cuidar</p>
+            <h2>No se trata solo de un masaje. Se trata de cómo quieres volver a sentirte.</h2>
+            <p>En Vita Lima combinamos técnica, escucha y una atmósfera cuidadosamente preparada para que cada visita se sienta privada, profesional y especial.</p>
+            <div className="storyPoints"><span>Aromas suaves</span><span>Música seleccionada</span><span>Atención cercana</span><span>Cabinas privadas</span></div>
           </div>
         </div>
       </section>
 
       <section id="opiniones" className="section reviewsSection">
         <div className="shell">
-          <div className="sectionTop reviewsTop">
-            <div><p className="eyebrow orangeText">La confianza de nuestros clientes</p><h2>Opiniones reales,<br />experiencias que hablan.</h2></div>
-            <a className="textLink lightLink" href="https://www.google.com/search?q=Vita+Lima+Spa+reseñas" target="_blank" rel="noreferrer">Ver opiniones verificadas →</a>
+          <div className="reviewsHeader">
+            <div><p className="eyebrow orangeText">Confianza que se construye visita a visita</p><h2>Más de 600 historias de bienestar compartidas por nuestros clientes.</h2></div>
+            <div className="ratingSummary">
+              <div><strong>4.7</strong><span>Google</span><small>226 opiniones</small></div>
+              <div><strong>4.8</strong><span>Tripadvisor</span><small>399 opiniones</small></div>
+              <div><strong>N.º 5</strong><span>En Lima</span><small>Spas y bienestar</small></div>
+            </div>
           </div>
           <div className="reviewGrid">
-            {[
-              ["Google", "Consulta nuestras calificaciones y comentarios públicos.", "Abrir Google"],
-              ["Tripadvisor", "Conoce experiencias compartidas por viajeros.", "Abrir Tripadvisor"],
-              ["Reseñas verificables", "Mostramos solo fuentes públicas y nunca inventamos testimonios.", "Ver fuentes"],
-              ["Tu experiencia", "Después de tu visita, tu opinión también ayuda a otros clientes.", "Reservar ahora"],
-            ].map(([source, text, action], i) => (
-              <article className="reviewCard" key={source}>
-                <div className="stars">★★★★★</div>
-                <p>{text}</p>
-                <div className="reviewSource"><span className="avatar">{i + 1}</span><strong>{source}</strong></div>
-                <a href={i === 3 ? "#reserva" : "https://www.google.com/search?q=Vita+Lima+Spa+reseñas"}>{action} →</a>
+            {reviews.map((review) => (
+              <article className="reviewCard" key={review.author}>
+                <div className="reviewTop"><span className="stars">★★★★★</span><strong>{review.rating}</strong></div>
+                <blockquote>“{review.quote}”</blockquote>
+                <div className="reviewSource"><span className="avatar">{review.author.charAt(0)}</span><div><strong>{review.author}</strong><small>{review.source}</small></div></div>
+              </article>
+            ))}
+          </div>
+          <div className="reviewActions">
+            <a href="https://www.google.com/search?q=Vita+Lima+Spa+reseñas" target="_blank" rel="noreferrer">Ver reseñas en Google →</a>
+            <a href="https://www.tripadvisor.com/Search?q=Vita%20Lima%20Spa" target="_blank" rel="noreferrer">Ver reseñas en Tripadvisor →</a>
+          </div>
+        </div>
+      </section>
+
+      <section className="whyReturnSection">
+        <div className="shell whyReturnLayout">
+          <div><p className="eyebrow">Lo que nuestros clientes recuerdan</p><h2>Los detalles que hacen que quieran volver.</h2></div>
+          <div className="whyReturnGrid">
+            {["El aroma y la calma del ambiente", "El trato profesional y cercano", "La personalización de cada sesión", "La limpieza y privacidad de las cabinas", "La sensación de alivio al terminar", "La facilidad para reservar por WhatsApp"].map((item, index) => <div key={item}><span>0{index + 1}</span><p>{item}</p></div>)}
+          </div>
+        </div>
+      </section>
+
+      <section id="experiencias" className="section experienceTilesSection">
+        <div className="shell">
+          <div className="sectionTop editorialTop"><div><p className="eyebrow">Más formas de vivir Vita Lima</p><h2>Experiencias creadas para compartir, regalar y cuidar.</h2></div></div>
+          <div className="experienceTiles">
+            {experiences.map((item) => (
+              <article className="experienceTile" key={item.title}>
+                <Image src={item.image} alt={item.title} fill sizes="(max-width: 800px) 88vw, 25vw" />
+                <div className="tileShade" />
+                <div className="tileContent"><span>{item.kicker}</span><h3>{item.title}</h3><p>{item.text}</p><a href="#reserva">{item.cta} →</a></div>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="experiencias" className="section experienceTilesSection">
-        <div className="shell experienceTiles">
-          {[
-            ["Para dos", "Un momento especial para compartir.", "/images/signature/couple-room.webp"],
-            ["Gift Cards", "Sorprende a alguien con una experiencia de bienestar.", "/images/signature/buddha.webp"],
-            ["Para empresas", "Bienestar y pausas de relajación para tu equipo.", "/images/signature/room-wide.webp"],
-            ["Masajes a domicilio", "Llevamos la pausa donde estés.", "/images/signature/facial.webp"],
-          ].map(([title, desc, image]) => (
-            <article className="experienceTile" key={title}>
-              <Image src={image} alt={title} fill sizes="(max-width: 800px) 85vw, 25vw" />
-              <div className="tileShade" />
-              <div><h3>{title}</h3><p>{desc}</p><a href="#reserva">Conocer más →</a></div>
-            </article>
-          ))}
-        </div>
-      </section>
-
       <section className="section stepsSection">
         <div className="shell stepsLayout">
-          <div className="stepsHeading"><p className="eyebrow">Reservar es simple</p><h2>De tu consulta a tu sesión, en cuatro pasos.</h2></div>
+          <div className="stepsHeading"><p className="eyebrow">Concierge Vita Lima</p><h2>Reservar tu experiencia es simple.</h2><p>Te acompañamos personalmente para encontrar el servicio, sede y horario ideales.</p></div>
           <div className="stepsGrid">
-            {steps.map(([number, title, text]) => (
-              <article className="stepCard" key={number}><span>{number}</span><h3>{title}</h3><p>{text}</p></article>
-            ))}
+            {[['01','Cuéntanos qué buscas','Relajación, alivio, pareja, regalo o una sesión personalizada.'],['02','Te orientamos','Nuestro equipo recomienda la experiencia más adecuada.'],['03','Confirmamos contigo','Coordinamos sede, horario y condiciones por WhatsApp.'],['04','Disfrutas tu momento','Llegas a Vita Lima y nosotros nos ocupamos del resto.']].map(([n,t,p]) => <article className="stepCard" key={n}><span>{n}</span><h3>{t}</h3><p>{p}</p></article>)}
           </div>
         </div>
       </section>
 
       <section className="section gallerySection">
         <div className="shell galleryLayout">
-          <div className="galleryIntro"><p className="eyebrow">Así es Vita Lima</p><h2>Ambientes creados para tu bienestar.</h2></div>
+          <div className="galleryIntro"><p className="eyebrow">Ambientes Vita Lima</p><h2>Privacidad, calma y atención a cada detalle.</h2><p>Una atmósfera pensada para ayudarte a desconectar desde el primer momento.</p></div>
           <div className="galleryGrid">
-            {["reception.webp", "room-wide.webp", "room-stone.webp", "ambience.webp"].map((img) => (
-              <div className="galleryItem" key={img}><Image src={`/images/signature/${img}`} alt="Ambiente Vita Lima" fill sizes="(max-width: 800px) 70vw, 20vw" /></div>
-            ))}
-            <a className="galleryCta" href="#sedes">Ver galería<br />completa →</a>
+            {["reception.webp", "room-wide.webp", "room-stone.webp", "ambience.webp"].map((img, index) => <div className={`galleryItem galleryItem${index + 1}`} key={img}><Image src={`/images/signature/${img}`} alt="Ambiente Vita Lima" fill sizes="(max-width: 800px) 100vw, 30vw" /></div>)}
           </div>
         </div>
       </section>
 
       <section id="sedes" className="section locationsSection">
+        <div className="shell sectionTop editorialTop"><div><p className="eyebrow">Dos sedes, una misma experiencia</p><h2>Encuentra tu pausa en Lima.</h2></div></div>
         <div className="shell locationsGrid">
-          <article className="locationCard"><Image src="/images/signature/reception.webp" alt="Sede San Borja" fill /><div className="locationShade" /><div><span>01</span><h3>San Borja</h3><p>Av. Aviación 3358, oficina 204</p><a href="https://www.google.com/maps/search/?api=1&query=Av.+Aviacion+3358+San+Borja" target="_blank" rel="noreferrer">Abrir en Google Maps →</a></div></article>
-          <article className="locationCard"><Image src="/images/signature/buddha.webp" alt="Sede Miraflores" fill /><div className="locationShade" /><div><span>02</span><h3>Miraflores</h3><p>Av. Larco 812, oficina 306</p><a href="https://www.google.com/maps/search/?api=1&query=Av.+Larco+812+Miraflores" target="_blank" rel="noreferrer">Abrir en Google Maps →</a></div></article>
+          <article className="locationCard"><Image src="/images/signature/reception.webp" alt="Sede San Borja" fill /><div className="locationShade" /><div className="locationContent"><span>01 · Sede principal</span><h3>San Borja</h3><p>Av. Aviación 3358, oficina 204</p><small>Lunes a sábado · 3:00 p. m. a 8:00 p. m.</small><a href="https://www.google.com/maps/search/?api=1&query=Av.+Aviacion+3358+San+Borja" target="_blank" rel="noreferrer">Cómo llegar →</a></div></article>
+          <article className="locationCard"><Image src="/images/signature/buddha.webp" alt="Sede Miraflores" fill /><div className="locationShade" /><div className="locationContent"><span>02 · Previa reserva</span><h3>Miraflores</h3><p>Av. Larco 812, oficina 306</p><small>Atención coordinada previamente</small><a href="https://www.google.com/maps/search/?api=1&query=Av.+Larco+812+Miraflores" target="_blank" rel="noreferrer">Cómo llegar →</a></div></article>
         </div>
       </section>
 
       <section id="reserva" className="section reservationSection">
         <div className="shell reservationLayout">
-          <div className="reservationIntro"><p className="eyebrow">Reserva tu momento</p><h2>Déjanos tus datos y coordinamos contigo.</h2><ul><li>Respuesta por WhatsApp</li><li>Sin cobros dentro del formulario</li><li>Atención personalizada</li></ul></div>
+          <div className="reservationIntro"><p className="eyebrow">Concierge de reservas</p><h2>Cuéntanos cómo quieres sentirte.</h2><p>Nos comunicaremos contigo personalmente para ayudarte a elegir la experiencia ideal y confirmar disponibilidad.</p><ul><li>Orientación personalizada</li><li>Confirmación por WhatsApp</li><li>Sin cobros desde este formulario</li></ul></div>
           <ReserveForm />
         </div>
       </section>
 
       <section id="preguntas" className="section faqSection">
         <div className="shell faqLayout">
-          <div><p className="eyebrow">Preguntas frecuentes</p><h2>Resolvemos tus dudas más comunes.</h2></div>
-          <div className="faqGrid">
-            {[
-              ["¿Cómo puedo reservar?", "Completa el formulario o escríbenos por WhatsApp. Confirmamos disponibilidad y condiciones contigo."],
-              ["¿Atienden a parejas?", "Sí. Coordinamos sesiones para dos según la sede y el horario disponible."],
-              ["¿Tienen Gift Cards?", "Sí. Podemos preparar una experiencia con dedicatoria para regalar."],
-              ["¿Realizan masajes a domicilio?", "Sí, sujeto a zona, horario y disponibilidad."],
-              ["¿Puedo reprogramar?", "Sí, de acuerdo con las políticas vigentes y comunicándolo con anticipación."],
-              ["¿Cuáles son sus métodos de pago?", "Coordinamos el método de pago durante la confirmación de tu reserva."],
-            ].map(([q, a]) => <details key={q}><summary>{q}<span>+</span></summary><p>{a}</p></details>)}
-          </div>
+          <div><p className="eyebrow">Antes de tu visita</p><h2>Todo claro, desde el inicio.</h2></div>
+          <div className="faqGrid">{faqs.map(([q,a]) => <details key={q}><summary>{q}<span>+</span></summary><p>{a}</p></details>)}</div>
         </div>
       </section>
 
       <footer className="footer">
+        <div className="shell footerTop"><p className="eyebrow orangeText">Vita Lima Spa</p><h2>Tu próxima pausa puede comenzar hoy.</h2><a className="button orangeButton" href="#reserva">Agendar mi momento →</a></div>
         <div className="shell footerGrid">
-          <div className="footerBrand"><Image src="/images/brand/logo-vita-lima-white.png" alt="Vita Lima Spa" width={180} height={78} /><p>Masajes terapéuticos y experiencias de bienestar en San Borja y Miraflores.</p></div>
-          <div><h4>Contacto</h4><a href="tel:+51907308415">+51 907 308 415</a><a href="mailto:info@vitalimaspa.com">info@vitalimaspa.com</a><a href="#reserva">Escríbenos por WhatsApp</a></div>
-          <div><h4>Sedes</h4><a href="#sedes">San Borja</a><a href="#sedes">Miraflores</a><a href="#sedes">Ver en Google Maps</a></div>
-          <div><h4>Información</h4><a href="/politica-de-privacidad">Política de privacidad</a><a href="/terminos-y-condiciones">Términos y condiciones</a><a href="#preguntas">Preguntas frecuentes</a></div>
-          <div><h4>Síguenos</h4><div className="socialRow"><span>◎</span><span>f</span><span>◉</span></div></div>
+          <div className="footerBrand"><Image src="/images/brand/logo-vita-lima-white.png" alt="Vita Lima Spa" width={190} height={84} /><p>Spa boutique de masajes y bienestar en San Borja y Miraflores.</p></div>
+          <div><h4>Explorar</h4><a href="#servicios">Experiencias</a><a href="#opiniones">Opiniones</a><a href="#sedes">Sedes</a><a href="#reserva">Reservar</a></div>
+          <div><h4>Contacto</h4><a href="https://wa.me/51907308415" target="_blank" rel="noreferrer">+51 907 308 415</a><a href="mailto:info@vitalimaspa.com">info@vitalimaspa.com</a></div>
+          <div><h4>Información</h4><a href="/politica-de-privacidad">Privacidad</a><a href="/terminos-y-condiciones">Términos</a><a href="#preguntas">Preguntas frecuentes</a></div>
+          <div><h4>Síguenos</h4><a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram</a><a href="https://www.facebook.com/" target="_blank" rel="noreferrer">Facebook</a><a href="https://www.tripadvisor.com/Search?q=Vita%20Lima%20Spa" target="_blank" rel="noreferrer">Tripadvisor</a></div>
         </div>
         <div className="shell footerBottom">© 2026 Vita Lima Spa. Todos los derechos reservados.</div>
       </footer>
-
       <WhatsAppButton />
     </main>
   );
