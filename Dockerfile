@@ -1,21 +1,15 @@
 FROM node:20-bookworm-slim AS deps
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable && corepack prepare pnpm@9.15.9 --activate
-COPY package.json ./
-RUN pnpm install --no-frozen-lockfile
+COPY package.json package-lock.json ./
+RUN npm ci
 
 FROM node:20-bookworm-slim AS builder
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable && corepack prepare pnpm@9.15.9 --activate
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN pnpm run build
+RUN npm run build
 
 FROM node:20-bookworm-slim AS runner
 WORKDIR /app

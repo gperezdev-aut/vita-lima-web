@@ -5,8 +5,9 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
-    env_file:
-      - .env.local
+    environment:
+      NEXT_PUBLIC_SITE_URL: https://nueva.vitalimaspa.com
+      NEXT_PUBLIC_WHATSAPP: "51907308415"
     ports:
       - "127.0.0.1:3001:3000"
     networks:
