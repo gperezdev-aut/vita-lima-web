@@ -1,41 +1,35 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { site } from "@/content/site";
+import { FormEvent } from "react";
 
-export function ReserveForm() {
-  const [sending, setSending] = useState(false);
-
-  function submit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setSending(true);
-    const data = new FormData(e.currentTarget);
+export default function ReserveForm() {
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
     const message = [
-      "Hola Vita Lima, quisiera solicitar una reserva.",
-      `Nombre: ${data.get("nombre")}`,
-      `WhatsApp: ${data.get("whatsapp")}`,
-      `Sede: ${data.get("sede")}`,
-      `Servicio: ${data.get("servicio")}`,
-      `Fecha: ${data.get("fecha")}`,
-      `Hora: ${data.get("hora")}`,
-      `Comentario: ${data.get("comentario") || "-"}`
+      "Hola Vita Lima, quisiera reservar:",
+      `Nombre: ${data.get("nombre") || ""}`,
+      `WhatsApp: ${data.get("whatsapp") || ""}`,
+      `Sede: ${data.get("sede") || ""}`,
+      `Servicio: ${data.get("servicio") || ""}`,
+      `Fecha: ${data.get("fecha") || ""}`,
+      `Horario: ${data.get("horario") || ""}`,
+      `Necesidad: ${data.get("detalle") || ""}`,
     ].join("\n");
-    window.open(`https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
-    setTimeout(() => setSending(false), 800);
+    window.open(`https://wa.me/51907308415?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   }
 
   return (
     <form className="reserveForm" onSubmit={submit}>
-      <label>Nombre<input name="nombre" required autoComplete="name" placeholder="Tu nombre" /></label>
-      <label>WhatsApp<input name="whatsapp" required inputMode="tel" autoComplete="tel" placeholder="987 654 321" /></label>
-      <label>Sede<select name="sede" required defaultValue=""><option value="" disabled>Selecciona una sede</option><option>San Borja</option><option>Miraflores</option></select></label>
-      <label>Servicio<select name="servicio" required defaultValue=""><option value="" disabled>Selecciona un servicio</option>{site.services.map(s => <option key={s.name}>{s.name}</option>)}</select></label>
-      <label>Fecha preferida<input name="fecha" type="date" required /></label>
-      <label>Horario preferido<input name="hora" type="time" required /></label>
-      <label className="full">Cuéntanos qué necesitas<textarea name="comentario" rows={4} placeholder="Ej. tensión en espalda, regalo o atención para dos..." /></label>
-      <label className="check full"><input type="checkbox" required /><span>Acepto la <a href="/politica-de-privacidad">política de privacidad</a> y el contacto por WhatsApp.</span></label>
-      <button className="button full formSubmit" type="submit" disabled={sending}>{sending ? "Abriendo WhatsApp..." : "Continuar por WhatsApp →"}</button>
-      <p className="formHint full">No se realiza ningún cobro desde este formulario.</p>
+      <label>Nombre<input name="nombre" placeholder="Tu nombre" required /></label>
+      <label>WhatsApp<input name="whatsapp" inputMode="tel" placeholder="987 654 321" required /></label>
+      <label>Sede<select name="sede" defaultValue=""><option value="" disabled>Selecciona una sede</option><option>San Borja</option><option>Miraflores</option></select></label>
+      <label>Servicio<select name="servicio" defaultValue=""><option value="" disabled>Selecciona un servicio</option><option>Relax Vital</option><option>Espalda Libre</option><option>Alivio Integral</option><option>Terapia Vita</option><option>Balance Plus</option></select></label>
+      <label>Fecha preferida<input name="fecha" type="date" /></label>
+      <label>Horario preferido<input name="horario" type="time" /></label>
+      <label className="fullField">Cuéntanos qué necesitas<textarea name="detalle" rows={2} placeholder="Ej. tensión en espalda, regalo, pareja..." /></label>
+      <p className="formNote">Tu información se usa solo para coordinar tu solicitud.</p>
+      <button type="submit">Continuar por WhatsApp →</button>
     </form>
   );
 }
