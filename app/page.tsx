@@ -1,15 +1,18 @@
 import Image from "next/image";
+import Link from "next/link";
 import Header from "@/components/Header";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ReserveForm from "@/components/ReserveForm";
+import { featuredServices } from "@/content/services";
 
-const services = [
-  { name: "Relax Vital", duration: "60 min", price: "S/70", desc: "Una pausa envolvente para soltar la tensión y recuperar calma.", image: "/images/signature/facial.webp", tag: "Más elegido" },
-  { name: "Espalda Libre", duration: "45 min", price: "S/58", desc: "Alivio focalizado para espalda, cuello y hombros cargados.", image: "/images/signature/electro.webp", tag: "Alivio focalizado" },
-  { name: "Alivio Integral", duration: "60 min", price: "S/80", desc: "Trabajo completo para músculos cansados y tensión acumulada.", image: "/images/signature/cupping.webp", tag: "Terapéutico" },
-  { name: "Terapia Vita", duration: "60 min", price: "S/80", desc: "Una sesión personalizada según lo que tu cuerpo necesita hoy.", image: "/images/signature/ambience.webp", tag: "Personalizado" },
-  { name: "Balance Plus", duration: "70 min", price: "S/88", desc: "Más tiempo para desconectar, respirar y renovarte con calma.", image: "/images/signature/facial-room.webp", tag: "Experiencia extendida" },
-];
+const featuredServiceImages: Record<string, string> = {
+  "relax-vital": "/images/signature/facial.webp",
+  "alivio-integral": "/images/signature/cupping.webp",
+  "balance-plus": "/images/signature/facial-room.webp",
+  relax: "/images/signature/room-wide.webp",
+  deluxe: "/images/signature/ambience.webp",
+  supreme: "/images/signature/room-stone.webp",
+};
 
 const reviews = [
   { quote: "Me encantó el ambiente, el aroma y el profesionalismo. Fue una experiencia realmente relajante.", author: "María Claudia N.", source: "Google", rating: "5.0" },
@@ -81,24 +84,27 @@ export default function HomePage() {
         <div className="shell">
           <div className="sectionTop editorialTop">
             <div><p className="eyebrow">Experiencias Vita Lima</p><h2>El bienestar se siente distinto cuando está hecho para ti.</h2></div>
-            <p className="sectionIntro">Cinco experiencias diseñadas para aliviar tensión, recuperar energía y regalarte una pausa de calidad.</p>
+            <p className="sectionIntro">Seis experiencias diseñadas para aliviar tensión, recuperar energía y regalarte una pausa de calidad.</p>
           </div>
           <div className="serviceGrid">
-            {services.map((service) => (
-              <article className="serviceCard" key={service.name}>
-                <a href="#reserva" className="serviceCardLink" aria-label={`Reservar ${service.name}`}>
+            {featuredServices.map((service) => (
+              <article className="serviceCard" key={service.code}>
+                <Link href={`/servicios#${service.slug}`} className="serviceCardLink" aria-label={`Ver experiencia ${service.name}`}>
                   <div className="serviceImageWrap">
-                    <Image src={service.image} alt={service.name} fill sizes="(max-width: 800px) 82vw, 20vw" />
-                    <span className="serviceTag">{service.tag}</span>
+                    <Image src={featuredServiceImages[service.slug]} alt={service.name} fill sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw" />
+                    <span className="serviceTag">{service.badge}</span>
                   </div>
                   <div className="serviceBody">
-                    <div className="serviceHeading"><h3>{service.name}</h3><span>{service.duration}</span></div>
-                    <p>{service.desc}</p>
-                    <div className="serviceFooter"><strong>{service.price}</strong><span>Elegir experiencia →</span></div>
+                    <div className="serviceHeading"><h3>{service.name}</h3><span>{service.duration} min</span></div>
+                    <p>{service.featuredSummary}</p>
+                    <div className="serviceFooter"><strong>S/ {service.price}</strong><span>Ver experiencia →</span></div>
                   </div>
-                </a>
+                </Link>
               </article>
             ))}
+          </div>
+          <div className="servicesAllAction">
+            <Link className="button servicesAllButton" href="/servicios">Ver todos los servicios <span>→</span></Link>
           </div>
         </div>
       </section>
