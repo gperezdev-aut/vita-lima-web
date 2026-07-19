@@ -15,6 +15,27 @@ export const metadata: Metadata = {
 
 const whatsappNumber = "51907308415";
 
+const catalogImages: Record<ServiceCategory, string[]> = {
+  individual: [
+    "/images/servicios/servicio-01.webp",
+    "/images/servicios/servicio-02.webp",
+    "/images/servicios/servicio-03.webp",
+  ],
+  couples: [
+    "/images/signature/couple-room.webp",
+    "/images/real/room_pair.webp",
+    "/images/v4/room-pair.webp",
+  ],
+  home: [
+    "/images/servicios/servicio-07.webp",
+    "/images/servicios/servicio-08.webp",
+  ],
+  program: [
+    "/images/signature/room-stone.webp",
+    "/images/signature/ambience.webp",
+  ],
+};
+
 const categorySections: Array<{
   category: ServiceCategory;
   title: string;
@@ -55,9 +76,19 @@ function whatsappHref(service?: Service) {
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
-function venueLabel(service: Service) {
-  if (service.mode === "HOME") return "Modalidad · A domicilio en Lima";
-  return `Sede · ${service.venue}`;
+function serviceSummary(includes: string) {
+  const separators = [" + ", ". "];
+  const end = separators
+    .map((separator) => includes.indexOf(separator))
+    .filter((index) => index > 0)
+    .sort((a, b) => a - b)[0];
+
+  return end ? includes.slice(0, end) : includes;
+}
+
+function serviceImage(category: ServiceCategory, index: number) {
+  const images = catalogImages[category];
+  return images[index % images.length];
 }
 
 export default function ServicesPage() {
@@ -82,13 +113,15 @@ export default function ServicesPage() {
 
       <nav className="catalogCategoryNav" aria-label="Categorías de servicios">
         <div className="shell">
-          {categorySections.map((section) => (
-            <a key={section.category} href={`#${section.category}`}>{section.title}</a>
-          ))}
+          <a href="#catalogo">Todos</a>
+          <a href="#individual">Individuales</a>
+          <a href="#couples">Para dos</a>
+          <a href="#home">Domicilio</a>
+          <a href="#program">Programas</a>
         </div>
       </nav>
 
-      <div className="catalogSections">
+      <div className="catalogSections" id="catalogo">
         {categorySections.map((section) => {
           const categoryServices = servicesByCategory[section.category];
 
@@ -104,18 +137,20 @@ export default function ServicesPage() {
                 </div>
 
                 <div className="catalogGrid">
-                  {categoryServices.map((service) => (
+                  {categoryServices.map((service, index) => (
                     <article className="catalogCard" id={service.slug} key={service.code}>
-                      <div className="catalogCardTop">
-                        <span>{service.duration} min</span>
-                        <strong>S/ {service.price}</strong>
+                      <div className="catalogCardImage">
+                        <Image src={serviceImage(section.category, index)} alt={service.name} fill sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw" />
                       </div>
-                      <h3>{service.name}</h3>
-                      <p className="catalogIncludes">{service.includes}</p>
-                      <div className="catalogCardFooter">
-                        <span>{venueLabel(service)}</span>
-                        <a href={whatsappHref(service)} target="_blank" rel="noreferrer" aria-label={`Reservar ${service.name} por WhatsApp`}>
-                          Reservar por WhatsApp <span>→</span>
+                      <div className="catalogCardBody">
+                        <h3>{service.name}</h3>
+                        <div className="catalogCardTop">
+                          <span>{service.duration} min</span>
+                          <strong>S/ {service.price}</strong>
+                        </div>
+                        <p className="catalogIncludes" title={service.includes}>{serviceSummary(service.includes)}</p>
+                        <a className="catalogReserveButton" href={whatsappHref(service)} target="_blank" rel="noreferrer" aria-label={`Reservar ${service.name} por WhatsApp`}>
+                          Reservar <span>→</span>
                         </a>
                       </div>
                     </article>
