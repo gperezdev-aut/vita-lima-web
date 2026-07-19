@@ -49,8 +49,20 @@ export default function HomePage() {
             <a className="button ghostButton" href="#servicios">Descubrir experiencias</a>
           </div>
           <div className="heroTrust" aria-label="Indicadores de confianza">
-            <div><strong>4.7</strong><span>Google · 226 opiniones</span></div>
-            <div><strong>4.8</strong><span>Tripadvisor · 399 opiniones</span></div>
+            <div>
+              <div className="heroRating" aria-label="Valoración de Google: 4.7 de 5 estrellas">
+                <strong>4.7</strong>
+                <span className="heroStars" aria-hidden="true">★★★★★</span>
+              </div>
+              <span>Google · 226 opiniones</span>
+            </div>
+            <div>
+              <div className="heroRating" aria-label="Valoración de Tripadvisor: 4.8 de 5 estrellas">
+                <strong>4.8</strong>
+                <span className="heroStars" aria-hidden="true">★★★★★</span>
+              </div>
+              <span>Tripadvisor · 399 opiniones</span>
+            </div>
             <div><strong>2</strong><span>Sedes en Lima</span></div>
           </div>
         </div>
