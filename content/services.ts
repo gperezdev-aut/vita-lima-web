@@ -271,7 +271,7 @@ export const services: Service[] = [
     mode: "IN_BRANCH",
     group: "PACK_2P",
     featured: true,
-    badge: "Experiencia premium",
+    badge: "Premium",
     featuredSummary: "Masaje relajante + descontracturante + piedras calientes + reflexología podal",
   },
   {
@@ -300,7 +300,7 @@ export const services: Service[] = [
     mode: "IN_BRANCH",
     group: "PACK_2P",
     featured: true,
-    badge: "Experiencia signature",
+    badge: "Signature",
     featuredSummary: "Masaje relajante/descontracturante (full body) + piedras calientes + exfoliación de espalda",
   },
   {
