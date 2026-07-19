@@ -38,7 +38,7 @@ export default function HomePage() {
     <main>
       <section id="inicio" className="heroSection">
         <Header />
-        <Image className="heroImage" src="/images/signature/hero.webp" alt="Ambiente de Vita Lima Spa" fill priority sizes="100vw" />
+        <Image className="heroImage" src="/images/hero-vita-lima-premium.png" alt="Ambiente de Vita Lima Spa" fill priority sizes="100vw" />
         <div className="heroShade" />
         <div className="heroContent shell">
           <p className="eyebrow heroEyebrow">Spa boutique · San Borja & Miraflores</p>
