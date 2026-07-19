@@ -14,6 +14,9 @@ const featuredServiceImages: Record<string, string> = {
   supreme: "/images/signature/room-stone.webp",
 };
 
+const serviceWhatsAppHref = (serviceName: string) =>
+  `https://wa.me/51907308415?text=${encodeURIComponent(`Hola Vita Lima, quisiera reservar el servicio ${serviceName}.`)}`;
+
 const reviews = [
   { quote: "Me encantó el ambiente, el aroma y el profesionalismo. Fue una experiencia realmente relajante.", author: "María Claudia N.", source: "Google", rating: "5.0" },
   { quote: "La atención fue excelente y el masaje me ayudó muchísimo. El lugar transmite tranquilidad desde que llegas.", author: "Carla A.", source: "Google", rating: "5.0" },
@@ -82,27 +85,41 @@ export default function HomePage() {
 
       <section id="servicios" className="section servicesSection">
         <div className="shell">
-          <div className="sectionTop editorialTop">
-            <div><p className="eyebrow">Experiencias Vita Lima</p><h2>El bienestar se siente distinto cuando está hecho para ti.</h2></div>
-            <p className="sectionIntro">Seis experiencias diseñadas para aliviar tensión, recuperar energía y regalarte una pausa de calidad.</p>
+          <div className="featuredServicesHeader">
+            <div>
+              <p className="eyebrow">Experiencias Vita Lima</p>
+              <h2>Los favoritos de nuestros clientes</h2>
+            </div>
+            <p>Las experiencias más reservadas por quienes buscan relajarse, aliviar tensiones y compartir un momento especial.</p>
           </div>
-          <div className="serviceGrid">
-            {featuredServices.map((service) => (
-              <article className="serviceCard" key={service.code}>
-                <Link href={`/servicios#${service.slug}`} className="serviceCardLink" aria-label={`Ver experiencia ${service.name}`}>
-                  <div className="serviceImageWrap">
-                    <Image src={featuredServiceImages[service.slug]} alt={service.name} fill sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw" />
-                    <span className="serviceTag">{service.badge}</span>
+
+          <div className="featuredCarouselWrap">
+            <div className="featuredCarousel" aria-label="Servicios favoritos">
+              {featuredServices.map((service) => (
+                <article className="featuredServiceCard" id={`featured-${service.slug}`} key={service.code}>
+                  <div className="featuredServiceImage">
+                    <Image src={featuredServiceImages[service.slug]} alt={service.name} fill sizes="(max-width: 760px) 88vw, (max-width: 1100px) 46vw, 30vw" />
+                    <span>{service.badge}</span>
                   </div>
-                  <div className="serviceBody">
-                    <div className="serviceHeading"><h3>{service.name}</h3><span>{service.duration} min</span></div>
-                    <p>{service.featuredSummary}</p>
-                    <div className="serviceFooter"><strong>S/ {service.price}</strong><span>Ver experiencia →</span></div>
+                  <div className="featuredServiceBody">
+                    <h3>{service.name}</h3>
+                    <div className="featuredServiceMeta">
+                      <span>{service.duration} min</span>
+                      <strong>S/ {service.price}</strong>
+                    </div>
+                    <a href={serviceWhatsAppHref(service.name)} target="_blank" rel="noreferrer" aria-label={`Reservar ${service.name} por WhatsApp`}>
+                      Reservar <span>→</span>
+                    </a>
                   </div>
-                </Link>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
+            <div className="featuredCarouselArrows" aria-label="Controles del carrusel">
+              <a href="#featured-relax-vital" aria-label="Volver al inicio del carrusel">←</a>
+              <a href="#featured-relax" aria-label="Avanzar en el carrusel">→</a>
+            </div>
           </div>
+
           <div className="servicesAllAction">
             <Link className="button servicesAllButton" href="/servicios">Ver todos los servicios <span>→</span></Link>
           </div>
