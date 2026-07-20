@@ -16,3 +16,83 @@
 .footer{background:#02362d;color:white;padding:0 0 18px}.footerTop{display:flex;justify-content:space-between;align-items:center;gap:40px;padding:75px 0;border-bottom:1px solid rgba(255,255,255,.14)}.footerTop h2{font-size:clamp(40px,4vw,65px);margin:0}.footerTop .eyebrow{margin:0}.footerGrid{display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:45px;padding-top:48px}.footerGrid>div{display:flex;flex-direction:column;gap:10px}.footerBrand img{width:150px;height:auto}.footerBrand p{font-size:12px;line-height:1.55;max-width:240px;color:rgba(255,255,255,.7)}.footer h4{font-family:Arial,sans-serif;margin:0 0 10px;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#ffac71}.footer a{font-size:11px;text-decoration:underline;text-underline-offset:3px;color:rgba(255,255,255,.8)}.footerBottom{text-align:center;font-size:10px;margin-top:38px;opacity:.6}.floatingWhatsapp{position:fixed;z-index:50;right:20px;bottom:20px;background:#21c96f;color:white;border-radius:999px;padding:12px 16px;display:flex;gap:8px;align-items:center;font-size:11px;box-shadow:0 12px 35px rgba(0,0,0,.18)}
 @media(max-width:1100px){.shell{width:min(100% - 40px,1100px)}.siteHeader{padding:0 20px;grid-template-columns:170px 1fr auto}.siteHeader nav{gap:18px}.phoneLink{display:none}.featuredServiceCard{flex-basis:calc((100% - 16px)/2)}.featuredCarouselArrows{display:none}.catalogGrid{grid-template-columns:repeat(3,1fr)}.signatureGrid{grid-template-columns:repeat(2,1fr)}.reviewsHeader{grid-template-columns:1fr}.experienceTiles{grid-template-columns:repeat(2,1fr)}.stepsLayout,.galleryLayout,.reservationLayout,.faqLayout,.whyReturnLayout,.brandStoryLayout{grid-template-columns:1fr}.brandStoryImage{min-height:480px}.brandStoryCopy{padding:70px 40px}.footerTop{align-items:flex-start;flex-direction:column}.footerGrid{grid-template-columns:2fr repeat(2,1fr)}.footerGrid>div:nth-child(n+4){margin-top:18px}}
 @media(max-width:760px){.shell{width:calc(100% - 28px)}.heroImage{object-position:67% center}.section{padding:68px 0}.siteHeader{height:72px;grid-template-columns:1fr auto;padding:0 14px}.brand img{width:112px}.headerActions{display:none}.menuToggle{display:flex;flex-direction:column;gap:5px;background:none;border:0}.menuToggle span{width:25px;height:2px;background:currentColor}.siteHeader nav{display:none;position:absolute;top:72px;left:0;right:0;background:var(--paper);color:var(--ink);padding:25px;flex-direction:column;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.12)}.siteHeader nav.navOpen{display:flex}.heroSection{height:760px;min-height:720px}.heroContent{padding-top:155px}.heroContent h1{font-size:60px;line-height:.92}.heroLead{font-size:16px}.heroButtons{flex-direction:column;align-items:flex-start}.heroTrust{flex-wrap:wrap;gap:16px 0}.heroTrust>div{min-width:0;padding:0 16px}.heroTrust>div:first-child{padding-left:0}.heroTrust>div+div{border-left:0}.heroTrust>div:last-child{padding-left:0;flex-basis:100%}.signatureGrid{display:flex;overflow-x:auto}.signatureGrid>div{min-width:270px}.sectionTop{align-items:flex-start;flex-direction:column}.editorialTop h2,.reviewsHeader h2,.stepsHeading h2,.galleryIntro h2,.reservationIntro h2,.faqLayout h2,.whyReturnLayout h2{font-size:42px}.featuredServicesHeader{grid-template-columns:1fr;gap:18px;align-items:start}.featuredServicesHeader h2{font-size:42px}.featuredServiceCard{flex-basis:100%}.featuredCarouselArrows{display:none}.featuredServiceImage{height:142px}.catalogGrid{grid-template-columns:1fr}.reviewGrid,.experienceTiles{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}.reviewCard,.experienceTile{min-width:84vw;scroll-snap-align:start}.brandStoryImage{min-height:380px}.brandStoryCopy{padding:55px 22px}.brandStoryCopy h2{font-size:42px}.ratingSummary{grid-template-columns:1fr 1fr 1fr;overflow-x:auto}.ratingSummary div{min-width:125px}.reviewCard blockquote{font-size:20px}.reviewActions{justify-content:flex-start;flex-direction:column;gap:12px}.whyReturnGrid{grid-template-columns:1fr}.whyReturnGrid div:nth-child(odd){border-right:0}.whyReturnGrid div:nth-child(even){padding-left:0}.stepsGrid{display:flex;overflow-x:auto}.stepCard{min-width:72vw}.galleryGrid{grid-template-columns:1fr;grid-template-rows:330px 230px}.galleryItem1{grid-row:auto}.galleryItem2{grid-column:auto}.locationsGrid{grid-template-columns:1fr}.locationCard{height:400px}.reserveForm{grid-template-columns:1fr}.formHeader{flex-direction:column;gap:6px}.reserveForm .fullField,.reserveForm button,.formNote,.formHeader{grid-column:1}.faqGrid{grid-template-columns:1fr}.footerGrid{grid-template-columns:1fr 1fr}.footerBrand{grid-column:1/-1}.floatingWhatsapp{right:12px;bottom:12px;padding:11px 13px}.floatingWhatsapp strong{display:none}.catalogNav{height:72px}.catalogNav img{width:115px}.catalogHero{padding:68px 0 76px}.catalogHero h1{font-size:53px}.catalogHero>p:not(.eyebrow){font-size:16px}.catalogCategoryNav .shell{justify-content:flex-start;gap:8px}.catalogSectionHeader{grid-template-columns:1fr;gap:18px;align-items:start}.catalogSectionHeader h2{font-size:42px}.catalogCardImage{height:145px}.catalogCard h3{font-size:25px}.catalogIncludes{font-size:12px}.catalogFooter .shell{align-items:flex-start;flex-direction:column}.catalogBackLink{font-size:10px}}
+
+/* Premium spacing pass: a tighter vertical rhythm everywhere except the home hero. */
+.section{padding:78px 0}
+.signatureGrid>div{padding:26px 28px}
+.sectionTop{margin-bottom:32px}
+.editorialTop h2,.reviewsHeader h2,.stepsHeading h2,.galleryIntro h2,.reservationIntro h2,.faqLayout h2,.whyReturnLayout h2,.featuredServicesHeader h2{font-size:clamp(38px,3.75vw,59px)}
+.featuredServicesHeader{margin-bottom:28px}
+.featuredCarousel{padding-bottom:14px}
+.featuredServiceImage{height:118px}
+.featuredServiceImage>span{top:9px;left:9px;padding:5px 9px}
+.featuredServiceBody{padding:12px 15px 13px}
+.featuredServiceBody h3{font-size:21px;margin-bottom:8px}
+.featuredServiceMeta{margin-bottom:9px}
+.featuredServiceMeta strong{font-size:20px}
+.featuredServiceBody>a{padding-top:9px}
+.servicesAllAction{margin-top:14px}
+.catalogHero{padding:72px 0 82px}
+.catalogCategoryNav .shell{padding-top:11px;padding-bottom:11px}
+.catalogSectionHeader{margin-bottom:25px}
+.catalogSectionHeader h2{font-size:clamp(37px,3.6vw,56px)}
+.catalogGrid{gap:14px}
+.catalogCardImage{height:105px}
+.catalogCardBody{padding:13px 15px}
+.catalogCard h3{font-size:21px;margin-bottom:9px}
+.catalogCardTop{margin-bottom:7px}
+.catalogCardTop strong{font-size:19px}
+.catalogIncludes{margin-bottom:9px}
+.catalogReserveButton{padding-top:9px}
+.brandStoryLayout,.brandStoryImage{min-height:500px}
+.brandStoryCopy{padding:68px 60px}
+.brandStoryCopy h2{font-size:clamp(38px,3.4vw,57px)}
+.storyPoints{margin-top:17px}
+.reviewsHeader{margin-bottom:34px}
+.reviewsHeader h2{font-size:clamp(41px,4.05vw,65px)}
+.ratingSummary div{padding:14px}
+.reviewCard{padding:22px;min-height:235px}
+.reviewCard blockquote{font-size:20px;margin:24px 0}
+.reviewActions{margin-top:20px}
+.whyReturnSection{padding:75px 0}
+.whyReturnLayout{gap:60px}
+.whyReturnGrid div{padding-top:19px;padding-bottom:19px}
+.experienceTile{min-height:315px}
+.tileContent{left:20px;right:20px;bottom:19px}
+.experienceTile h3{font-size:28px;margin:6px 0}
+.experienceTile p{margin-bottom:10px}
+.stepsLayout{gap:55px}
+.stepCard{padding-top:18px}
+.stepCard h3{font-size:20px;margin:17px 0 7px}
+.galleryGrid{grid-template-rows:205px 205px}
+.locationsSection{padding-top:62px}
+.locationCard{height:390px}
+.locationContent{left:30px;right:30px;bottom:28px}
+.locationContent h3{font-size:49px;margin:6px 0}
+.locationContent small{margin-bottom:16px}
+.reservationLayout{gap:55px}
+.reservationIntro ul{margin:21px 0}
+.reservationIntro li{margin:9px 0}
+.reserveForm{padding:21px;gap:13px}
+.formHeader{padding-bottom:12px}
+.reserveForm input,.reserveForm select,.reserveForm textarea{margin-top:6px;padding:11px 13px}
+.reserveForm button{padding:12px}
+.faqLayout{gap:50px}
+.faqGrid details{padding:14px 16px}
+.footer{padding-bottom:14px}
+.footerTop{padding:57px 0}
+.footerTop h2{font-size:clamp(34px,3.4vw,55px)}
+.footerGrid{padding-top:37px}
+.footerBottom{margin-top:29px}
+
+@media(max-width:1100px){.brandStoryCopy{padding:54px 36px}.brandStoryImage{min-height:400px}}
+@media(max-width:760px){.section{padding:53px 0}.signatureGrid>div{padding-top:25px;padding-bottom:25px}.sectionTop{margin-bottom:26px}.editorialTop h2,.reviewsHeader h2,.stepsHeading h2,.galleryIntro h2,.reservationIntro h2,.faqLayout h2,.whyReturnLayout h2,.featuredServicesHeader h2,.brandStoryCopy h2,.catalogSectionHeader h2{font-size:36px}.featuredServicesHeader{margin-bottom:24px}.featuredServiceImage{height:118px}.brandStoryImage{min-height:300px}.brandStoryCopy{padding:42px 22px}.reviewCard{min-height:220px}.experienceTile{min-height:310px}.galleryGrid{grid-template-rows:260px 185px}.locationsSection{padding-top:50px}.locationCard{height:320px}.locationContent{left:24px;right:24px;bottom:22px}.locationContent h3{font-size:43px}.reserveForm{padding:19px;gap:12px}.footerTop{padding:46px 0}.footerGrid{padding-top:32px}.catalogHero{padding:54px 0 61px}.catalogCardImage{height:116px}}
+
+/* Readability and touch-target correction for the compact spacing scale. */
+.signatureGrid span,.featuredServiceImage>span,.featuredServiceMeta span,.catalogCategoryNav a,.catalogCardTop span,.storyPoints span,.ratingSummary span,.ratingSummary small,.reviewSource small,.whyReturnGrid span,.tileContent>span,.stepCard span,.locationContent>span,.locationContent small,.formHeader span,.formHeader strong,.reserveForm label,.footer h4{font-size:12px}
+.signatureGrid p,.catalogIncludes,.experienceTile p,.stepCard p,.formNote,.faqGrid p,.footerBrand p,.catalogFooter p{font-size:14px}
+.featuredServiceBody>a,.servicesAllButton,.catalogReserveButton,.reviewActions a,.experienceTile a,.locationContent a,.reserveForm button,.faqGrid summary,.footerTop .button,.footer a,.catalogFooter a,.catalogBackLink,.floatingWhatsapp{font-size:14px}
+.reviewsSection,.reservationSection{padding-top:84px;padding-bottom:84px}
+.locationsSection{padding-top:68px;padding-bottom:84px}
+
+@media(max-width:760px){.reviewsSection,.reservationSection{padding-top:60px;padding-bottom:60px}.locationsSection{padding-top:58px;padding-bottom:60px}.featuredServiceBody>a,.servicesAllButton,.catalogReserveButton,.catalogCategoryNav a,.catalogBackLink,.reviewActions a,.experienceTile a,.locationContent a,.reserveForm button,.faqGrid summary,.footerTop .button,.footer a,.catalogFooter a,.floatingWhatsapp{min-height:44px;display:inline-flex;align-items:center;justify-content:center}.featuredServiceBody>a,.catalogReserveButton,.faqGrid summary{justify-content:space-between}.footer a{align-self:flex-start}}
