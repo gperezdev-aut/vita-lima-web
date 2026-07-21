@@ -96,3 +96,21 @@
 .locationsSection{padding-top:68px;padding-bottom:84px}
 
 @media(max-width:760px){.reviewsSection,.reservationSection{padding-top:60px;padding-bottom:60px}.locationsSection{padding-top:58px;padding-bottom:60px}.featuredServiceBody>a,.servicesAllButton,.catalogReserveButton,.catalogCategoryNav a,.catalogBackLink,.reviewActions a,.experienceTile a,.locationContent a,.reserveForm button,.faqGrid summary,.footerTop .button,.footer a,.catalogFooter a,.floatingWhatsapp{min-height:44px;display:inline-flex;align-items:center;justify-content:center}.featuredServiceBody>a,.catalogReserveButton,.faqGrid summary{justify-content:space-between}.footer a{align-self:flex-start}}
+
+/* Compact horizontal catalog — scoped exclusively to /servicios. */
+.servicesCatalogPage .catalogHero{padding-top:58px;padding-bottom:66px}
+.servicesCatalogPage .catalogSection{padding-top:62px;padding-bottom:62px}
+.servicesCatalogPage .catalogSectionHeader{margin-bottom:20px}
+.servicesCatalogPage .catalogGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.servicesCatalogPage .catalogCard{display:grid;grid-template-columns:38% minmax(0,1fr);min-height:190px;max-height:210px}
+.servicesCatalogPage .catalogCardImage{height:auto;min-height:190px}
+.servicesCatalogPage .catalogCardBody{min-width:0;padding:16px 18px;display:flex;flex-direction:column}
+.servicesCatalogPage .catalogCard h3{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:21px;line-height:1.08;margin-bottom:10px}
+.servicesCatalogPage .catalogCardTop{margin-bottom:7px}
+.servicesCatalogPage .catalogCardTop span{font-size:12px}
+.servicesCatalogPage .catalogCardTop strong{font-size:20px}
+.servicesCatalogPage .catalogIncludes{font-size:14px;line-height:1.4;margin-bottom:8px}
+.servicesCatalogPage .catalogReserveButton{min-height:44px;margin-top:auto;padding-top:8px;font-size:14px}
+
+@media(max-width:1100px){.servicesCatalogPage .catalogGrid{grid-template-columns:1fr}.servicesCatalogPage .catalogCard{max-height:210px}}
+@media(max-width:760px){.servicesCatalogPage .catalogHero{padding-top:45px;padding-bottom:50px}.servicesCatalogPage .catalogSection{padding-top:44px;padding-bottom:44px}.servicesCatalogPage .catalogSectionHeader{margin-bottom:18px}.servicesCatalogPage .catalogCard{grid-template-columns:38% minmax(0,1fr);min-height:190px;max-height:230px}.servicesCatalogPage .catalogCardImage{height:auto;min-height:190px}.servicesCatalogPage .catalogCardBody{padding:14px}.servicesCatalogPage .catalogCard h3{font-size:20px}.servicesCatalogPage .catalogReserveButton{min-height:44px}}
