@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import SiteFooter from "@/components/SiteFooter";
 import { servicesByCategory, type Service, type ServiceCategory } from "@/content/services";
 
 export const metadata: Metadata = {
@@ -34,6 +35,11 @@ const catalogImages: Record<ServiceCategory, string[]> = {
     "/images/signature/room-stone.webp",
     "/images/signature/ambience.webp",
   ],
+  beauty: [
+    "/images/v4/facial.webp",
+    "/images/real/facial_real.webp",
+    "/images/v4/facial-room.webp",
+  ],
 };
 
 const categorySections: Array<{
@@ -65,6 +71,12 @@ const categorySections: Array<{
     title: "Programas de sesiones",
     eyebrow: "Bienestar continuo",
     description: "Programas para dar continuidad a tu cuidado y tus objetivos de bienestar.",
+  },
+  {
+    category: "beauty",
+    title: "Mirada y belleza",
+    eyebrow: "REALZA TU MIRADA",
+    description: "Tratamientos para realzar pestañas y cejas con un acabado natural y cuidado.",
   },
 ];
 
@@ -118,6 +130,7 @@ export default function ServicesPage() {
           <a href="#couples">Para dos</a>
           <a href="#home">Domicilio</a>
           <a href="#program">Programas</a>
+          <a href="#mirada-y-belleza">MIRADA Y BELLEZA</a>
         </div>
       </nav>
 
@@ -126,7 +139,11 @@ export default function ServicesPage() {
           const categoryServices = servicesByCategory[section.category];
 
           return (
-            <section className="catalogSection section" id={section.category} key={section.category}>
+            <section
+              className="catalogSection section"
+              id={section.category === "beauty" ? "mirada-y-belleza" : section.category}
+              key={section.category}
+            >
               <div className="shell">
                 <div className="catalogSectionHeader">
                   <div>
@@ -162,12 +179,7 @@ export default function ServicesPage() {
         })}
       </div>
 
-      <footer className="catalogFooter">
-        <div className="shell">
-          <p>Vita Lima Spa · San Borja & Miraflores</p>
-          <Link href="/">Volver al inicio</Link>
-        </div>
-      </footer>
+      <SiteFooter context="internal" />
     </main>
   );
 }

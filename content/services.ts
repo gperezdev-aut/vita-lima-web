@@ -1,4 +1,4 @@
-export type ServiceCategory = "individual" | "couples" | "home" | "program";
+export type ServiceCategory = "individual" | "couples" | "home" | "program" | "beauty";
 
 export type Service = {
   code: string;
@@ -10,7 +10,7 @@ export type Service = {
   includes: string;
   venue: string;
   mode: "IN_BRANCH" | "HOME";
-  group: "PROMOS_1P" | "PACK_2P" | "HOME" | "SESSIONS";
+  group: "PROMOS_1P" | "PACK_2P" | "HOME" | "SESSIONS" | "BEAUTY";
   featured: boolean;
   badge: string;
   featuredSummary?: string;
@@ -387,6 +387,48 @@ export const services: Service[] = [
     featured: false,
     badge: "",
   },
+  {
+    code: "SVC_027",
+    slug: "lifting-de-pestanas",
+    category: "beauty",
+    name: "Lifting de Pestañas",
+    duration: 60,
+    price: 90,
+    includes: "Eleva y realza las pestañas naturales desde la raíz. Incluye tinturado con henna.",
+    venue: "Ambas",
+    mode: "IN_BRANCH",
+    group: "BEAUTY",
+    featured: false,
+    badge: "",
+  },
+  {
+    code: "SVC_028",
+    slug: "planchado-de-cejas",
+    category: "beauty",
+    name: "Planchado de Cejas",
+    duration: 25,
+    price: 50,
+    includes: "Alinea y define las cejas, ayudando a controlar el vello rebelde y resaltar su forma natural.",
+    venue: "Ambas",
+    mode: "IN_BRANCH",
+    group: "BEAUTY",
+    featured: false,
+    badge: "",
+  },
+  {
+    code: "SVC_029",
+    slug: "lifting-tinturado-planchado-cejas",
+    category: "beauty",
+    name: "Lifting de Pestañas + Tinturado + Planchado de Cejas",
+    duration: 90,
+    price: 130,
+    includes: "Tratamiento integral para realzar pestañas y cejas con lifting, tinturado y planchado.",
+    venue: "Ambas",
+    mode: "IN_BRANCH",
+    group: "BEAUTY",
+    featured: true,
+    badge: "Destacado",
+  },
 ];
 
 export const featuredServices = services.filter((service) => service.featured);
@@ -396,4 +438,5 @@ export const servicesByCategory = {
   couples: services.filter((service) => service.category === "couples"),
   home: services.filter((service) => service.category === "home"),
   program: services.filter((service) => service.category === "program"),
+  beauty: services.filter((service) => service.category === "beauty"),
 };

@@ -3,6 +3,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ReserveForm from "@/components/ReserveForm";
+import SiteFooter from "@/components/SiteFooter";
 import { featuredServices } from "@/content/services";
 
 const featuredServiceImages: Record<string, string> = {
@@ -228,17 +229,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="footer">
-        <div className="shell footerTop"><p className="eyebrow orangeText">Vita Lima Spa</p><h2>Tu próxima pausa puede comenzar hoy.</h2><a className="button orangeButton" href="#reserva">Agendar mi momento →</a></div>
-        <div className="shell footerGrid">
-          <div className="footerBrand"><Image src="/images/brand/logo-vita-lima-white.png" alt="Vita Lima Spa" width={190} height={84} /><p>Spa boutique de masajes y bienestar en San Borja y Miraflores.</p></div>
-          <div><h4>Explorar</h4><a href="#servicios">Experiencias</a><a href="#opiniones">Opiniones</a><a href="#sedes">Sedes</a><a href="#reserva">Reservar</a></div>
-          <div><h4>Contacto</h4><a href="https://wa.me/51907308415" target="_blank" rel="noreferrer">+51 907 308 415</a><a href="mailto:info@vitalimaspa.com">info@vitalimaspa.com</a></div>
-          <div><h4>Información</h4><a href="/politica-de-privacidad">Privacidad</a><a href="/terminos-y-condiciones">Términos</a><a href="#preguntas">Preguntas frecuentes</a></div>
-          <div><h4>Síguenos</h4><a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram</a><a href="https://www.facebook.com/" target="_blank" rel="noreferrer">Facebook</a><a href="https://www.tripadvisor.com/Search?q=Vita%20Lima%20Spa" target="_blank" rel="noreferrer">Tripadvisor</a></div>
-        </div>
-        <div className="shell footerBottom">© 2026 Vita Lima Spa. Todos los derechos reservados.</div>
-      </footer>
+      <SiteFooter context="home" />
       <WhatsAppButton />
     </main>
   );
