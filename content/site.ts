@@ -2,8 +2,9 @@ export const site = {
   whatsapp: "51907308415",
   whatsappDisplay: "+51 907 308 415",
   email: "info@vitalimaspa.com",
-  instagram: "https://www.instagram.com/",
-  facebook: "https://www.facebook.com/",
+  instagram: "https://www.instagram.com/vitalima1/",
+  facebook: "https://www.facebook.com/vitalimaperu/",
+  tiktok: "https://www.tiktok.com/@vita.lima",
   services: [
     { name: "Relax Vital", duration: "60 min", price: "S/70", text: "Una pausa profunda para reducir tensión y recuperar ligereza." },
     { name: "Espalda Libre", duration: "45 min", price: "S/58", text: "Trabajo focalizado para espalda, cuello y hombros cargados." },
