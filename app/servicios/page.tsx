@@ -40,6 +40,11 @@ const catalogImages: Record<ServiceCategory, string[]> = {
     "/images/real/facial_real.webp",
     "/images/v4/facial-room.webp",
   ],
+  facial: [
+    "/images/signature/facial.webp",
+    "/images/signature/facial-room.webp",
+    "/images/generated/foot.webp",
+  ],
 };
 
 const categorySections: Array<{
@@ -59,6 +64,12 @@ const categorySections: Array<{
     title: "Experiencias para dos",
     eyebrow: "Para compartir",
     description: "Pausas creadas para disfrutar en pareja o con alguien especial.",
+  },
+  {
+    category: "facial",
+    title: "Faciales",
+    eyebrow: "Piel cuidada",
+    description: "Limpiezas y tratamientos faciales independientes, sin necesidad de combinarlos con un masaje.",
   },
   {
     category: "home",
@@ -128,9 +139,12 @@ export default function ServicesPage() {
           <a href="#catalogo">Todos</a>
           <a href="#individual">Individuales</a>
           <a href="#couples">Para dos</a>
+          <a href="#facial">Faciales</a>
           <a href="#home">Domicilio</a>
           <a href="#program">Programas</a>
           <a href="#mirada-y-belleza">MIRADA Y BELLEZA</a>
+          <a href="/empresas">Empresas</a>
+          <a href="/regalos">Gift Cards</a>
         </div>
       </nav>
 

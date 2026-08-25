@@ -25,10 +25,10 @@ const reviews = [
 ];
 
 const experiences = [
-  { kicker: "Para compartir", title: "Una pausa para dos", text: "Un momento íntimo de descanso, calma y conexión.", image: "/images/signature/couple-room.webp", cta: "Ver experiencia para dos" },
-  { kicker: "Para sorprender", title: "Gift Cards", text: "Regala bienestar con una experiencia cuidada de principio a fin.", image: "/images/signature/buddha.webp", cta: "Solicitar Gift Card" },
-  { kicker: "Para tu equipo", title: "Bienestar corporativo", text: "Pausas profesionales de relajación para empresas y eventos.", image: "/images/signature/room-wide.webp", cta: "Solicitar propuesta" },
-  { kicker: "Donde estés", title: "Masajes a domicilio", text: "Llevamos la experiencia Vita Lima a tu espacio, previa coordinación.", image: "/images/signature/facial.webp", cta: "Consultar disponibilidad" },
+  { kicker: "Para compartir", title: "Una pausa para dos", text: "Un momento íntimo de descanso, calma y conexión.", image: "/images/signature/couple-room.webp", cta: "Ver experiencia para dos", href: "/servicios#couples" },
+  { kicker: "Para sorprender", title: "Gift Cards", text: "Regala bienestar con una experiencia cuidada de principio a fin.", image: "/images/signature/buddha.webp", cta: "Solicitar Gift Card", href: "/regalos" },
+  { kicker: "Para tu equipo", title: "Bienestar corporativo", text: "Pausas profesionales de relajación para empresas y eventos.", image: "/images/signature/room-wide.webp", cta: "Solicitar propuesta", href: "/empresas" },
+  { kicker: "Donde estés", title: "Masajes a domicilio", text: "Llevamos la experiencia Vita Lima a tu espacio, previa coordinación.", image: "/images/signature/facial.webp", cta: "Consultar disponibilidad", href: "/servicios#home" },
 ];
 
 const faqs = [
@@ -182,7 +182,7 @@ export default function HomePage() {
               <article className="experienceTile" key={item.title}>
                 <Image src={item.image} alt={item.title} fill sizes="(max-width: 800px) 88vw, 25vw" />
                 <div className="tileShade" />
-                <div className="tileContent"><span>{item.kicker}</span><h3>{item.title}</h3><p>{item.text}</p><a href="#reserva">{item.cta} →</a></div>
+                <div className="tileContent"><span>{item.kicker}</span><h3>{item.title}</h3><p>{item.text}</p><a href={item.href}>{item.cta} →</a></div>
               </article>
             ))}
           </div>
