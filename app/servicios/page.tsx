@@ -3,7 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 import AddToCartButton from "@/components/AddToCartButton";
+import JsonLd from "@/components/JsonLd";
 import { servicesByCategory, type Service, type ServiceCategory } from "@/content/services";
+import { buildServicesJsonLd } from "@/content/structured-data";
 
 export const metadata: Metadata = {
   title: "Experiencias Vita Lima | Catálogo de masajes y bienestar",
@@ -118,6 +120,7 @@ function serviceImage(category: ServiceCategory, index: number) {
 export default function ServicesPage() {
   return (
     <main className="servicesCatalogPage">
+      <JsonLd data={buildServicesJsonLd()} />
       <header className="catalogHeader">
         <div className="catalogNav shell">
           <Link href="/" aria-label="Vita Lima Spa - Inicio">

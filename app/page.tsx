@@ -4,7 +4,9 @@ import Header from "@/components/Header";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ReserveForm from "@/components/ReserveForm";
 import SiteFooter from "@/components/SiteFooter";
+import JsonLd from "@/components/JsonLd";
 import { featuredServices } from "@/content/services";
+import { buildOrganizationJsonLd, buildFaqJsonLd } from "@/content/structured-data";
 
 const featuredServiceImages: Record<string, string> = {
   "relax-vital": "/images/signature/facial.webp",
@@ -43,6 +45,8 @@ const faqs = [
 export default function HomePage() {
   return (
     <main>
+      <JsonLd data={buildOrganizationJsonLd()} />
+      <JsonLd data={buildFaqJsonLd(faqs)} />
       <section id="inicio" className="heroSection">
         <Header />
         <Image className="heroImage" src="/images/hero-vita-lima-premium.png" alt="Ambiente de Vita Lima Spa" fill priority sizes="100vw" />
