@@ -5,20 +5,21 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import ReserveForm from "@/components/ReserveForm";
 import SiteFooter from "@/components/SiteFooter";
 import JsonLd from "@/components/JsonLd";
+import FeaturedCarousel from "@/components/FeaturedCarousel";
+import ReviewsCarousel from "@/components/ReviewsCarousel";
 import { featuredServices } from "@/content/services";
 import { buildOrganizationJsonLd, buildFaqJsonLd } from "@/content/structured-data";
 
-const featuredServiceImages: Record<string, string> = {
-  "relax-vital": "/images/signature/facial.webp",
-  "alivio-integral": "/images/signature/cupping.webp",
-  "balance-plus": "/images/signature/facial-room.webp",
-  relax: "/images/signature/room-wide.webp",
-  deluxe: "/images/signature/ambience.webp",
-  supreme: "/images/signature/room-stone.webp",
+// Cada servicio muestra 2-3 fotos que rotan automáticamente en su tarjeta.
+const featuredServiceImages: Record<string, string[]> = {
+  "relax-vital": ["/images/signature/facial.webp", "/images/real/room_single.webp", "/images/servicios/servicio-01.webp"],
+  "alivio-integral": ["/images/signature/cupping.webp", "/images/v4/cupping.webp", "/images/v4/electro.webp"],
+  "balance-plus": ["/images/signature/facial-room.webp", "/images/v4/facial-room.webp", "/images/real/facial_real.webp"],
+  relax: ["/images/signature/room-wide.webp", "/images/v4/room-pair.webp", "/images/real/room_pair.webp"],
+  deluxe: ["/images/signature/ambience.webp", "/images/v4/ambience.webp", "/images/signature/couple-room.webp"],
+  supreme: ["/images/signature/room-stone.webp", "/images/v4/room-dark.webp", "/images/generated/hot_stones.webp"],
+  "lifting-tinturado-planchado-cejas": ["/images/v4/facial.webp", "/images/real/facial_real.webp", "/images/signature/facial.webp"],
 };
-
-const serviceWhatsAppHref = (serviceName: string) =>
-  `https://wa.me/51907308415?text=${encodeURIComponent(`Hola Vita Lima, quisiera reservar el servicio ${serviceName}.`)}`;
 
 const reviews = [
   { quote: "Me encantó el ambiente, el aroma y el profesionalismo. Fue una experiencia realmente relajante.", author: "María Claudia N.", source: "Google", rating: "5.0" },
@@ -98,32 +99,7 @@ export default function HomePage() {
             <p>Las experiencias más reservadas por quienes buscan relajarse, aliviar tensiones y compartir un momento especial.</p>
           </div>
 
-          <div className="featuredCarouselWrap">
-            <div className="featuredCarousel" aria-label="Servicios favoritos">
-              {featuredServices.map((service) => (
-                <article className="featuredServiceCard" id={`featured-${service.slug}`} key={service.code}>
-                  <div className="featuredServiceImage">
-                    <Image src={featuredServiceImages[service.slug]} alt={service.name} fill sizes="(max-width: 760px) 88vw, (max-width: 1100px) 46vw, 30vw" />
-                    <span>{service.badge}</span>
-                  </div>
-                  <div className="featuredServiceBody">
-                    <h3>{service.name}</h3>
-                    <div className="featuredServiceMeta">
-                      <span>{service.duration} min</span>
-                      <strong>S/ {service.price}</strong>
-                    </div>
-                    <a href={serviceWhatsAppHref(service.name)} target="_blank" rel="noreferrer" aria-label={`Reservar ${service.name} por WhatsApp`}>
-                      Reservar <span>→</span>
-                    </a>
-                  </div>
-                </article>
-              ))}
-            </div>
-            <div className="featuredCarouselArrows" aria-label="Controles del carrusel">
-              <a href="#featured-relax-vital" aria-label="Volver al inicio del carrusel">←</a>
-              <a href="#featured-relax" aria-label="Avanzar en el carrusel">→</a>
-            </div>
-          </div>
+          <FeaturedCarousel services={featuredServices} images={featuredServiceImages} />
 
           <div className="servicesAllAction">
             <Link className="button servicesAllButton" href="/servicios">Ver todos los servicios <span>→</span></Link>
@@ -153,15 +129,7 @@ export default function HomePage() {
               <div><strong>N.º 5</strong><span>En Lima</span><small>Spas y bienestar</small></div>
             </div>
           </div>
-          <div className="reviewGrid">
-            {reviews.map((review) => (
-              <article className="reviewCard" key={review.author}>
-                <div className="reviewTop"><span className="stars">★★★★★</span><strong>{review.rating}</strong></div>
-                <blockquote>“{review.quote}”</blockquote>
-                <div className="reviewSource"><span className="avatar">{review.author.charAt(0)}</span><div><strong>{review.author}</strong><small>{review.source}</small></div></div>
-              </article>
-            ))}
-          </div>
+          <ReviewsCarousel reviews={reviews} />
           <div className="reviewActions">
             <a href="https://www.google.com/search?q=Vita+Lima+Spa+reseñas" target="_blank" rel="noreferrer">Ver reseñas en Google →</a>
             <a href="https://www.tripadvisor.com/Search?q=Vita%20Lima%20Spa" target="_blank" rel="noreferrer">Ver reseñas en Tripadvisor →</a>

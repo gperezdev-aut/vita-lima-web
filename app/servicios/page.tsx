@@ -6,6 +6,7 @@ import AddToCartButton from "@/components/AddToCartButton";
 import JsonLd from "@/components/JsonLd";
 import { servicesByCategory, type Service, type ServiceCategory } from "@/content/services";
 import { buildServicesJsonLd } from "@/content/structured-data";
+import { BLUR_DATA_URL } from "@/lib/blurPlaceholder";
 
 export const metadata: Metadata = {
   title: "Experiencias Vita Lima | Catálogo de masajes y bienestar",
@@ -175,7 +176,7 @@ export default function ServicesPage() {
                   {categoryServices.map((service, index) => (
                     <article className="catalogCard" id={service.slug} key={service.code}>
                       <div className="catalogCardImage">
-                        <Image src={serviceImage(section.category, index)} alt={service.name} fill sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw" />
+                        <Image src={serviceImage(section.category, index)} alt={service.name} fill sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw" placeholder="blur" blurDataURL={BLUR_DATA_URL} />
                         {service.badge && <span>{service.badge}</span>}
                       </div>
                       <div className="catalogCardBody">
