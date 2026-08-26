@@ -5,15 +5,26 @@ import { trackWhatsappClick } from "./WhatsAppTracking";
 
 const WHATSAPP_NUMBER = "51907308415";
 
+function formatDate(isoDate: string) {
+  const [year, month, day] = isoDate.split("-");
+  if (!year || !month || !day) return isoDate;
+  return `${day}/${month}/${year}`;
+}
+
 export default function CartWidget() {
-  const { items, removeItem, clear, isOpen, open, close, total } = useCart();
+  const { items, removeItem, clear, isOpen, open, close, total, preferredDate, preferredTime, setPreferredDate, setPreferredTime } = useCart();
 
   function sendToWhatsapp() {
     const lines = items.map((item) => `- ${item.name}${item.meta ? ` (${item.meta})` : ""}: S/${item.price}`);
+    const scheduleLines = [];
+    if (preferredDate) scheduleLines.push(`Fecha preferida: ${formatDate(preferredDate)}`);
+    if (preferredTime) scheduleLines.push(`Horario preferido: ${preferredTime}`);
+
     const message = [
       "Hola Vita Lima, quisiera reservar/consultar lo siguiente:",
       ...lines,
       "",
+      ...(scheduleLines.length > 0 ? [...scheduleLines, ""] : []),
       `Total estimado: S/${total}`,
       "",
       "¿Me ayudan a coordinar disponibilidad?",
@@ -60,6 +71,16 @@ export default function CartWidget() {
 
         {items.length > 0 && (
           <div className="cartPanelFooter">
+            <div className="cartScheduleFields">
+              <label>
+                Fecha preferida
+                <input type="date" value={preferredDate} onChange={(event) => setPreferredDate(event.target.value)} />
+              </label>
+              <label>
+                Horario preferido
+                <input type="time" value={preferredTime} onChange={(event) => setPreferredTime(event.target.value)} />
+              </label>
+            </div>
             <div className="cartTotalRow"><span>Total estimado</span><strong>S/{total}</strong></div>
             <button type="button" className="button orangeButton cartCheckoutButton" onClick={sendToWhatsapp}>
               Reservar por WhatsApp <span>→</span>
