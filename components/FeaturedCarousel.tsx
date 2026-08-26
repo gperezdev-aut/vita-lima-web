@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { Service } from "@/content/services";
+import RotatingCardImage from "./RotatingCardImage";
 
 type FeaturedCarouselProps = {
   services: Service[];
-  images: Record<string, string>;
+  images: Record<string, string[]>;
 };
 
 const whatsappNumber = "51907308415";
@@ -51,10 +51,15 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
   return (
     <div className="featuredCarouselWrap">
       <div className="featuredCarousel" aria-label="Servicios favoritos" ref={trackRef}>
-        {services.map((service) => (
+        {services.map((service, index) => (
           <article className="featuredServiceCard" id={`featured-${service.slug}`} key={service.code}>
             <div className="featuredServiceImage">
-              <Image src={images[service.slug]} alt={service.name} fill sizes="(max-width: 760px) 88vw, (max-width: 1100px) 46vw, 30vw" />
+              <RotatingCardImage
+                images={images[service.slug]}
+                alt={service.name}
+                sizes="(max-width: 760px) 88vw, (max-width: 1100px) 46vw, 30vw"
+                staggerMs={index * 700}
+              />
               <span>{service.badge}</span>
             </div>
             <div className="featuredServiceBody">
