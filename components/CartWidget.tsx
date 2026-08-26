@@ -78,7 +78,7 @@ export default function CartWidget() {
               </label>
               <label>
                 Horario preferido
-                <input type="time" value={preferredTime} onChange={(event) => setPreferredTime(event.target.value)} />
+                <input type="time" step={900} value={preferredTime} onChange={(event) => setPreferredTime(event.target.value)} />
               </label>
             </div>
             <div className="cartTotalRow"><span>Total estimado</span><strong>S/{total}</strong></div>
