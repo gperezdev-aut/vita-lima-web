@@ -11,6 +11,12 @@ export type CartItem = {
 
 export type CartLine = CartItem & { cartId: string };
 
+type StoredCart = {
+  items: CartLine[];
+  preferredDate: string;
+  preferredTime: string;
+};
+
 type CartContextValue = {
   items: CartLine[];
   addItem: (item: CartItem) => void;
@@ -20,6 +26,10 @@ type CartContextValue = {
   open: () => void;
   close: () => void;
   total: number;
+  preferredDate: string;
+  preferredTime: string;
+  setPreferredDate: (value: string) => void;
+  setPreferredTime: (value: string) => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -30,8 +40,23 @@ function makeCartId(id: string) {
   return `${id}__${random}`;
 }
 
+function parseStoredCart(raw: string): StoredCart {
+  const parsed = JSON.parse(raw);
+  // Compatibilidad con el formato anterior, donde solo se guardaba el array de items.
+  if (Array.isArray(parsed)) {
+    return { items: parsed, preferredDate: "", preferredTime: "" };
+  }
+  return {
+    items: Array.isArray(parsed.items) ? parsed.items : [],
+    preferredDate: typeof parsed.preferredDate === "string" ? parsed.preferredDate : "",
+    preferredTime: typeof parsed.preferredTime === "string" ? parsed.preferredTime : "",
+  };
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartLine[]>([]);
+  const [preferredDate, setPreferredDate] = useState("");
+  const [preferredTime, setPreferredTime] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
@@ -40,8 +65,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
     // el hidratado SSR (el servidor siempre renderiza el carrito vacío).
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (raw) setItems(JSON.parse(raw));
+      if (raw) {
+        const stored = parseStoredCart(raw);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setItems(stored.items);
+        setPreferredDate(stored.preferredDate);
+        setPreferredTime(stored.preferredTime);
+      }
     } catch {
       // localStorage no disponible o corrupto: seguimos con carrito vacío.
     }
@@ -51,11 +81,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      const stored: StoredCart = { items, preferredDate, preferredTime };
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
     } catch {
       // Sin acceso a almacenamiento local: no persistimos, pero no rompemos la UI.
     }
-  }, [items, hydrated]);
+  }, [items, preferredDate, preferredTime, hydrated]);
 
   function addItem(item: CartItem) {
     setItems((prev) => [...prev, { ...item, cartId: makeCartId(item.id) }]);
@@ -67,6 +98,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   function clear() {
     setItems([]);
+    setPreferredDate("");
+    setPreferredTime("");
   }
 
   const total = useMemo(() => items.reduce((sum, line) => sum + line.price, 0), [items]);
@@ -80,6 +113,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     open: () => setIsOpen(true),
     close: () => setIsOpen(false),
     total,
+    preferredDate,
+    preferredTime,
+    setPreferredDate,
+    setPreferredTime,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

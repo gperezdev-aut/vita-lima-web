@@ -149,3 +149,15 @@ button.catalogReserveButton{font:inherit;-webkit-appearance:none;appearance:none
 .cartClearLink:hover{color:var(--orange)}
 
 @media(max-width:760px){.cartTrigger{right:12px;bottom:78px;padding:11px 13px}.cartTrigger .cartLabel{display:none}.cartPanel{width:100%}}
+
+/* Mapas de sedes */
+.locationsMaps{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.locationMapCard{position:relative;height:280px;border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow)}
+.locationMapCard iframe{width:100%;height:100%;border:0;display:block}
+@media(max-width:760px){.locationsMaps{grid-template-columns:1fr}.locationMapCard{height:220px}}
+
+/* Fecha y horario preferidos en el carrito */
+.cartScheduleFields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+.cartScheduleFields label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.cartScheduleFields input{width:100%;margin-top:6px;border:1px solid var(--line);background:white;border-radius:10px;padding:11px;font:inherit;color:var(--ink)}
+.cartScheduleFields input:focus{outline:2px solid rgba(244,123,32,.25);border-color:var(--orange)}

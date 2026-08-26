@@ -217,6 +217,24 @@ export default function HomePage() {
           <article className="locationCard"><Image src="/images/signature/reception.webp" alt="Sede San Borja" fill /><div className="locationShade" /><div className="locationContent"><span>01 · Sede principal</span><h3>San Borja</h3><p>Av. Aviación 3358, oficina 204</p><small>Lunes a sábado · 3:00 p. m. a 8:00 p. m.</small><a href="https://www.google.com/maps/search/?api=1&query=Av.+Aviacion+3358+San+Borja" target="_blank" rel="noreferrer">Cómo llegar →</a></div></article>
           <article className="locationCard"><Image src="/images/signature/buddha.webp" alt="Sede Miraflores" fill /><div className="locationShade" /><div className="locationContent"><span>02 · Previa reserva</span><h3>Miraflores</h3><p>Av. Larco 812, oficina 306</p><small>Atención coordinada previamente</small><a href="https://www.google.com/maps/search/?api=1&query=Av.+Larco+812+Miraflores" target="_blank" rel="noreferrer">Cómo llegar →</a></div></article>
         </div>
+        <div className="shell locationsMaps">
+          <div className="locationMapCard">
+            <iframe
+              src="https://www.google.com/maps?q=Av.+Aviacion+3358+San+Borja+Lima&output=embed"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Mapa de la sede San Borja"
+            />
+          </div>
+          <div className="locationMapCard">
+            <iframe
+              src="https://www.google.com/maps?q=Av.+Larco+812+Miraflores+Lima&output=embed"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Mapa de la sede Miraflores"
+            />
+          </div>
+        </div>
       </section>
 
       <section id="reserva" className="section reservationSection">
