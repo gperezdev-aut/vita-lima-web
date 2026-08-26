@@ -79,7 +79,7 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
           </article>
         ))}
       </div>
-      <div className="featuredCarouselArrows" aria-label="Controles del carrusel">
+      <div className="featuredCarouselControls" aria-label="Controles del carrusel">
         <button
           type="button"
           onClick={() => setImagesPaused((current) => !current)}
@@ -88,8 +88,10 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
         >
           {imagesPaused ? "▶" : "❚❚"}
         </button>
-        <button type="button" onClick={() => scrollByCard(-1)} disabled={!canScrollPrev} aria-label="Ver servicios anteriores">←</button>
-        <button type="button" onClick={() => scrollByCard(1)} disabled={!canScrollNext} aria-label="Ver más servicios">→</button>
+        <div className="featuredCarouselArrows">
+          <button type="button" onClick={() => scrollByCard(-1)} disabled={!canScrollPrev} aria-label="Ver servicios anteriores">←</button>
+          <button type="button" onClick={() => scrollByCard(1)} disabled={!canScrollNext} aria-label="Ver más servicios">→</button>
+        </div>
       </div>
     </div>
   );

@@ -182,3 +182,15 @@ button.catalogReserveButton{font:inherit;-webkit-appearance:none;appearance:none
 .whatsappToast{position:fixed;left:50%;top:110px;transform:translate(-50%,-14px);background:var(--green-deep);color:white;padding:12px 20px;border-radius:999px;font-size:12px;font-weight:700;box-shadow:0 12px 30px rgba(0,0,0,.22);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:70;max-width:88vw;text-align:center}
 .whatsappToastVisible{opacity:1;transform:translate(-50%,0)}
 @media(max-width:760px){.whatsappToast{top:86px;font-size:11px;padding:11px 16px}}
+
+/* El botón de pausa de la rotación de fotos debe seguir visible aunque las
+   flechas de navegación se oculten en tablet/celular a favor del swipe táctil
+   (WCAG 2.2.2: el control de pausa no puede desaparecer mientras el contenido
+   sigue moviéndose solo). Se separa en su propio contenedor. */
+.featuredCarouselArrows{position:static;top:auto;right:auto}
+.featuredCarouselControls{position:absolute;right:0;top:-54px;display:flex;align-items:center;gap:8px}
+.featuredCarouselControls button{width:35px;height:35px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;background:var(--paper);color:var(--ink);font-size:14px;font-family:inherit;cursor:pointer;transition:.25s}
+.featuredCarouselControls button:hover:not(:disabled){background:var(--green);border-color:var(--green);color:white}
+.featuredCarouselControls button:disabled{opacity:.35;cursor:default}
+@media(max-width:1100px){.featuredCarouselControls{position:static;justify-content:flex-end;margin:0 0 14px}}
+@media(max-width:760px){.featuredCarouselControls{margin:0 0 10px}}
