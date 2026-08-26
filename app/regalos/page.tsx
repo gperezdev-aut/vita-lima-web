@@ -3,7 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 import AddToCartButton from "@/components/AddToCartButton";
+import JsonLd from "@/components/JsonLd";
 import { giftBoxes, giftBoxesNote } from "@/content/giftboxes";
+import { buildGiftBoxesJsonLd } from "@/content/structured-data";
 
 export const metadata: Metadata = {
   title: "Gift Cards y cajas de regalo | Vita Lima Spa",
@@ -33,6 +35,7 @@ function whatsappHref(name?: string) {
 export default function GiftCardsPage() {
   return (
     <main className="servicesCatalogPage">
+      <JsonLd data={buildGiftBoxesJsonLd()} />
       <header className="catalogHeader">
         <div className="catalogNav shell">
           <Link href="/" aria-label="Vita Lima Spa - Inicio">
