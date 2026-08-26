@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent } from "react";
+import { trackWhatsappClick } from "./WhatsAppTracking";
 
 export default function ReserveForm() {
   function submit(event: FormEvent<HTMLFormElement>) {
@@ -16,7 +17,9 @@ export default function ReserveForm() {
       `Horario: ${data.get("horario") || ""}`,
       `Qué necesito: ${data.get("detalle") || ""}`,
     ].join("\n");
-    window.open(`https://wa.me/51907308415?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+    const href = `https://wa.me/51907308415?text=${encodeURIComponent(message)}`;
+    trackWhatsappClick(href);
+    window.open(href, "_blank", "noopener,noreferrer");
   }
 
   return (
