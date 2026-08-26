@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
+import AddToCartButton from "@/components/AddToCartButton";
 import { servicesByCategory, type Service, type ServiceCategory } from "@/content/services";
 
 export const metadata: Metadata = {
@@ -180,9 +181,11 @@ export default function ServicesPage() {
                           <strong>S/ {service.price}</strong>
                         </div>
                         <p className="catalogIncludes" title={service.includes}>{serviceSummary(service.includes)}</p>
-                        <a className="catalogReserveButton" href={whatsappHref(service)} target="_blank" rel="noreferrer" aria-label={`Reservar ${service.name} por WhatsApp`}>
-                          Reservar <span>→</span>
-                        </a>
+                        <AddToCartButton
+                          className="catalogReserveButton"
+                          label="Agregar"
+                          item={{ id: service.slug, name: service.name, price: service.price, meta: `${service.duration} min` }}
+                        />
                       </div>
                     </article>
                   ))}

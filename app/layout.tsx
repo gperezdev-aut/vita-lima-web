@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import GoogleTag from "@/components/GoogleTag";
 import WhatsAppTracking from "@/components/WhatsAppTracking";
+import { CartProvider } from "@/components/CartContext";
+import CartWidget from "@/components/CartWidget";
 
 export const metadata: Metadata = {
   title: "Vita Lima Spa | Masajes y bienestar en Lima",
@@ -20,7 +22,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <GoogleTag />
         <WhatsAppTracking />
-        {children}
+        <CartProvider>
+          {children}
+          <CartWidget />
+        </CartProvider>
       </body>
     </html>
   );
