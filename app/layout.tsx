@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import GoogleTag from "@/components/GoogleTag";
+import WhatsAppTracking from "@/components/WhatsAppTracking";
 
 export const metadata: Metadata = {
   title: "Vita Lima Spa | Masajes y bienestar en Lima",
@@ -13,5 +15,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="es"><body>{children}</body></html>;
+  return (
+    <html lang="es">
+      <body>
+        <GoogleTag />
+        <WhatsAppTracking />
+        {children}
+      </body>
+    </html>
+  );
 }
