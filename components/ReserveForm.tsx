@@ -30,7 +30,7 @@ export default function ReserveForm() {
       <label>Sede<select name="sede" defaultValue=""><option value="" disabled>Selecciona una sede</option><option>San Borja</option><option>Miraflores</option></select></label>
       <label>Experiencia<select name="servicio" defaultValue=""><option value="" disabled>Selecciona una experiencia</option><option>Necesito orientación</option><option>Relax Vital</option><option>Espalda Libre</option><option>Alivio Integral</option><option>Terapia Vita</option><option>Balance Plus</option><option>Experiencia para dos</option><option>Gift Card</option></select></label>
       <label>Fecha preferida<input name="fecha" type="date" /></label>
-      <label>Horario preferido<input name="horario" type="time" /></label>
+      <label>Horario preferido<input name="horario" type="time" step={900} /></label>
       <label className="fullField">¿Qué te gustaría aliviar o vivir?<textarea name="detalle" rows={3} placeholder="Ej. tensión en espalda, una experiencia para dos, un regalo especial..." /></label>
       <p className="formNote">El envío no confirma automáticamente la reserva. Te contactaremos por WhatsApp para validar disponibilidad.</p>
       <button type="submit">Hablar con concierge →</button>
