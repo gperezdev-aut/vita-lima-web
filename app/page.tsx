@@ -6,6 +6,7 @@ import ReserveForm from "@/components/ReserveForm";
 import SiteFooter from "@/components/SiteFooter";
 import JsonLd from "@/components/JsonLd";
 import FeaturedCarousel from "@/components/FeaturedCarousel";
+import ReviewsCarousel from "@/components/ReviewsCarousel";
 import { featuredServices } from "@/content/services";
 import { buildOrganizationJsonLd, buildFaqJsonLd } from "@/content/structured-data";
 
@@ -128,15 +129,7 @@ export default function HomePage() {
               <div><strong>N.º 5</strong><span>En Lima</span><small>Spas y bienestar</small></div>
             </div>
           </div>
-          <div className="reviewGrid">
-            {reviews.map((review) => (
-              <article className="reviewCard" key={review.author}>
-                <div className="reviewTop"><span className="stars">★★★★★</span><strong>{review.rating}</strong></div>
-                <blockquote>“{review.quote}”</blockquote>
-                <div className="reviewSource"><span className="avatar">{review.author.charAt(0)}</span><div><strong>{review.author}</strong><small>{review.source}</small></div></div>
-              </article>
-            ))}
-          </div>
+          <ReviewsCarousel reviews={reviews} />
           <div className="reviewActions">
             <a href="https://www.google.com/search?q=Vita+Lima+Spa+reseñas" target="_blank" rel="noreferrer">Ver reseñas en Google →</a>
             <a href="https://www.tripadvisor.com/Search?q=Vita%20Lima%20Spa" target="_blank" rel="noreferrer">Ver reseñas en Tripadvisor →</a>
