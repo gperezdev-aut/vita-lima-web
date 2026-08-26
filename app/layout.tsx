@@ -1,4 +1,10 @@
 import type { Metadata } from "next";
+// Serif de marca para títulos, precios y citas (reemplaza a Georgia, que
+// queda como fallback). Se sirve desde el propio paquete @fontsource
+// (self-hosted) en vez de next/font/google: así el build no depende de
+// alcanzar fonts.googleapis.com en redes con salida restringida.
+import "@fontsource/fraunces/500.css";
+import "@fontsource/fraunces/600.css";
 import "./globals.css";
 import GoogleTag from "@/components/GoogleTag";
 import WhatsAppTracking from "@/components/WhatsAppTracking";

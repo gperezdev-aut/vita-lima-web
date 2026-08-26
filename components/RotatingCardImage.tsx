@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { BLUR_DATA_URL } from "@/lib/blurPlaceholder";
 
 type RotatingCardImageProps = {
   images: string[];
@@ -48,6 +49,8 @@ export default function RotatingCardImage({ images, alt, sizes, intervalMs = 450
           aria-hidden={index === 0 ? undefined : true}
           fill
           sizes={sizes}
+          placeholder="blur"
+          blurDataURL={BLUR_DATA_URL}
           style={{ opacity: index === activeIndex ? 1 : 0, transition: "opacity 1.1s ease" }}
         />
       ))}

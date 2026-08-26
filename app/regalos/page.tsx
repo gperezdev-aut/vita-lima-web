@@ -6,6 +6,7 @@ import AddToCartButton from "@/components/AddToCartButton";
 import JsonLd from "@/components/JsonLd";
 import { giftBoxes, giftBoxesNote } from "@/content/giftboxes";
 import { buildGiftBoxesJsonLd } from "@/content/structured-data";
+import { BLUR_DATA_URL } from "@/lib/blurPlaceholder";
 
 export const metadata: Metadata = {
   title: "Gift Cards y cajas de regalo | Vita Lima Spa",
@@ -68,7 +69,7 @@ export default function GiftCardsPage() {
               {giftBoxes.map((box, index) => (
                 <article className="catalogCard" id={box.slug} key={box.slug}>
                   <div className="catalogCardImage">
-                    <Image src={giftImages[index % giftImages.length]} alt={box.name} fill sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw" />
+                    <Image src={giftImages[index % giftImages.length]} alt={box.name} fill sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw" placeholder="blur" blurDataURL={BLUR_DATA_URL} />
                   </div>
                   <div className="catalogCardBody">
                     <h3>{box.name}</h3>
