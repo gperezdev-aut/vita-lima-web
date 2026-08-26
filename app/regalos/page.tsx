@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
+import AddToCartButton from "@/components/AddToCartButton";
 import { giftBoxes, giftBoxesNote } from "@/content/giftboxes";
 
 export const metadata: Metadata = {
@@ -73,9 +74,11 @@ export default function GiftCardsPage() {
                       <strong>S/ {box.price}</strong>
                     </div>
                     <p className="catalogIncludes" title={box.includes}>{box.includes}</p>
-                    <a className="catalogReserveButton" href={whatsappHref(box.name)} target="_blank" rel="noreferrer" aria-label={`Pedir ${box.name} por WhatsApp`}>
-                      Pedir <span>→</span>
-                    </a>
+                    <AddToCartButton
+                      className="catalogReserveButton"
+                      label="Agregar"
+                      item={{ id: box.slug, name: box.name, price: box.price, meta: "Incluye masaje" }}
+                    />
                   </div>
                 </article>
               ))}
