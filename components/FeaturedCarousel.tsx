@@ -19,6 +19,9 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(true);
+  // Pausa compartida para la rotación de fotos de todas las tarjetas
+  // (WCAG 2.2.2): un solo botón controla las N instancias de RotatingCardImage.
+  const [imagesPaused, setImagesPaused] = useState(false);
 
   function updateArrowState() {
     const track = trackRef.current;
@@ -59,6 +62,7 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
                 alt={service.name}
                 sizes="(max-width: 760px) 88vw, (max-width: 1100px) 46vw, 30vw"
                 staggerMs={index * 700}
+                paused={imagesPaused}
               />
               <span>{service.badge}</span>
             </div>
@@ -76,6 +80,14 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
         ))}
       </div>
       <div className="featuredCarouselArrows" aria-label="Controles del carrusel">
+        <button
+          type="button"
+          onClick={() => setImagesPaused((current) => !current)}
+          aria-pressed={imagesPaused}
+          aria-label={imagesPaused ? "Reanudar la rotación de fotos" : "Pausar la rotación de fotos"}
+        >
+          {imagesPaused ? "▶" : "❚❚"}
+        </button>
         <button type="button" onClick={() => scrollByCard(-1)} disabled={!canScrollPrev} aria-label="Ver servicios anteriores">←</button>
         <button type="button" onClick={() => scrollByCard(1)} disabled={!canScrollNext} aria-label="Ver más servicios">→</button>
       </div>

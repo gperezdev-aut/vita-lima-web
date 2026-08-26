@@ -12,14 +12,16 @@ type RotatingCardImageProps = {
   intervalMs?: number;
   /** Retraso inicial para que no todas las tarjetas roten a la vez. */
   staggerMs?: number;
+  /** Pausa manual (WCAG 2.2.2), controlada por un botón compartido en FeaturedCarousel. */
+  paused?: boolean;
 };
 
-export default function RotatingCardImage({ images, alt, sizes, intervalMs = 4500, staggerMs = 0 }: RotatingCardImageProps) {
+export default function RotatingCardImage({ images, alt, sizes, intervalMs = 4500, staggerMs = 0, paused = false }: RotatingCardImageProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const safeImages = images && images.length > 0 ? images : [];
 
   useEffect(() => {
-    if (safeImages.length < 2) return;
+    if (safeImages.length < 2 || paused) return;
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let intervalId: ReturnType<typeof setInterval> | undefined;
@@ -35,7 +37,7 @@ export default function RotatingCardImage({ images, alt, sizes, intervalMs = 450
       if (intervalId) clearInterval(intervalId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [safeImages.length]);
+  }, [safeImages.length, paused]);
 
   if (safeImages.length === 0) return null;
 
