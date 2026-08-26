@@ -176,6 +176,7 @@ export default function ServicesPage() {
                     <article className="catalogCard" id={service.slug} key={service.code}>
                       <div className="catalogCardImage">
                         <Image src={serviceImage(section.category, index)} alt={service.name} fill sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw" />
+                        {service.badge && <span>{service.badge}</span>}
                       </div>
                       <div className="catalogCardBody">
                         <h3>{service.name}</h3>
