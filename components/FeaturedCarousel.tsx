@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Service } from "@/content/services";
+import { serviceSummary } from "@/lib/serviceSummary";
 import RotatingCardImage from "./RotatingCardImage";
 
 type FeaturedCarouselProps = {
@@ -72,6 +73,11 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
                 <span>{service.duration} min</span>
                 <strong>S/ {service.price}</strong>
               </div>
+              <p className="featuredServiceSummary">{service.featuredSummary || serviceSummary(service.includes)}</p>
+              <details className="featuredServiceDetails">
+                <summary>Saber más</summary>
+                <p>{service.includes}</p>
+              </details>
               <a href={serviceWhatsAppHref(service.name)} target="_blank" rel="noreferrer" aria-label={`Reservar ${service.name} por WhatsApp`}>
                 Reservar <span>→</span>
               </a>

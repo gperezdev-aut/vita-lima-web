@@ -7,6 +7,7 @@ import JsonLd from "@/components/JsonLd";
 import { servicesByCategory, type Service, type ServiceCategory } from "@/content/services";
 import { buildServicesJsonLd } from "@/content/structured-data";
 import { BLUR_DATA_URL } from "@/lib/blurPlaceholder";
+import { serviceSummary } from "@/lib/serviceSummary";
 
 export const metadata: Metadata = {
   title: "Experiencias Vita Lima | Catálogo de masajes y bienestar",
@@ -101,16 +102,6 @@ function whatsappHref(service?: Service) {
     : "Hola Vita Lima, quisiera recibir orientación para reservar una experiencia.";
 
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-}
-
-function serviceSummary(includes: string) {
-  const separators = [" + ", ". "];
-  const end = separators
-    .map((separator) => includes.indexOf(separator))
-    .filter((index) => index > 0)
-    .sort((a, b) => a - b)[0];
-
-  return end ? includes.slice(0, end) : includes;
 }
 
 function serviceImage(category: ServiceCategory, index: number) {
