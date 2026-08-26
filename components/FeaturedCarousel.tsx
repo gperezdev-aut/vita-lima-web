@@ -50,7 +50,7 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
 
   return (
     <div className="featuredCarouselWrap">
-      <div className="featuredCarousel" aria-label="Servicios favoritos" ref={trackRef}>
+      <div className="featuredCarousel" role="group" aria-label="Servicios favoritos" ref={trackRef}>
         {services.map((service, index) => (
           <article className="featuredServiceCard" id={`featured-${service.slug}`} key={service.code}>
             <div className="featuredServiceImage">

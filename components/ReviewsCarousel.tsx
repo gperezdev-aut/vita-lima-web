@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Review = {
   quote: string;
@@ -19,6 +19,8 @@ const RESUME_DELAY_MS = 2600;
 export default function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const pausedRef = useRef(false);
+  const manuallyPausedRef = useRef(false);
+  const [manuallyPaused, setManuallyPaused] = useState(false);
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
@@ -40,7 +42,7 @@ export default function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
       const delta = timestamp - lastTime;
       lastTime = timestamp;
 
-      if (!pausedRef.current && document.visibilityState === "visible" && track) {
+      if (!pausedRef.current && !manuallyPausedRef.current && document.visibilityState === "visible" && track) {
         const halfWidth = track.scrollWidth / 2;
         offset += (PIXELS_PER_SECOND * delta) / 1000;
         if (halfWidth > 0 && offset >= halfWidth) {
@@ -67,6 +69,20 @@ export default function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
     }, RESUME_DELAY_MS);
   }
 
+  // Control de pausa accesible por teclado (WCAG 2.2.2): a diferencia de la
+  // pausa por hover/touch, esta es explícita y persiste hasta que el usuario
+  // vuelva a pulsar el botón. Al reanudar, ignoramos cualquier pausa por
+  // hover pendiente para que el clic tenga efecto inmediato.
+  function toggleManualPause() {
+    const next = !manuallyPausedRef.current;
+    manuallyPausedRef.current = next;
+    setManuallyPaused(next);
+    if (!next) {
+      pausedRef.current = false;
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    }
+  }
+
   // Duplicamos las reseñas para que el desplazamiento continuo se vea infinito:
   // al llegar a la mitad del ancho del track, restamos esa mitad y sigue igual.
   const loopedReviews = reviews.length > 1 ? [...reviews, ...reviews] : reviews;
@@ -79,7 +95,20 @@ export default function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
       onTouchStart={pause}
       onTouchEnd={scheduleResume}
     >
-      <div className="reviewGrid" ref={trackRef} aria-label="Opiniones de clientes">
+      {reviews.length > 1 && (
+        <div className="reviewsCarouselControls">
+          <button
+            type="button"
+            className="reviewsCarouselPause"
+            onClick={toggleManualPause}
+            aria-pressed={manuallyPaused}
+            aria-label={manuallyPaused ? "Reanudar el desplazamiento automático de reseñas" : "Pausar el desplazamiento automático de reseñas"}
+          >
+            {manuallyPaused ? "▶" : "❚❚"}
+          </button>
+        </div>
+      )}
+      <div className="reviewGrid" ref={trackRef} role="group" aria-label="Opiniones de clientes">
         {loopedReviews.map((review, index) => (
           <article
             className="reviewCard"
