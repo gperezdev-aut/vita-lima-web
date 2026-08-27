@@ -16,6 +16,14 @@ function serviceWhatsAppHref(serviceName: string) {
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hola Vita Lima, quisiera reservar el servicio ${serviceName}.`)}`;
 }
 
+// Resumen corto que se muestra siempre en la tarjeta. Cuando coincide
+// exactamente con el detalle completo (service.includes) no hay nada nuevo
+// que revelar, así que no se muestra el botón "Saber más" para ese caso
+// (evita repetir la misma línea dos veces).
+function summaryFor(service: Service) {
+  return service.featuredSummary || serviceSummary(service.includes);
+}
+
 export default function FeaturedCarousel({ services, images }: FeaturedCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -73,11 +81,13 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
                 <span>{service.duration} min</span>
                 <strong>S/ {service.price}</strong>
               </div>
-              <p className="featuredServiceSummary">{service.featuredSummary || serviceSummary(service.includes)}</p>
-              <details className="featuredServiceDetails">
-                <summary>Saber más</summary>
-                <p>{service.includes}</p>
-              </details>
+              <p className="featuredServiceSummary">{summaryFor(service)}</p>
+              {service.includes !== summaryFor(service) && (
+                <details className="featuredServiceDetails">
+                  <summary>Saber más</summary>
+                  <p>{service.includes}</p>
+                </details>
+              )}
               <a href={serviceWhatsAppHref(service.name)} target="_blank" rel="noreferrer" aria-label={`Reservar ${service.name} por WhatsApp`}>
                 Reservar <span>→</span>
               </a>
