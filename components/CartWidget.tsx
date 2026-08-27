@@ -2,6 +2,8 @@
 
 import { useCart } from "./CartContext";
 import { trackWhatsappClick } from "./WhatsAppTracking";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { translations } from "@/lib/i18n/translations";
 
 const WHATSAPP_NUMBER = "51907308415";
 
@@ -13,21 +15,23 @@ function formatDate(isoDate: string) {
 
 export default function CartWidget() {
   const { items, removeItem, clear, isOpen, open, close, total, preferredDate, preferredTime, setPreferredDate, setPreferredTime } = useCart();
+  const { language } = useLanguage();
+  const t = translations[language].cart;
 
   function sendToWhatsapp() {
     const lines = items.map((item) => `- ${item.name}${item.meta ? ` (${item.meta})` : ""}: S/${item.price}`);
     const scheduleLines = [];
-    if (preferredDate) scheduleLines.push(`Fecha preferida: ${formatDate(preferredDate)}`);
-    if (preferredTime) scheduleLines.push(`Horario preferido: ${preferredTime}`);
+    if (preferredDate) scheduleLines.push(`${t.whatsappDate}: ${formatDate(preferredDate)}`);
+    if (preferredTime) scheduleLines.push(`${t.whatsappTime}: ${preferredTime}`);
 
     const message = [
-      "Hola Vita Lima, quisiera reservar/consultar lo siguiente:",
+      t.whatsappIntro,
       ...lines,
       "",
       ...(scheduleLines.length > 0 ? [...scheduleLines, ""] : []),
-      `Total estimado: S/${total}`,
+      `${t.whatsappTotal}: S/${total}`,
       "",
-      "¿Me ayudan a coordinar disponibilidad?",
+      t.whatsappClosing,
     ].join("\n");
     const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     trackWhatsappClick(href);
@@ -36,9 +40,9 @@ export default function CartWidget() {
 
   return (
     <>
-      <button type="button" className="cartTrigger" onClick={open} aria-label="Ver mi selección">
+      <button type="button" className="cartTrigger" onClick={open} aria-label={t.trigger}>
         <span aria-hidden="true">🛍️</span>
-        <span className="cartLabel">Mi selección</span>
+        <span className="cartLabel">{t.triggerLabel}</span>
         {items.length > 0 && <span className="cartBadge">{items.length}</span>}
       </button>
 
@@ -46,13 +50,13 @@ export default function CartWidget() {
 
       <aside className={`cartPanel${isOpen ? " cartPanelOpen" : ""}`} aria-hidden={!isOpen}>
         <div className="cartPanelHeader">
-          <h3>Tu selección</h3>
-          <button type="button" className="cartCloseButton" onClick={close} aria-label="Cerrar">×</button>
+          <h3>{t.panelTitle}</h3>
+          <button type="button" className="cartCloseButton" onClick={close} aria-label={t.close}>×</button>
         </div>
 
         <div className="cartPanelBody">
           {items.length === 0 ? (
-            <p className="cartEmpty">Todavía no agregaste nada. Explora el catálogo de servicios o las cajas de regalo y agrega lo que te interese.</p>
+            <p className="cartEmpty">{t.empty}</p>
           ) : (
             items.map((item) => (
               <div className="cartLine" key={item.cartId}>
@@ -62,7 +66,7 @@ export default function CartWidget() {
                 </div>
                 <div className="cartLineActions">
                   <span className="cartLinePrice">S/{item.price}</span>
-                  <button type="button" className="cartLineRemove" onClick={() => removeItem(item.cartId)} aria-label={`Quitar ${item.name}`}>×</button>
+                  <button type="button" className="cartLineRemove" onClick={() => removeItem(item.cartId)} aria-label={t.remove(item.name)}>×</button>
                 </div>
               </div>
             ))
@@ -73,19 +77,19 @@ export default function CartWidget() {
           <div className="cartPanelFooter">
             <div className="cartScheduleFields">
               <label>
-                Fecha preferida
+                {t.dateLabel}
                 <input type="date" value={preferredDate} onChange={(event) => setPreferredDate(event.target.value)} />
               </label>
               <label>
-                Horario preferido
+                {t.timeLabel}
                 <input type="time" step={900} value={preferredTime} onChange={(event) => setPreferredTime(event.target.value)} />
               </label>
             </div>
-            <div className="cartTotalRow"><span>Total estimado</span><strong>S/{total}</strong></div>
+            <div className="cartTotalRow"><span>{t.totalLabel}</span><strong>S/{total}</strong></div>
             <button type="button" className="button orangeButton cartCheckoutButton" onClick={sendToWhatsapp}>
-              Reservar por WhatsApp <span>→</span>
+              {t.checkout} <span>→</span>
             </button>
-            <button type="button" className="cartClearLink" onClick={clear}>Vaciar selección</button>
+            <button type="button" className="cartClearLink" onClick={clear}>{t.clear}</button>
           </div>
         )}
       </aside>

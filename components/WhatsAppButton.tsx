@@ -1,3 +1,12 @@
+"use client";
+
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { translations } from "@/lib/i18n/translations";
+
 export default function WhatsAppButton() {
-  return <a className="floatingWhatsapp" href="https://wa.me/51907308415?text=Hola%20Vita%20Lima%2C%20quisiera%20reservar" target="_blank" rel="noreferrer" aria-label="Reservar por WhatsApp"><span>◉</span><strong>WhatsApp</strong></a>;
+  const { language } = useLanguage();
+  const t = translations[language].whatsappButton;
+  const href = `https://wa.me/51907308415?text=${encodeURIComponent(t.message)}`;
+
+  return <a className="floatingWhatsapp" href={href} target="_blank" rel="noreferrer" aria-label={t.aria}><span>◉</span><strong>{t.label}</strong></a>;
 }
