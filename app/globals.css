@@ -206,3 +206,11 @@ button.catalogReserveButton{font:inherit;-webkit-appearance:none;appearance:none
 .featuredServiceDetails[open] summary::after{content:"–"}
 .featuredServiceDetails summary:hover{color:var(--orange)}
 .featuredServiceDetails p{color:var(--ink);font-size:12px;line-height:1.6;margin-top:8px}
+
+/* Precio "antes" tachado junto al precio vigente, solo para servicios con
+   originalPrice definido (descuento confirmado). El texto ".srOnly" da
+   contexto a lectores de pantalla, ya que el tachado por sí solo no se
+   anuncia como "precio anterior". */
+.priceNow{display:inline-flex;align-items:baseline;gap:7px}
+.priceOld{color:var(--muted);font-size:13px;font-weight:600;text-decoration:line-through;text-decoration-color:var(--muted)}
+.srOnly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

@@ -174,7 +174,18 @@ export default function ServicesPage() {
                         <h3>{service.name}</h3>
                         <div className="catalogCardTop">
                           <span>{service.duration} min</span>
-                          <strong>S/ {service.price}</strong>
+                          <span className="priceNow">
+                            {service.originalPrice && (
+                              <s className="priceOld">
+                                <span className="srOnly">Antes </span>
+                                S/ {service.originalPrice}
+                              </s>
+                            )}
+                            <strong>
+                              {service.originalPrice && <span className="srOnly">Ahora </span>}
+                              S/ {service.price}
+                            </strong>
+                          </span>
                         </div>
                         <p className="catalogIncludes" title={service.includes}>{serviceSummary(service.includes)}</p>
                         <AddToCartButton

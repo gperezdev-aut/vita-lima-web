@@ -7,6 +7,10 @@ export type Service = {
   name: string;
   duration: number;
   price: number;
+  // Precio de lista antes del descuento vigente. Opcional: solo se define
+  // cuando se confirmó el precio "antes" real; si no está presente, la
+  // tarjeta muestra únicamente el precio final, sin comparación.
+  originalPrice?: number;
   includes: string;
   venue: string;
   mode: "IN_BRANCH" | "HOME";
@@ -24,6 +28,7 @@ export const services: Service[] = [
     name: "🌿 Relax Vital",
     duration: 60,
     price: 70,
+    originalPrice: 80,
     includes: "Masaje Relajante + Reflexología",
     venue: "Ambas",
     mode: "IN_BRANCH",
@@ -39,6 +44,7 @@ export const services: Service[] = [
     name: "🌤️ Espalda Libre",
     duration: 45,
     price: 58,
+    originalPrice: 68,
     includes: "Masaje Relajante o Descontracturante de Parte Superior",
     venue: "Ambas",
     mode: "IN_BRANCH",
@@ -53,6 +59,7 @@ export const services: Service[] = [
     name: "💆‍♂️ Alivio Integral",
     duration: 60,
     price: 80,
+    originalPrice: 88,
     includes: "Masaje Descontracturante + Reflexología",
     venue: "Ambas",
     mode: "IN_BRANCH",
@@ -68,6 +75,7 @@ export const services: Service[] = [
     name: "👐 Terapia Vita",
     duration: 60,
     price: 80,
+    originalPrice: 90,
     includes: "Masaje Terapéutico ideal para aliviar tensiones musculares",
     venue: "Ambas",
     mode: "IN_BRANCH",
@@ -82,6 +90,7 @@ export const services: Service[] = [
     name: "🌿 Balance Plus",
     duration: 70,
     price: 88,
+    originalPrice: 95,
     includes: "Masaje Relajante o Descontracturante + Piedras Calientes + Reflexología + Exfoliación de Espalda",
     venue: "Ambas",
     mode: "IN_BRANCH",
@@ -97,6 +106,7 @@ export const services: Service[] = [
     name: "✨ Glow Facial",
     duration: 75,
     price: 99,
+    originalPrice: 108,
     includes: "Masaje Relajante o Descontracturante + Limpieza Facial Express con Mascarilla de Colágeno",
     venue: "Ambas",
     mode: "IN_BRANCH",
@@ -111,6 +121,7 @@ export const services: Service[] = [
     name: "🌙 Deep Balance 120",
     duration: 120,
     price: 148,
+    originalPrice: 158,
     includes: "Masaje Relajante y Descontracturante + Piedras Calientes + Reflexología + Compresas Calientes",
     venue: "Ambas",
     mode: "IN_BRANCH",
@@ -125,7 +136,8 @@ export const services: Service[] = [
     name: "🕯️ Aroma Zen",
     duration: 60,
     price: 89,
-    includes: "Masaje Relajante o Descontracturante + Reflexología + Aromaterapia",
+    originalPrice: 99,
+    includes: "Masaje Relajante o Descontracturante + Reflexología + Aromaterapia. Incluye nuestra Vela Indalo de Soja para tu sesión y te la llevas de regalo",
     venue: "Ambas",
     mode: "IN_BRANCH",
     group: "PROMOS_1P",
@@ -139,6 +151,7 @@ export const services: Service[] = [
     name: "🥥 Coco Premium",
     duration: 80,
     price: 100,
+    originalPrice: 110,
     includes: "Masaje Relajante o Descontracturante + Piedras Calientes + Exfoliación de Coco + Reflexología + Aromaterapia + 1 Copa de Vino o Infusión",
     venue: "Ambas",
     mode: "IN_BRANCH",
