@@ -218,10 +218,18 @@ button.catalogReserveButton{font:inherit;-webkit-appearance:none;appearance:none
 /* Selector de idioma ES/EN en el header. Vive dentro de <nav>, así que
    aparece tanto en la barra horizontal de escritorio como en el menú
    desplegable de mobile, sin necesidad de duplicar el botón ni agregar
-   media queries propias. */
-.langToggle{font:inherit;font-size:11px;font-weight:800;letter-spacing:.04em;cursor:pointer;background:transparent;color:inherit;border:1px solid currentColor;opacity:.85;border-radius:999px;padding:5px 12px;transition:.2s}
-.langToggle:hover{opacity:1;background:var(--orange);border-color:var(--orange);color:white}
-@media(max-width:760px){.langToggle{margin-top:14px;opacity:1;border-color:var(--line);color:var(--ink)}.langToggle:hover{background:var(--orange);border-color:var(--orange);color:white}}
+   media queries propias.
+   Antes tenía solo un borde fino y fondo transparente: al lado de los
+   links de texto y del botón sólido "Reservar ahora" se perdía, costaba
+   notar que era un botón. Ahora lleva relleno translúcido siempre (no
+   solo en hover) para que se lea como botón desde el primer vistazo,
+   con una variante para el header ya con scroll (fondo claro, texto
+   oscuro) y otra para el header inicial sobre la imagen (fondo oscuro,
+   texto blanco). */
+.langToggle{font:inherit;font-size:12px;font-weight:800;letter-spacing:.04em;cursor:pointer;background:rgba(255,255,255,.18);color:inherit;border:1px solid rgba(255,255,255,.6);border-radius:999px;padding:7px 15px;transition:.2s}
+.langToggle:hover{background:var(--orange);border-color:var(--orange);color:white}
+.siteHeaderScrolled .langToggle{background:rgba(18,55,47,.08);border-color:rgba(18,55,47,.3)}
+@media(max-width:760px){.langToggle{margin-top:14px;background:rgba(18,55,47,.08);border-color:var(--line);color:var(--ink)}.langToggle:hover{background:var(--orange);border-color:var(--orange);color:white}}
 
 /* Mismo selector de idioma, reutilizado en el header del catálogo
    (/servicios), que no comparte el componente Header con el resto del
