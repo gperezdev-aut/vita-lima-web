@@ -6,7 +6,6 @@ import SiteFooter from "@/components/SiteFooter";
 import AddToCartButton from "@/components/AddToCartButton";
 import { servicesByCategory, type Service, type ServiceCategory } from "@/content/services";
 import { BLUR_DATA_URL } from "@/lib/blurPlaceholder";
-import { serviceSummary } from "@/lib/serviceSummary";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { translations } from "@/lib/i18n/translations";
 import { serviceText } from "@/lib/i18n/serviceText";
@@ -146,7 +145,11 @@ export default function ServicesCatalog() {
                               </strong>
                             </span>
                           </div>
-                          <p className="catalogIncludes" title={text.includes}>{serviceSummary(text.includes)}</p>
+                          {/* Se muestra el texto completo de "includes" (antes se recortaba con
+                              serviceSummary()) porque el dueño del negocio pidió explícitamente
+                              que la tarjeta del catálogo liste todo lo que incluye cada servicio,
+                              no un resumen parcial — ver ejemplo de Royale en el pedido original. */}
+                          <p className="catalogIncludes">{text.includes}</p>
                           <AddToCartButton
                             className="catalogReserveButton"
                             label={t.addToCart}
