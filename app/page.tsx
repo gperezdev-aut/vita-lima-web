@@ -57,7 +57,10 @@ export default function HomePage() {
         <div className="heroShade" />
         <div className="heroContent shell">
           <p className="eyebrow heroEyebrow">{t.hero.eyebrow}</p>
-          <h1>{t.hero.titleLine1}<br />{t.hero.titleLine2}</h1>
+          {/* En inglés el texto es más largo que en español y con el mismo tamaño
+              rompía en 3 líneas en vez de 2; heroTitleCompact reduce un poco el
+              tamaño solo para esa versión para que vuelva a verse en 2 líneas. */}
+          <h1 className={language === "en" ? "heroTitleCompact" : undefined}>{t.hero.titleLine1}<br />{t.hero.titleLine2}</h1>
           <p className="heroLead">{t.hero.lead}</p>
           <div className="heroButtons">
             <a className="button orangeButton" href="#reserva">{t.hero.ctaPrimary} <span>→</span></a>

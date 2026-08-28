@@ -10,6 +10,7 @@ import { buildServicesJsonLd } from "@/content/structured-data";
 export const metadata: Metadata = {
   title: "Experiencias Vita Lima | Catálogo de masajes y bienestar",
   description: "Conoce los masajes individuales, experiencias para dos, servicios a domicilio y programas de sesiones de Vita Lima Spa.",
+  alternates: { canonical: "/servicios" },
   openGraph: {
     title: "Experiencias Vita Lima",
     description: "Catálogo completo de masajes y experiencias de bienestar en Lima.",

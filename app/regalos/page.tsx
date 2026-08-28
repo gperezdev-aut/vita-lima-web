@@ -11,6 +11,7 @@ import { BLUR_DATA_URL } from "@/lib/blurPlaceholder";
 export const metadata: Metadata = {
   title: "Gift Cards y cajas de regalo | Vita Lima Spa",
   description: "Regala una experiencia Vita Lima: cajas de regalo con masaje incluido, en distintas presentaciones y precios.",
+  alternates: { canonical: "/regalos" },
   openGraph: {
     title: "Gift Cards Vita Lima",
     description: "Cajas de regalo con masaje incluido para sorprender a alguien especial.",

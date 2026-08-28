@@ -235,3 +235,11 @@ button.catalogReserveButton{font:inherit;-webkit-appearance:none;appearance:none
    (/servicios), que no comparte el componente Header con el resto del
    sitio y por eso necesita su propio contenedor con el link "Volver". */
 .catalogNavActions{display:flex;align-items:center;gap:16px}
+
+/* El título del hero en inglés ("It's time / to come back to you.") es
+   más largo que el original en español y con el mismo tamaño rompía en
+   3 líneas en vez de 2. Se reduce un poco el tamaño solo para esta
+   versión (heroTitleCompact, aplicada desde app/page.tsx cuando el
+   idioma activo es "en") para que vuelva a caber en 2 líneas. */
+.heroContent h1.heroTitleCompact{font-size:clamp(46px,5.2vw,80px)}
+@media(max-width:760px){.heroContent h1.heroTitleCompact{font-size:38px}}

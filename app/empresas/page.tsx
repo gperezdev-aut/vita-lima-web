@@ -7,6 +7,7 @@ import { corporate } from "@/content/corporate";
 export const metadata: Metadata = {
   title: "Bienestar corporativo | Vita Lima Spa",
   description: "Masajes para empresas en silla o camilla, coaching empresarial, ergonomía laboral y limpieza facial express para tu equipo.",
+  alternates: { canonical: "/empresas" },
   openGraph: {
     title: "Bienestar corporativo Vita Lima",
     description: "Pausas de masajes y bienestar para empresas y equipos en Lima.",
