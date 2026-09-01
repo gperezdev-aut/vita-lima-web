@@ -18,7 +18,12 @@ import { translations } from "@/lib/i18n/translations";
 const featuredServiceImages: Record<string, string[]> = {
   "relax-vital": ["/images/signature/facial.webp", "/images/real/room_single.webp", "/images/servicios/servicio-01.webp"],
   "alivio-integral": ["/images/signature/cupping.webp", "/images/v4/cupping.webp", "/images/v4/electro.webp"],
-  "balance-plus": ["/images/signature/facial-room.webp", "/images/v4/facial-room.webp", "/images/real/facial_real.webp"],
+  "balance-plus": [
+    "/images/balance-plus/balance-01-piedras-calientes.webp",
+    "/images/balance-plus/balance-02-reflexologia.webp",
+    "/images/balance-plus/balance-03-exfoliacion-espalda.webp",
+    "/images/balance-plus/balance-04-masaje.webp",
+  ],
   relax: ["/images/signature/room-wide.webp", "/images/v4/room-pair.webp", "/images/real/room_pair.webp"],
   deluxe: ["/images/signature/ambience.webp", "/images/v4/ambience.webp", "/images/signature/couple-room.webp"],
   supreme: ["/images/signature/room-stone.webp", "/images/v4/room-dark.webp", "/images/generated/hot_stones.webp"],
