@@ -19,7 +19,12 @@ const featuredServiceImages: Record<string, string[]> = {
   "relax-vital": ["/images/signature/facial.webp", "/images/real/room_single.webp", "/images/servicios/servicio-01.webp"],
   "alivio-integral": ["/images/signature/cupping.webp", "/images/v4/cupping.webp", "/images/v4/electro.webp"],
   "balance-plus": ["/images/signature/facial-room.webp", "/images/v4/facial-room.webp", "/images/real/facial_real.webp"],
-  relax: ["/images/signature/room-wide.webp", "/images/v4/room-pair.webp", "/images/real/room_pair.webp"],
+  relax: [
+    "/images/relax/relax-01-piedras-aromaterapia.webp",
+    "/images/relax/relax-02-reflexologia-podal.webp",
+    "/images/relax/relax-03-vino-o-infusion.webp",
+    "/images/relax/relax-04-masaje.webp",
+  ],
   deluxe: ["/images/signature/ambience.webp", "/images/v4/ambience.webp", "/images/signature/couple-room.webp"],
   supreme: ["/images/signature/room-stone.webp", "/images/v4/room-dark.webp", "/images/generated/hot_stones.webp"],
   "lifting-tinturado-planchado-cejas": ["/images/v4/facial.webp", "/images/real/facial_real.webp", "/images/signature/facial.webp"],
