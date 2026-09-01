@@ -17,7 +17,12 @@ import { translations } from "@/lib/i18n/translations";
 // Cada servicio muestra 2-3 fotos que rotan automáticamente en su tarjeta.
 const featuredServiceImages: Record<string, string[]> = {
   "relax-vital": ["/images/signature/facial.webp", "/images/real/room_single.webp", "/images/servicios/servicio-01.webp"],
-  "alivio-integral": ["/images/signature/cupping.webp", "/images/v4/cupping.webp", "/images/v4/electro.webp"],
+  "alivio-integral": [
+    "/images/alivio-integral/alivio-01-hombros.webp",
+    "/images/alivio-integral/alivio-02-cuello.webp",
+    "/images/alivio-integral/alivio-03-reflexologia.webp",
+    "/images/alivio-integral/alivio-04-lumbar.webp",
+  ],
   "balance-plus": ["/images/signature/facial-room.webp", "/images/v4/facial-room.webp", "/images/real/facial_real.webp"],
   relax: ["/images/signature/room-wide.webp", "/images/v4/room-pair.webp", "/images/real/room_pair.webp"],
   deluxe: ["/images/signature/ambience.webp", "/images/v4/ambience.webp", "/images/signature/couple-room.webp"],
