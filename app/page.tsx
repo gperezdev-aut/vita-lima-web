@@ -90,10 +90,11 @@ export default function HomePage() {
       <section id="inicio" className="heroSection">
         <Header />
         <div className="heroImageRotation">
-          <Image className="heroImage heroImageLayer heroImageLayer1" src="/images/main-hero/hero-01-masaje-relajante.webp" alt="Ambiente de Vita Lima Spa" fill priority sizes="100vw" />
-          <Image className="heroImage heroImageLayer heroImageLayer2" src="/images/main-hero/hero-02-piedras-calientes.webp" alt="" aria-hidden="true" fill sizes="100vw" />
-          <Image className="heroImage heroImageLayer heroImageLayer3" src="/images/main-hero/hero-03-reflexologia-podal.webp" alt="" aria-hidden="true" fill sizes="100vw" />
-          <Image className="heroImage heroImageLayer heroImageLayer4" src="/images/main-hero/hero-04-cuello-hombros.webp" alt="" aria-hidden="true" fill sizes="100vw" />
+          <Image className="heroImage heroImageLayer heroImageLayer1" src="/images/hero-vita-lima-premium.png" alt="Ambiente de Vita Lima Spa" fill priority sizes="100vw" />
+          <Image className="heroImage heroImageLayer heroImageLayer2" src="/images/main-hero/hero-01-masaje-relajante.webp" alt="" aria-hidden="true" fill sizes="100vw" />
+          <Image className="heroImage heroImageLayer heroImageLayer3" src="/images/main-hero/hero-02-piedras-calientes.webp" alt="" aria-hidden="true" fill sizes="100vw" />
+          <Image className="heroImage heroImageLayer heroImageLayer4" src="/images/main-hero/hero-03-reflexologia-podal.webp" alt="" aria-hidden="true" fill sizes="100vw" />
+          <Image className="heroImage heroImageLayer heroImageLayer5" src="/images/main-hero/hero-04-cuello-hombros.webp" alt="" aria-hidden="true" fill sizes="100vw" />
         </div>
         <div className="heroShade" />
         <div className="heroContent shell">
