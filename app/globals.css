@@ -260,11 +260,12 @@ button.catalogReserveButton{font:inherit;-webkit-appearance:none;appearance:none
 @media(max-width:760px){.servicesCatalogPage .catalogHeader::before,.servicesCatalogPage .catalogHeader::after,.servicesCatalogPage .catalogHero::before,.servicesCatalogPage .catalogHero::after{background-position:66% center;filter:brightness(.78)}.servicesCatalogPage .catalogHero::before,.servicesCatalogPage .catalogHero::after{top:-72px}}
 @media(prefers-reduced-motion:reduce){.servicesCatalogPage .catalogHeader::before{opacity:1;animation:none}.servicesCatalogPage .catalogHeader::after,.servicesCatalogPage .catalogHero::before,.servicesCatalogPage .catalogHero::after{display:none;animation:none}}
 
-/* Cuatro capas independientes para la rotación del hero principal. */
+/* Cinco capas independientes para la rotación del hero principal. */
 .heroImageRotation{position:absolute;inset:0}
-.heroImageLayer{opacity:0;will-change:opacity;animation:mainHeroLayerCycle 22s linear infinite}
-.heroImageLayer2{animation-delay:-16.5s}
-.heroImageLayer3{animation-delay:-11s}
-.heroImageLayer4{animation-delay:-5.5s}
-@keyframes mainHeroLayerCycle{0%,20%{opacity:1}25%,95%{opacity:0}100%{opacity:1}}
+.heroImageLayer{opacity:0;will-change:opacity;animation:mainHeroLayerCycle 27.5s linear infinite}
+.heroImageLayer2{animation-delay:-22s}
+.heroImageLayer3{animation-delay:-16.5s}
+.heroImageLayer4{animation-delay:-11s}
+.heroImageLayer5{animation-delay:-5.5s}
+@keyframes mainHeroLayerCycle{0%,16%{opacity:1}20%,96%{opacity:0}100%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.heroImageLayer{opacity:0;animation:none}.heroImageLayer1{opacity:1}}
