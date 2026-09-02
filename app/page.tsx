@@ -22,7 +22,12 @@ const featuredServiceImages: Record<string, string[]> = {
   relax: ["/images/signature/room-wide.webp", "/images/v4/room-pair.webp", "/images/real/room_pair.webp"],
   deluxe: ["/images/signature/ambience.webp", "/images/v4/ambience.webp", "/images/signature/couple-room.webp"],
   supreme: ["/images/signature/room-stone.webp", "/images/v4/room-dark.webp", "/images/generated/hot_stones.webp"],
-  "lifting-tinturado-planchado-cejas": ["/images/v4/facial.webp", "/images/real/facial_real.webp", "/images/signature/facial.webp"],
+  "lifting-tinturado-planchado-cejas": [
+    "/images/lifting-pestanas-cejas/lifting-01-pestanas.webp",
+    "/images/lifting-pestanas-cejas/lifting-02-planchado-cejas.webp",
+    "/images/lifting-pestanas-cejas/lifting-03-tinturado.webp",
+    "/images/lifting-pestanas-cejas/lifting-04-resultado.webp",
+  ],
 };
 
 // Reseñas reales de clientes: se muestran siempre en su idioma original
