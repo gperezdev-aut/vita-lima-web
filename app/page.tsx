@@ -16,13 +16,49 @@ import { translations } from "@/lib/i18n/translations";
 
 // Cada servicio muestra 2-3 fotos que rotan automáticamente en su tarjeta.
 const featuredServiceImages: Record<string, string[]> = {
-  "relax-vital": ["/images/signature/facial.webp", "/images/real/room_single.webp", "/images/servicios/servicio-01.webp"],
-  "alivio-integral": ["/images/signature/cupping.webp", "/images/v4/cupping.webp", "/images/v4/electro.webp"],
-  "balance-plus": ["/images/signature/facial-room.webp", "/images/v4/facial-room.webp", "/images/real/facial_real.webp"],
-  relax: ["/images/signature/room-wide.webp", "/images/v4/room-pair.webp", "/images/real/room_pair.webp"],
-  deluxe: ["/images/signature/ambience.webp", "/images/v4/ambience.webp", "/images/signature/couple-room.webp"],
-  supreme: ["/images/signature/room-stone.webp", "/images/v4/room-dark.webp", "/images/generated/hot_stones.webp"],
-  "lifting-tinturado-planchado-cejas": ["/images/v4/facial.webp", "/images/real/facial_real.webp", "/images/signature/facial.webp"],
+  "relax-vital": [
+    "/images/relax-vital/relax-01-shoulders.webp",
+    "/images/relax-vital/relax-02-pressure.webp",
+    "/images/relax-vital/relax-03-palms.webp",
+    "/images/relax-vital/relax-04-reflexology.webp",
+  ],
+  "alivio-integral": [
+    "/images/alivio-integral/alivio-01-hombros.webp",
+    "/images/alivio-integral/alivio-02-cuello.webp",
+    "/images/alivio-integral/alivio-03-reflexologia.webp",
+    "/images/alivio-integral/alivio-04-lumbar.webp",
+  ],
+  "balance-plus": [
+    "/images/balance-plus/balance-01-piedras-calientes.webp",
+    "/images/balance-plus/balance-02-reflexologia.webp",
+    "/images/balance-plus/balance-03-exfoliacion-espalda.webp",
+    "/images/balance-plus/balance-04-masaje.webp",
+  ],
+  relax: [
+    "/images/relax/relax-01-piedras-aromaterapia.webp",
+    "/images/relax/relax-02-reflexologia-podal.webp",
+    "/images/relax/relax-03-vino-o-infusion.webp",
+    "/images/relax/relax-04-masaje.webp",
+  ],
+  deluxe: [
+    "/images/deluxe/deluxe-01-piedras-aromaterapia.webp",
+    "/images/deluxe/deluxe-02-facial-colageno.webp",
+    "/images/deluxe/deluxe-03-reflexologia-podal.webp",
+    "/images/deluxe/deluxe-04-vino-o-infusion.webp",
+  ],
+  supreme: [
+    "/images/supreme/supreme-01-piedras-aromaterapia.webp",
+    "/images/supreme/supreme-02-exfoliacion-hidratacion.webp",
+    "/images/supreme/supreme-03-facial-hialuronico.webp",
+    "/images/supreme/supreme-04-reflexologia-podal.webp",
+    "/images/supreme/supreme-05-descanso-pareja.webp",
+  ],
+  "lifting-tinturado-planchado-cejas": [
+    "/images/lifting-pestanas-cejas/lifting-01-pestanas.webp",
+    "/images/lifting-pestanas-cejas/lifting-02-planchado-cejas.webp",
+    "/images/lifting-pestanas-cejas/lifting-03-tinturado.webp",
+    "/images/lifting-pestanas-cejas/lifting-04-resultado.webp",
+  ],
 };
 
 // Reseñas reales de clientes: se muestran siempre en su idioma original
