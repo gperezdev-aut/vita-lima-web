@@ -269,3 +269,162 @@ button.catalogReserveButton{font:inherit;-webkit-appearance:none;appearance:none
 .heroImageLayer5{animation-delay:-5.5s}
 @keyframes mainHeroLayerCycle{0%,16%{opacity:1}20%,96%{opacity:0}100%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.heroImageLayer{opacity:0;animation:none}.heroImageLayer1{opacity:1}}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Banner de consentimiento de cookies (Ley 29733).
+   Fijo abajo, por encima del botón flotante de WhatsApp pero sin taparlo
+   en escritorio; en móvil ocupa el ancho completo.
+   ───────────────────────────────────────────────────────────────────── */
+.cookieBanner{position:fixed;z-index:80;left:20px;bottom:20px;width:min(640px,calc(100% - 40px));display:flex;align-items:center;gap:24px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 22px;box-shadow:0 18px 50px rgba(60,40,32,.22)}
+.cookieBannerCopy{flex:1;min-width:0}
+.cookieBannerCopy strong{display:block;font-family:var(--font-display),Georgia,serif;font-size:18px;margin-bottom:5px}
+.cookieBannerCopy p{margin:0 0 6px;font-size:13px;line-height:1.55;color:var(--muted)}
+.cookieBannerCopy a{font-size:12px;font-weight:800;color:var(--green);text-decoration:underline;text-underline-offset:3px}
+.cookieBannerCopy a:hover{color:var(--orange)}
+.cookieBannerActions{display:flex;gap:10px;flex-shrink:0}
+.cookieBanner button{font:inherit;font-size:13px;font-weight:800;border-radius:999px;padding:12px 20px;min-height:44px;cursor:pointer;transition:.2s}
+.cookieAccept{border:0;background:var(--orange);color:white}
+.cookieAccept:hover{background:#dd7f0d}
+.cookieReject{border:1px solid var(--line);background:transparent;color:var(--ink)}
+.cookieReject:hover{background:rgba(60,40,32,.06)}
+.cookieBanner button:focus-visible{outline:3px solid rgba(241,142,23,.45);outline-offset:2px}
+/* Mientras el aviso está visible, los botones flotantes suben para no
+   quedar tapados (ni tapar los botones Aceptar/Rechazar). */
+body:has(.cookieBanner) .floatingWhatsapp{bottom:118px}
+body:has(.cookieBanner) .cartTrigger{bottom:184px}
+@media(max-width:760px){
+  .cookieBanner{left:10px;bottom:10px;width:calc(100% - 20px);flex-direction:column;align-items:stretch;gap:14px;padding:16px}
+  .cookieBannerActions{justify-content:stretch}
+  .cookieBanner button{flex:1}
+  body:has(.cookieBanner) .floatingWhatsapp{bottom:236px}
+  body:has(.cookieBanner) .cartTrigger{bottom:302px}
+}
+
+/* Casilla de autorización de datos en el formulario de reserva. */
+.reserveForm .consentField{display:flex;align-items:flex-start;gap:10px;text-transform:none;letter-spacing:normal;font-size:13px;font-weight:400;line-height:1.5;color:var(--muted)}
+.reserveForm .consentField input[type="checkbox"]{width:18px;height:18px;flex-shrink:0;margin:2px 0 0;padding:0;accent-color:var(--orange);cursor:pointer}
+.reserveForm .consentField a{color:var(--green);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.reserveForm .consentField a:hover{color:var(--orange)}
+.consentError{color:#a3341a;font-size:13px;font-weight:700;margin:0}
+
+/* Mapa que no se carga hasta que la persona lo pide. */
+.locationMapPlaceholder{display:grid;place-items:center}
+.locationMapVeil{position:absolute;inset:0;background:linear-gradient(0deg,rgba(84,45,28,.82),rgba(84,45,28,.45))}
+.locationMapPrompt{position:relative;z-index:2;display:grid;justify-items:center;gap:10px;padding:20px;text-align:center}
+.locationMapPrompt p{margin:0;max-width:38ch;font-size:12px;line-height:1.5;color:rgba(255,255,255,.85)}
+
+/* Migas de pan en páginas internas. */
+.breadcrumb{margin-bottom:18px}
+.breadcrumb ol{display:flex;flex-wrap:wrap;align-items:center;gap:8px;list-style:none;margin:0;padding:0;font-size:12px;font-weight:700;color:rgba(255,255,255,.72)}
+.breadcrumb li+li:before{content:"/";margin-right:8px;opacity:.55}
+.breadcrumb a{text-decoration:underline;text-underline-offset:3px}
+.breadcrumb a:hover{color:#ffdc6d}
+.breadcrumb li[aria-current="page"]{color:#ffdc6d}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Página de un servicio: /servicios/[slug]
+   Reutiliza el header y las tarjetas de /servicios (clase
+   .servicesCatalogPage) y añade solo lo propio del detalle.
+   ───────────────────────────────────────────────────────────────────── */
+.serviceDetailHero h1{font-size:clamp(42px,5.4vw,80px);max-width:16ch}
+.serviceDetailTagline{max-width:60ch;font-size:18px;line-height:1.65;color:rgba(255,255,255,.82);margin-bottom:26px}
+.serviceDetailMeta{display:flex;flex-wrap:wrap;gap:0;margin:0 0 26px;padding-top:20px;border-top:1px solid rgba(255,255,255,.2);max-width:620px}
+.serviceDetailMeta>div{padding:0 26px}
+.serviceDetailMeta>div:first-child{padding-left:0}
+.serviceDetailMeta>div+div{border-left:1px solid rgba(255,255,255,.18)}
+.serviceDetailMeta dt{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:rgba(255,255,255,.68);margin-bottom:5px}
+.serviceDetailMeta dd{margin:0;font-family:var(--font-display),Georgia,serif;font-size:26px;line-height:1.1;color:white}
+.serviceDetailMeta dd strong{font-weight:500}
+.serviceDetailMeta .priceOld{color:rgba(255,255,255,.6);font-family:Arial,sans-serif;font-size:14px}
+.serviceDetailActions{display:flex;flex-wrap:wrap;gap:12px}
+.serviceDetailAddButton{border:1px solid rgba(255,255,255,.65);color:white;background:transparent;font:inherit;font-size:14px;font-weight:800;cursor:pointer;gap:10px}
+.serviceDetailAddButton:hover{background:rgba(255,255,255,.12)}
+.serviceDetailAddButton:focus-visible{outline:3px solid rgba(255,255,255,.6);outline-offset:3px}
+
+.serviceDetailBody{background:white}
+.serviceDetailLayout{display:grid;grid-template-columns:1.35fr .65fr;gap:60px;align-items:start}
+.serviceDetailMain h2{font-size:clamp(26px,2.4vw,34px);margin:34px 0 12px}
+.serviceDetailMain h2:first-of-type{margin-top:30px}
+.serviceDetailParagraph{font-size:17px;line-height:1.75;color:var(--ink);max-width:64ch;margin-bottom:16px}
+.serviceDetailAside{display:grid;gap:16px;position:sticky;top:24px}
+.serviceDetailCard{background:var(--cream);border:1px solid var(--line);border-radius:16px;padding:22px}
+.serviceDetailCard h2{font-size:20px;margin:0 0 10px}
+.serviceDetailCard p{margin:0;font-size:15px;line-height:1.6;color:var(--muted)}
+.serviceDetailCard ul{margin:0;padding-left:20px;display:grid;gap:8px}
+.serviceDetailCard li{font-size:15px;line-height:1.5;color:var(--muted)}
+.serviceDetailCard li::marker{color:var(--orange)}
+.serviceDetailAsideImage{position:relative;height:240px;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+
+.serviceDetailGallerySection{background:var(--cream)}
+.serviceDetailGallerySection h2,.serviceDetailRelatedSection h2,.locationServicesSection h2,.locationGallerySection h2{font-size:clamp(30px,3vw,44px);margin-bottom:22px}
+.serviceDetailGallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.serviceDetailGalleryItem{position:relative;aspect-ratio:4/3;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.serviceDetailFaqSection{background:white}
+.serviceDetailRelatedSection{background:var(--cream)}
+.serviceDetailRelatedGrid{margin-bottom:8px}
+.catalogCardTitleLink:hover{color:var(--orange)}
+.catalogCardActions{display:grid;gap:8px;margin-top:auto}
+.catalogDetailLink{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;font-size:13px;font-weight:800;color:var(--green);text-decoration:underline;text-underline-offset:4px}
+.catalogDetailLink:hover{color:var(--orange)}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Páginas de sede: /san-borja y /miraflores
+   ───────────────────────────────────────────────────────────────────── */
+.locationIntroSection{background:white}
+.locationIntroLayout{display:grid;grid-template-columns:1.3fr .7fr;gap:60px;align-items:start}
+.locationIntroCopy p{font-size:17px;line-height:1.75;max-width:64ch;margin-bottom:16px}
+.locationIntroCopy h2{font-size:clamp(26px,2.4vw,34px);margin:32px 0 12px}
+.locationList{margin:0;padding-left:20px;display:grid;gap:9px;max-width:60ch}
+.locationList li{font-size:16px;line-height:1.55;color:var(--muted)}
+.locationList li::marker{color:var(--orange)}
+.locationFactsCard{background:var(--cream);border:1px solid var(--line);border-radius:18px;padding:24px;position:sticky;top:24px}
+.locationFactsCard h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em;font-family:Arial,sans-serif;color:var(--orange);margin:0 0 6px}
+.locationFactsCard h2+*{margin-top:0}
+.locationFactsCard h2:not(:first-child){margin-top:20px}
+.locationAddress{font-family:var(--font-display),Georgia,serif;font-size:22px;line-height:1.25;margin:0 0 3px}
+.locationDistrict{font-size:14px;color:var(--muted);margin:0}
+.locationFactsCard>p{font-size:15px;line-height:1.55;color:var(--muted);margin:0}
+.locationCardCta{width:100%;margin-top:20px}
+.locationMapWrap{margin-top:18px}
+.locationMapWrap .locationMapCard{height:230px}
+.locationServicesSection{background:var(--cream)}
+.locationGallerySection{background:white}
+.locationGallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.locationGalleryItem{position:relative;aspect-ratio:1/1;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.locationFaqSection{background:var(--cream)}
+
+@media(max-width:1100px){
+  .serviceDetailLayout,.locationIntroLayout{grid-template-columns:1fr;gap:36px}
+  .serviceDetailAside,.locationFactsCard{position:static}
+}
+@media(max-width:760px){
+  .serviceDetailHero h1{font-size:40px}
+  .serviceDetailTagline{font-size:16px}
+  .serviceDetailMeta{gap:14px 0}
+  .serviceDetailMeta>div{padding:0 16px;min-width:0}
+  .serviceDetailMeta>div:first-child{padding-left:0}
+  .serviceDetailMeta>div+div{border-left:0}
+  .serviceDetailMeta dd{font-size:22px}
+  .serviceDetailActions{flex-direction:column;align-items:stretch}
+  .serviceDetailParagraph,.locationIntroCopy p{font-size:16px}
+  .locationMapWrap .locationMapCard{height:200px}
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Páginas legales (privacidad y términos). Antes no tenían estilo propio:
+   el texto salía a ancho completo, sin jerarquía ni márgenes.
+   ───────────────────────────────────────────────────────────────────── */
+.legal{max-width:760px;margin:0 auto;padding:56px 22px 80px;color:var(--ink)}
+.legal h1{font-size:clamp(36px,4.5vw,54px);line-height:1.05;margin:18px 0 6px}
+.legal h2{font-size:clamp(20px,2vw,25px);margin:38px 0 10px}
+.legal p,.legal li{font-size:16px;line-height:1.7;color:var(--muted)}
+.legal p{margin-bottom:14px;max-width:66ch}
+.legal ul{margin:0 0 18px;padding-left:22px;display:grid;gap:9px;max-width:66ch}
+.legal li::marker{color:var(--orange)}
+.legal strong{color:var(--ink)}
+.legal a{color:var(--green);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.legal a:hover{color:var(--orange)}
+.legalBack{display:inline-flex;align-items:center;min-height:44px;font-size:13px;font-weight:800;color:var(--green)}
+.legalUpdated{font-size:13px;color:var(--muted);margin-bottom:26px}
+.legalFootNote{margin-top:34px;padding-top:20px;border-top:1px solid var(--line);font-size:15px}
+@media(max-width:760px){.legal{padding:36px 16px 60px}}
