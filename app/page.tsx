@@ -9,8 +9,10 @@ import SiteFooter from "@/components/SiteFooter";
 import JsonLd from "@/components/JsonLd";
 import FeaturedCarousel from "@/components/FeaturedCarousel";
 import ReviewsCarousel from "@/components/ReviewsCarousel";
+import ConsentMap from "@/components/ConsentMap";
 import { featuredServices } from "@/content/services";
-import { buildOrganizationJsonLd, buildFaqJsonLd } from "@/content/structured-data";
+import { locations } from "@/content/locations";
+import { buildOrganizationJsonLd, buildFaqJsonLd, buildWebSiteJsonLd } from "@/content/structured-data";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { translations } from "@/lib/i18n/translations";
 
@@ -86,6 +88,7 @@ export default function HomePage() {
   return (
     <main>
       <JsonLd data={buildOrganizationJsonLd()} />
+      <JsonLd data={buildWebSiteJsonLd()} />
       <JsonLd data={buildFaqJsonLd(faqsForJsonLd)} />
       <section id="inicio" className="heroSection">
         <Header />
@@ -231,26 +234,25 @@ export default function HomePage() {
       <section id="sedes" className="section locationsSection">
         <div className="shell sectionTop editorialTop"><div><p className="eyebrow">{t.locations.eyebrow}</p><h2>{t.locations.title}</h2></div></div>
         <div className="shell locationsGrid">
-          <article className="locationCard"><Image src="/images/signature/reception.webp" alt="Sede San Borja" fill /><div className="locationShade" /><div className="locationContent"><span>{t.locations.sanBorja.tag}</span><h3>San Borja</h3><p>Av. Aviación 3358, oficina 204</p><small>{t.locations.sanBorja.hours}</small><a href="https://www.google.com/maps/search/?api=1&query=Av.+Aviacion+3358+San+Borja" target="_blank" rel="noreferrer">{t.locations.sanBorja.directions}</a></div></article>
-          <article className="locationCard"><Image src="/images/signature/buddha.webp" alt="Sede Miraflores" fill /><div className="locationShade" /><div className="locationContent"><span>{t.locations.miraflores.tag}</span><h3>Miraflores</h3><p>Av. Larco 812, oficina 306</p><small>{t.locations.miraflores.hours}</small><a href="https://www.google.com/maps/search/?api=1&query=Av.+Larco+812+Miraflores" target="_blank" rel="noreferrer">{t.locations.miraflores.directions}</a></div></article>
+          {/* Las tarjetas llevan ahora a la página propia de cada sede
+              (/san-borja y /miraflores), que es donde vive el contenido local
+              indexable: cómo llegar, horarios, fotos del local y su FAQ. */}
+          <article className="locationCard"><Image src="/images/sede-san-borja/san-borja-01.webp" alt="Sede San Borja" fill /><div className="locationShade" /><div className="locationContent"><span>{t.locations.sanBorja.tag}</span><h3>San Borja</h3><p>Av. Aviación 3358, oficina 204</p><small>{t.locations.sanBorja.hours}</small><Link href="/san-borja">{t.locations.sanBorja.directions}</Link></div></article>
+          <article className="locationCard"><Image src="/images/signature/buddha.webp" alt="Sede Miraflores" fill /><div className="locationShade" /><div className="locationContent"><span>{t.locations.miraflores.tag}</span><h3>Miraflores</h3><p>Av. Larco 812, oficina 306</p><small>{t.locations.miraflores.hours}</small><Link href="/miraflores">{t.locations.miraflores.directions}</Link></div></article>
         </div>
+        {/* Los mapas ya no se embeben en la carga inicial: cada uno muestra
+            una foto de la sede y solo inserta el iframe de Google Maps —con
+            sus cookies— cuando la persona pulsa "Ver mapa". */}
         <div className="shell locationsMaps">
-          <div className="locationMapCard">
-            <iframe
-              src="https://www.google.com/maps?q=Av.+Aviacion+3358+San+Borja+Lima&output=embed"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title={t.locations.sanBorja.mapTitle}
+          {locations.map((location) => (
+            <ConsentMap
+              key={location.slug}
+              name={location.name}
+              query={location.mapQuery}
+              previewImage={location.heroImage}
+              previewAlt={`Sede ${location.name} de Vita Lima Spa`}
             />
-          </div>
-          <div className="locationMapCard">
-            <iframe
-              src="https://www.google.com/maps?q=Av.+Larco+812+Miraflores+Lima&output=embed"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title={t.locations.miraflores.mapTitle}
-            />
-          </div>
+          ))}
         </div>
       </section>
 

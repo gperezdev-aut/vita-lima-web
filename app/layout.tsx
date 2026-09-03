@@ -11,13 +11,27 @@ import WhatsAppTracking from "@/components/WhatsAppTracking";
 import { CartProvider } from "@/components/CartContext";
 import CartWidget from "@/components/CartWidget";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import { ConsentProvider } from "@/components/ConsentContext";
+import CookieBanner from "@/components/CookieBanner";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nueva.vitalimaspa.com";
 
 export const metadata: Metadata = {
   title: "Vita Lima Spa | Masajes y bienestar en Lima",
   description: "Masajes relajantes, terapéuticos, para parejas, Gift Cards y bienestar corporativo en San Borja y Miraflores.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://nueva.vitalimaspa.com"),
+  metadataBase: new URL(siteUrl),
   alternates: { canonical: "/" },
   openGraph: {
+    title: "Vita Lima Spa",
+    description: "Es momento de volver a ti. Masajes y bienestar premium en Lima.",
+    type: "website",
+    url: "/",
+    locale: "es_PE",
+    siteName: "Vita Lima Spa",
+    images: ["/images/signature/hero.webp"]
+  },
+  twitter: {
+    card: "summary_large_image",
     title: "Vita Lima Spa",
     description: "Es momento de volver a ti. Masajes y bienestar premium en Lima.",
     images: ["/images/signature/hero.webp"]
@@ -28,13 +42,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <body>
-        <GoogleTag />
-        <WhatsAppTracking />
         <LanguageProvider>
-          <CartProvider>
-            {children}
-            <CartWidget />
-          </CartProvider>
+          {/* ConsentProvider va por dentro de LanguageProvider porque el
+              banner de cookies se muestra en el idioma activo, y por fuera
+              de todo lo que carga terceros (GoogleTag, mapas). */}
+          <ConsentProvider>
+            <GoogleTag />
+            <WhatsAppTracking />
+            <CartProvider>
+              {children}
+              <CartWidget />
+            </CartProvider>
+            <CookieBanner />
+          </ConsentProvider>
         </LanguageProvider>
       </body>
     </html>

@@ -55,6 +55,7 @@ export default function ServicesCatalog() {
   const t = translations[language].servicesPage;
   const tPricing = translations[language].pricing;
   const tHeader = translations[language].header;
+  const tDetail = translations[language].serviceDetail;
 
   function whatsappHref(service?: Service) {
     const message = service ? t.whatsappForService(serviceText(service, language).name) : t.whatsappDefault;
@@ -129,7 +130,14 @@ export default function ServicesCatalog() {
                           {text.badge && <span>{text.badge}</span>}
                         </div>
                         <div className="catalogCardBody">
-                          <h3>{text.name}</h3>
+                          {/* El título enlaza a la página propia del servicio:
+                              cada servicio tiene ahora su URL indexable en
+                              /servicios/[slug] con descripción larga y FAQ. */}
+                          <h3>
+                            <Link className="catalogCardTitleLink" href={`/servicios/${service.slug}`}>
+                              {text.name}
+                            </Link>
+                          </h3>
                           <div className="catalogCardTop">
                             <span>{service.duration} min</span>
                             <span className="priceNow">
@@ -150,13 +158,18 @@ export default function ServicesCatalog() {
                               que la tarjeta del catálogo liste todo lo que incluye cada servicio,
                               no un resumen parcial — ver ejemplo de Royale en el pedido original. */}
                           <p className="catalogIncludes">{text.includes}</p>
-                          <AddToCartButton
-                            className="catalogReserveButton"
-                            label={t.addToCart}
-                            addedLabel={t.addedToCart}
-                            ariaLabel={t.addToCartAria(text.name)}
-                            item={{ id: service.slug, name: text.name, price: service.price, meta: `${service.duration} min` }}
-                          />
+                          <div className="catalogCardActions">
+                            <AddToCartButton
+                              className="catalogReserveButton"
+                              label={t.addToCart}
+                              addedLabel={t.addedToCart}
+                              ariaLabel={t.addToCartAria(text.name)}
+                              item={{ id: service.slug, name: text.name, price: service.price, meta: `${service.duration} min` }}
+                            />
+                            <Link className="catalogDetailLink" href={`/servicios/${service.slug}`}>
+                              {tDetail.seeDetails} <span aria-hidden="true">→</span>
+                            </Link>
+                          </div>
                         </div>
                       </article>
                     );
