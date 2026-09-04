@@ -20,6 +20,13 @@ const isProductionSite = (process.env.NEXT_PUBLIC_SITE_ENV || "production") === 
  * Se usa 301 (y no el 308 que Next emite con `permanent: true`) porque es el
  * código que toda herramienta de SEO y todo navegador antiguo entiende sin
  * ambigüedad. Google los trata igual; el resto del ecosistema no siempre.
+ *
+ * Los `source` con tilde o ñ van percent-encoded (ej. "%C3%A9" para "é"), no
+ * como el carácter literal: Next.js compila `source` a una regex y la
+ * compara contra la URL tal como llega (percent-encoded), así que un
+ * carácter Unicode literal en `source` nunca hace match y la regla cae
+ * silenciosamente en el comodín de más abajo. No "simplificar" esto de
+ * vuelta a tildes literales sin volver a probar contra el build real.
  */
 const wixRedirects = [
   // ── Páginas del sitio anterior ──────────────────────────────────────
@@ -53,13 +60,13 @@ const wixRedirects = [
     destination: "/guias/beneficios-del-masaje-relajante",
   },
   {
-    source: "/single-post/descubre-los-beneficios-de-un-masaje-relajante-y-cómo-puede-transformar-tu-bienestar",
+    source: "/single-post/descubre-los-beneficios-de-un-masaje-relajante-y-c%C3%B3mo-puede-transformar-tu-bienestar",
     destination: "/guias/beneficios-del-masaje-relajante",
   },
   { source: "/single-post/reflexologiapodal", destination: "/guias/que-es-la-reflexologia-podal" },
   { source: "/single-post/2017/03/29/masaje-pre-natal", destination: "/guias/masaje-prenatal-cuando-si" },
   {
-    source: "/single-post/2018/08/20/como-combatir-el-estrés",
+    source: "/single-post/2018/08/20/como-combatir-el-estr%C3%A9s",
     destination: "/guias/bajar-el-estres-sin-formulas-magicas",
   },
   { source: "/single-post/2019/12/19/masajes-reductores", destination: "/guias/que-es-la-bambuterapia" },
@@ -70,11 +77,11 @@ const wixRedirects = [
 
   // ── Blog: los que no se migraron, al servicio o la guía más cercana ──
   { source: "/single-post/2016/08/16/masajes-relajantes", destination: "/servicios/relax-vital" },
-  { source: "/single-post/2017/03/21/-porque-consumir-colágeno-hidrolisado", destination: "/servicios/glow-facial" },
+  { source: "/single-post/2017/03/21/-porque-consumir-col%C3%A1geno-hidrolisado", destination: "/servicios/glow-facial" },
   { source: "/single-post/2016/11/01/serum-rejuvenecedor-celular", destination: "/servicios/facial-glow-premium-solo" },
   { source: "/single-post/2016/08/16/beneficios-de-beber-agua", destination: "/guias" },
   {
-    source: "/single-post/2016/08/16/-es-bueno-beber-agua-por-la-noche-la-respuesta-te-sorprenderá",
+    source: "/single-post/2016/08/16/-es-bueno-beber-agua-por-la-noche-la-respuesta-te-sorprender%C3%A1",
     destination: "/guias",
   },
 
