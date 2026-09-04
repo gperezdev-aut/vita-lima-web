@@ -20,7 +20,9 @@ export const metadata: Metadata = {
   title: "Vita Lima Spa | Masajes y bienestar en Lima",
   description: "Masajes relajantes, terapéuticos, para parejas, Gift Cards y bienestar corporativo en San Borja y Miraflores.",
   metadataBase: new URL(siteUrl),
-  alternates: { canonical: "/" },
+  // El canonical y el hreflang los define cada página: el home tiene el suyo
+  // en app/page.tsx (español) y app/en/page.tsx (inglés). Dejarlo aquí lo
+  // heredaban rutas que no son el home.
   openGraph: {
     title: "Vita Lima Spa",
     description: "Es momento de volver a ti. Masajes y bienestar premium en Lima.",

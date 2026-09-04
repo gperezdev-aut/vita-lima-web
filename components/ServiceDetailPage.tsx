@@ -23,7 +23,7 @@ type ServiceDetailPageProps = {
 };
 
 export default function ServiceDetailPage({ service, detail, images, related }: ServiceDetailPageProps) {
-  const { language, toggleLanguage } = useLanguage();
+  const { language, toggleLanguage, href } = useLanguage();
   const t = translations[language].serviceDetail;
   const tPricing = translations[language].pricing;
   const tHeader = translations[language].header;
@@ -39,7 +39,7 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
     <main className="servicesCatalogPage serviceDetailPage">
       <header className="catalogHeader serviceDetailHeader">
         <div className="catalogNav shell">
-          <Link href="/" aria-label={tHeader.brandHome}>
+          <Link href={href("/")} aria-label={tHeader.brandHome}>
             <Image src="/images/brand/logo-vita-lima-white.png" alt="Vita Lima Spa" width={180} height={78} priority />
           </Link>
           <div className="catalogNavActions">
@@ -51,7 +51,7 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
             >
               {language === "es" ? "EN" : "ES"}
             </button>
-            <Link className="catalogBackLink" href="/servicios">
+            <Link className="catalogBackLink" href={href("/servicios")}>
               {t.backToCatalog}
             </Link>
           </div>
@@ -61,10 +61,10 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
           <nav className="breadcrumb" aria-label="Breadcrumb">
             <ol>
               <li>
-                <Link href="/">{t.breadcrumbHome}</Link>
+                <Link href={href("/")}>{t.breadcrumbHome}</Link>
               </li>
               <li>
-                <Link href="/servicios">{t.breadcrumbCatalog}</Link>
+                <Link href={href("/servicios")}>{t.breadcrumbCatalog}</Link>
               </li>
               <li aria-current="page">{text.name}</li>
             </ol>
@@ -212,7 +212,7 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
                   <article className="catalogCard" key={item.code}>
                     <div className="catalogCardBody">
                       <h3>
-                        <Link href={`/servicios/${item.slug}`}>{relatedText.name}</Link>
+                        <Link href={href(`/servicios/${item.slug}`)}>{relatedText.name}</Link>
                       </h3>
                       <div className="catalogCardTop">
                         <span>
@@ -221,7 +221,7 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
                         <strong>S/ {item.price}</strong>
                       </div>
                       <p className="catalogIncludes">{relatedText.includes}</p>
-                      <Link className="catalogReserveButton" href={`/servicios/${item.slug}`}>
+                      <Link className="catalogReserveButton" href={href(`/servicios/${item.slug}`)}>
                         {t.seeDetails}
                         <span aria-hidden="true">→</span>
                       </Link>
@@ -231,7 +231,7 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
               })}
             </div>
             <div className="servicesAllAction">
-              <Link className="button servicesAllButton" href="/servicios">
+              <Link className="button servicesAllButton" href={href("/servicios")}>
                 {t.backToCatalog} <span aria-hidden="true">→</span>
               </Link>
             </div>

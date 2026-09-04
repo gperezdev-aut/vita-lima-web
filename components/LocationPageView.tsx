@@ -22,7 +22,7 @@ type LocationPageViewProps = {
 };
 
 export default function LocationPageView({ location, featuredServices, otherLocation }: LocationPageViewProps) {
-  const { language, toggleLanguage } = useLanguage();
+  const { language, toggleLanguage, href } = useLanguage();
   const t = translations[language].locationPage;
   const tService = translations[language].serviceDetail;
   const tHeader = translations[language].header;
@@ -36,7 +36,7 @@ export default function LocationPageView({ location, featuredServices, otherLoca
     <main className="servicesCatalogPage locationDetailPage">
       <header className="catalogHeader">
         <div className="catalogNav shell">
-          <Link href="/" aria-label={tHeader.brandHome}>
+          <Link href={href("/")} aria-label={tHeader.brandHome}>
             <Image src="/images/brand/logo-vita-lima-white.png" alt="Vita Lima Spa" width={180} height={78} priority />
           </Link>
           <div className="catalogNavActions">
@@ -48,7 +48,7 @@ export default function LocationPageView({ location, featuredServices, otherLoca
             >
               {language === "es" ? "EN" : "ES"}
             </button>
-            <Link className="catalogBackLink" href={`/${otherLocation.slug}`}>
+            <Link className="catalogBackLink" href={href(`/${otherLocation.slug}`)}>
               {t.otherLocation}
             </Link>
           </div>
@@ -58,7 +58,7 @@ export default function LocationPageView({ location, featuredServices, otherLoca
           <nav className="breadcrumb" aria-label="Breadcrumb">
             <ol>
               <li>
-                <Link href="/">{t.breadcrumbHome}</Link>
+                <Link href={href("/")}>{t.breadcrumbHome}</Link>
               </li>
               <li aria-current="page">{location.name}</li>
             </ol>
@@ -128,7 +128,7 @@ export default function LocationPageView({ location, featuredServices, otherLoca
                 <article className="catalogCard" key={service.code}>
                   <div className="catalogCardBody">
                     <h3>
-                      <Link href={`/servicios/${service.slug}`}>{text.name}</Link>
+                      <Link href={href(`/servicios/${service.slug}`)}>{text.name}</Link>
                     </h3>
                     <div className="catalogCardTop">
                       <span>
@@ -137,7 +137,7 @@ export default function LocationPageView({ location, featuredServices, otherLoca
                       <strong>S/ {service.price}</strong>
                     </div>
                     <p className="catalogIncludes">{text.includes}</p>
-                    <Link className="catalogReserveButton" href={`/servicios/${service.slug}`}>
+                    <Link className="catalogReserveButton" href={href(`/servicios/${service.slug}`)}>
                       {tService.seeDetails}
                       <span aria-hidden="true">→</span>
                     </Link>
@@ -147,7 +147,7 @@ export default function LocationPageView({ location, featuredServices, otherLoca
             })}
           </div>
           <div className="servicesAllAction">
-            <Link className="button servicesAllButton" href="/servicios">
+            <Link className="button servicesAllButton" href={href("/servicios")}>
               {t.viewAllServices} <span aria-hidden="true">→</span>
             </Link>
           </div>

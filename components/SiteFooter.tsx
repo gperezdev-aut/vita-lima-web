@@ -10,8 +10,10 @@ type SiteFooterProps = {
 };
 
 export default function SiteFooter({ context = "home" }: SiteFooterProps) {
-  const sectionHref = (section: string) => `${context === "internal" ? "/" : ""}#${section}`;
-  const { language } = useLanguage();
+  const { language, href } = useLanguage();
+  // En páginas internas los enlaces de sección apuntan al home del idioma
+  // activo; en el propio home son anclas dentro de la misma página.
+  const sectionHref = (section: string) => `${context === "internal" ? href("/") : ""}#${section}`;
   const t = translations[language].footer;
 
   return (
@@ -19,7 +21,7 @@ export default function SiteFooter({ context = "home" }: SiteFooterProps) {
       <div className="shell footerTop"><p className="eyebrow orangeText">{t.eyebrow}</p><h2>{t.title}</h2><a className="button orangeButton" href={sectionHref("reserva")}>{t.cta}</a></div>
       <div className="shell footerGrid">
         <div className="footerBrand"><Image src="/images/brand/logo-vita-lima-white.png" alt="Vita Lima Spa" width={190} height={84} /><p>{t.tagline}</p></div>
-        <div><h4>{t.exploreHeading}</h4><Link href="/servicios">{t.exploreLinks.catalog}</Link><Link href="/san-borja">{t.exploreLinks.sanBorja}</Link><Link href="/miraflores">{t.exploreLinks.miraflores}</Link><Link href="/empresas">{t.exploreLinks.empresas}</Link><Link href="/regalos">{t.exploreLinks.giftCards}</Link><a href={sectionHref("reserva")}>{t.exploreLinks.reservar}</a></div>
+        <div><h4>{t.exploreHeading}</h4><Link href={href("/servicios")}>{t.exploreLinks.catalog}</Link><Link href={href("/san-borja")}>{t.exploreLinks.sanBorja}</Link><Link href={href("/miraflores")}>{t.exploreLinks.miraflores}</Link><Link href="/empresas">{t.exploreLinks.empresas}</Link><Link href="/regalos">{t.exploreLinks.giftCards}</Link><a href={sectionHref("reserva")}>{t.exploreLinks.reservar}</a></div>
         <div><h4>{t.contactHeading}</h4><a href="https://wa.me/51907308415" target="_blank" rel="noreferrer">+51 907 308 415</a><a href="mailto:info@vitalimaspa.com">info@vitalimaspa.com</a></div>
         <div><h4>{t.infoHeading}</h4><Link href="/politica-de-privacidad">{t.infoLinks.privacidad}</Link><Link href="/terminos-y-condiciones">{t.infoLinks.terminos}</Link><a href={sectionHref("preguntas")}>{t.infoLinks.faq}</a><a href="https://caja.vitalimaspa.com/login" target="_blank" rel="noreferrer">{t.staffLogin}</a></div>
         <div><h4>{t.followHeading}</h4><a href="https://www.instagram.com/vitalima1/" target="_blank" rel="noreferrer">Instagram</a><a href="https://www.facebook.com/vitalimaperu/" target="_blank" rel="noreferrer">Facebook</a><a href="https://www.tiktok.com/@vita.lima" target="_blank" rel="noreferrer">TikTok</a><a href="https://www.tripadvisor.com/Search?q=Vita%20Lima%20Spa" target="_blank" rel="noreferrer">Tripadvisor</a></div>
