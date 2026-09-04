@@ -4,10 +4,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      # Van en `args` y no solo en `environment` porque el sitio se genera
+      # estatico durante el build. Ver el comentario en el Dockerfile.
+      args:
+        NEXT_PUBLIC_SITE_URL: https://www.vitalimaspa.com
+        NEXT_PUBLIC_WHATSAPP: "51907308415"
+        NEXT_PUBLIC_SITE_ENV: production
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_SITE_URL: https://nueva.vitalimaspa.com
+      NEXT_PUBLIC_SITE_URL: https://www.vitalimaspa.com
       NEXT_PUBLIC_WHATSAPP: "51907308415"
+      NEXT_PUBLIC_SITE_ENV: production
     ports:
       - "127.0.0.1:3001:3000"
     networks:

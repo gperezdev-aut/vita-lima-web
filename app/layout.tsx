@@ -14,7 +14,7 @@ import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { ConsentProvider } from "@/components/ConsentContext";
 import CookieBanner from "@/components/CookieBanner";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nueva.vitalimaspa.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.vitalimaspa.com";
 
 export const metadata: Metadata = {
   title: "Vita Lima Spa | Masajes y bienestar en Lima",
