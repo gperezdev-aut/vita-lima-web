@@ -34,13 +34,14 @@ const ROUTE_PAIRS: { es: string; en: string }[] = [
 ];
 
 /**
- * Páginas que todavía no están traducidas (empresas, gift cards y las
- * legales). No tienen versión bajo `/en`: desde el sitio en inglés se enlaza
+ * Páginas que todavía no están traducidas (guías, empresas, gift cards y
+ * las legales). No tienen versión bajo `/en`: desde el sitio en inglés se enlaza
  * directamente a la versión en español, que es lo honesto — publicar una URL
  * en inglés con contenido en español sería contenido duplicado y una mala
  * experiencia. Cuando se traduzcan, basta agregarlas a ROUTE_PAIRS.
  */
 export const UNTRANSLATED_PATHS = [
+  "/guias",
   "/empresas",
   "/regalos",
   "/politica-de-privacidad",

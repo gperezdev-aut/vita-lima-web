@@ -428,3 +428,63 @@ body:has(.cookieBanner) .cartTrigger{bottom:184px}
 .legalUpdated{font-size:13px;color:var(--muted);margin-bottom:26px}
 .legalFootNote{margin-top:34px;padding-top:20px;border-top:1px solid var(--line);font-size:15px}
 @media(max-width:760px){.legal{padding:36px 16px 60px}}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Guías: /guias y /guias/[slug]
+   Reutilizan el header y el sistema de /servicios; aquí va solo lo propio
+   del listado y del artículo.
+   ───────────────────────────────────────────────────────────────────── */
+.guidesListSection{background:var(--cream)}
+.guidesGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.guideCard{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 9px 26px rgba(60,40,32,.05);transition:transform .3s,box-shadow .3s}
+.guideCard:hover{transform:translateY(-4px);box-shadow:0 17px 34px rgba(60,40,32,.11)}
+.guideCardImage{position:relative;display:block;aspect-ratio:16/9;overflow:hidden}
+.guideCardImage img{transition:transform .5s}
+.guideCard:hover .guideCardImage img{transform:scale(1.035)}
+.guideCardBody{display:flex;flex:1;flex-direction:column;padding:20px 22px 22px}
+.guideCardMeta{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.guideCard h2,.guideCard h3{font-size:23px;line-height:1.15;margin:0 0 10px}
+.guideCard h2 a:hover,.guideCard h3 a:hover{color:var(--orange)}
+.guideCardSummary{font-size:15px;line-height:1.6;color:var(--muted);margin:0 0 16px}
+.guideCardLink{margin-top:auto;display:inline-flex;align-items:center;gap:7px;min-height:36px;font-size:14px;font-weight:800;color:var(--green);text-decoration:underline;text-underline-offset:4px}
+.guideCardLink:hover{color:var(--orange)}
+
+.guideHero h1{font-size:clamp(38px,4.6vw,68px);max-width:20ch}
+.guideHeroSummary{max-width:62ch;font-size:18px;line-height:1.65;color:rgba(255,255,255,.82);margin-bottom:18px}
+.guideHeroMeta{font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.62);margin:0}
+
+.guideBodySection{background:white}
+.guideLayout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,.6fr);gap:60px;align-items:start}
+.guideBody{max-width:68ch}
+.guideBody h2{font-size:clamp(25px,2.3vw,33px);margin:36px 0 12px}
+.guideBody h2:first-child{margin-top:0}
+.guideBody p{font-size:17px;line-height:1.78;margin-bottom:17px}
+.guideBody ul{margin:0 0 20px;padding-left:22px;display:grid;gap:10px}
+.guideBody li{font-size:17px;line-height:1.6;color:var(--muted)}
+.guideBody li::marker{color:var(--orange)}
+.guideNote{background:var(--cream);border-left:3px solid var(--orange);border-radius:0 12px 12px 0;padding:16px 20px;margin:24px 0}
+.guideNote p{font-size:15px;line-height:1.6;color:var(--muted);margin:0}
+.guideCta{margin-top:38px;padding-top:26px;border-top:1px solid var(--line);display:grid;gap:16px;justify-items:start}
+.guideCta p{font-size:17px;margin:0;max-width:52ch}
+
+.guideAside{display:grid;gap:16px;position:sticky;top:24px}
+.guideAsideImage{position:relative;aspect-ratio:4/3;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.guideServiceList{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.guideServiceList li{display:grid;gap:2px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.guideServiceList li:last-child{padding-bottom:0;border-bottom:0}
+.guideServiceList a{font-family:var(--font-display),Georgia,serif;font-size:17px;line-height:1.2;color:var(--ink)}
+.guideServiceList a:hover{color:var(--orange)}
+.guideServiceList span{font-size:13px;color:var(--muted);font-weight:700}
+.guideRelatedSection{background:var(--cream)}
+.guideRelatedSection h2{font-size:clamp(28px,2.8vw,40px);margin-bottom:22px}
+
+@media(max-width:1100px){
+  .guideLayout{grid-template-columns:1fr;gap:36px}
+  .guideAside{position:static}
+}
+@media(max-width:760px){
+  .guideHero h1{font-size:36px}
+  .guideHeroSummary{font-size:16px}
+  .guideBody p,.guideBody li{font-size:16px}
+  .guidesGrid{grid-template-columns:1fr}
+}

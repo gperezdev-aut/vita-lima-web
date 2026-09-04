@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { services } from "@/content/services";
 import { locations } from "@/content/locations";
+import { guides } from "@/content/guides";
 import { toEnglishPath } from "@/lib/i18n/routes";
 
 /**
@@ -32,6 +33,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...locations.flatMap((location) => bilingual(`/${location.slug}`, 0.8)),
     ...services.flatMap((service) => bilingual(`/servicios/${service.slug}`, service.featured ? 0.8 : 0.7)),
     // Sin versión en inglés todavía.
+    { url: `${base}/guias`, lastModified, priority: 0.6 },
+    ...guides.map((guide) => ({
+      url: `${base}/guias/${guide.slug}`,
+      lastModified: new Date(guide.date),
+      priority: 0.5,
+    })),
     { url: `${base}/empresas`, lastModified, priority: 0.6 },
     { url: `${base}/regalos`, lastModified, priority: 0.6 },
     { url: `${base}/politica-de-privacidad`, lastModified, priority: 0.3 },
