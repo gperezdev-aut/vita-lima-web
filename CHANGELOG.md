@@ -2,6 +2,29 @@
 
 Registro de cambios relevantes del sitio (`vita-lima-web`). No sigue un formato semántico de versiones; cada entrada referencia el/los commits donde se aplicó el cambio en `main`.
 
+## 2026-09-04 — Sección de guías y redirecciones desde el sitio anterior
+
+Preparación para el corte del dominio: cuando `vitalimaspa.com` deje de apuntar a Wix, las 22 URLs que Google tiene indexadas de ese sitio dejarían de existir. Estas redirecciones evitan que cada posición ganada en años caiga en un 404.
+
+### Redirecciones (`next.config.ts`)
+
+- **Las 22 páginas del Wix** van a su equivalente nuevo: `/masajes` → `/servicios#individual`, `/para-empresas` → `/empresas`, `/protocolos-y-condiciones` → `/terminos-y-condiciones`, etc.
+- **Los 13 artículos del blog** van a su guía correspondiente, o al servicio más cercano cuando no se migraron.
+- **Redes de seguridad** para lo que el sitemap del Wix no listaba: `/blog/*`, `/single-post/*`, `/booking-calendar/*`, `/service-page/*`, `/product-page/*`, `/member-profile/*`. Van al final para que las reglas específicas ganen.
+- Se emite **301** explícito, no el 308 que Next usa por defecto con `permanent: true`. Google los trata igual, pero el resto de herramientas de SEO y los navegadores viejos entienden el 301 sin ambigüedad.
+
+### Sección de guías (`/guias`)
+
+- **`content/guides.ts`** (nuevo): 11 guías. Seis rescatan lo aprovechable del blog del Wix y cinco son nuevas, escritas para responder lo que la gente busca antes de reservar: relajante o descontracturante, qué esperar la primera vez, cada cuánto conviene volver, cómo regalar un masaje, qué es la bambuterapia, qué son las piedras calientes.
+- **Reescritura por criterio de contenido**: los artículos originales prometían resultados que el resto del sitio evita cuidadosamente — la reflexología "estimula el sistema inmunológico y equilibra hormonas", los masajes reductores "reducen medidas". Se conservó lo útil y se quitó lo que no se sostiene, para no contradecir las 50 páginas de servicio. La guía de bambuterapia lo dice explícitamente: si alguien promete centímetros con solo masajes, desconfía.
+- Los siete artículos que no se migraron (los de 2016 sobre beber agua, el de colágeno, el de sérum) redirigen al servicio o a la guía más cercana en vez de republicarse: eran relleno y publicarlos bajaría la calidad promedio del sitio.
+- **`app/guias/page.tsx`** y **`app/guias/[slug]/page.tsx`**: índice y detalle, con `Article` + `BreadcrumbList` JSON-LD, metadata propia y enlaces cruzados a los servicios que resuelven cada tema.
+- Cada guía enlaza a sus servicios relacionados y a otras guías, que es lo que convierte la sección en una vía de entrada y no en un blog aislado.
+
+El build pasó de 117 a **130 páginas estáticas** y el sitemap de 112 a **124 URLs**. Las guías van solo en español, igual que `/empresas` y `/regalos`: están en `UNTRANSLATED_PATHS`, así que desde el sitio en inglés se enlaza a la versión en español y no se emite hreflang para ellas.
+
+Validado con `npm run typecheck`, `npm run lint` y `npm run build`, y probado sobre el build de producción: las redirecciones devuelven 301 al destino correcto, las 11 guías responden 200, un slug inexistente da 404 y el texto de las guías viene en el HTML servido.
+
 ## 2026-09-04 — El inglés pasa a tener URLs propias (i18n con rutas y hreflang)
 
 Cierra el pendiente de fondo del selector de idioma. Hasta ahora el botón EN cambiaba el texto sin cambiar la dirección: el inglés existía para quien ya estaba en la página, pero Google indexa URLs, no clics, así que la versión en inglés era invisible para el buscador y no se podía compartir por enlace.
