@@ -4,7 +4,7 @@ import { site } from "@/content/site";
 import { locations, type Location } from "@/content/locations";
 import { serviceDetails, getServiceImages } from "@/content/service-details";
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nueva.vitalimaspa.com";
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.vitalimaspa.com";
 const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 
 /**

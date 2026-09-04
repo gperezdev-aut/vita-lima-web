@@ -12,7 +12,7 @@ import type { MetadataRoute } from "next";
 export const isProductionSite = (process.env.NEXT_PUBLIC_SITE_ENV || "production") === "production";
 
 export default function robots(): MetadataRoute.Robots {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://nueva.vitalimaspa.com";
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://www.vitalimaspa.com";
 
   if (!isProductionSite) {
     return { rules: { userAgent: "*", disallow: "/" } };

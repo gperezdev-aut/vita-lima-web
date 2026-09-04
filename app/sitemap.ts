@@ -11,7 +11,7 @@ import { toEnglishPath } from "@/lib/i18n/routes";
  * traducidas (empresas, gift cards, legales) aparecen solo en español.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://nueva.vitalimaspa.com";
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://www.vitalimaspa.com";
   const lastModified = new Date();
 
   /** Una entrada por idioma para una ruta que existe en ambos. */
