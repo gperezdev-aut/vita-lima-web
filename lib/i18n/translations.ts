@@ -205,6 +205,10 @@ export const translations = {
       galleryHeading: "El ambiente",
       backToCatalog: "Ver el catálogo completo",
       seeDetails: "Ver detalle",
+      // El campo `venue` de content/services.ts guarda el valor en español
+      // ("Ambas" / "Lima"); aquí se traduce para mostrarlo. Si aparece un
+      // valor nuevo sin entrada, se muestra tal cual viene del catálogo.
+      venues: { Ambas: "Ambas sedes", Lima: "Lima" } as Record<string, string>,
       minutes: "min",
       whatsappMessage: (name: string) => `Hola Vita Lima, quisiera reservar ${name}. ¿Qué horarios tienen disponibles?`,
     },
@@ -221,6 +225,7 @@ export const translations = {
       book: "Reservar por WhatsApp",
       viewAllServices: "Ver el catálogo completo",
       otherLocation: "Ver la otra sede",
+      photoAlt: (name: string) => `Sede ${name} de Vita Lima Spa`,
       whatsappMessage: (name: string) => `Hola Vita Lima, quisiera reservar en la sede de ${name}. ¿Qué horarios tienen disponibles?`,
     },
     servicesPage: {
@@ -477,6 +482,7 @@ export const translations = {
       galleryHeading: "The setting",
       backToCatalog: "See the full catalog",
       seeDetails: "See details",
+      venues: { Ambas: "Both locations", Lima: "Lima" } as Record<string, string>,
       minutes: "min",
       whatsappMessage: (name: string) => `Hi Vita Lima, I'd like to book ${name}. What times do you have available?`,
     },
@@ -493,6 +499,7 @@ export const translations = {
       book: "Book via WhatsApp",
       viewAllServices: "See the full catalog",
       otherLocation: "See the other location",
+      photoAlt: (name: string) => `Vita Lima Spa — ${name} location`,
       whatsappMessage: (name: string) => `Hi Vita Lima, I'd like to book at the ${name} location. What times do you have available?`,
     },
     servicesPage: {
