@@ -51,7 +51,7 @@ function serviceImage(category: ServiceCategory, index: number) {
 }
 
 export default function ServicesCatalog() {
-  const { language, toggleLanguage } = useLanguage();
+  const { language, toggleLanguage, href } = useLanguage();
   const t = translations[language].servicesPage;
   const tPricing = translations[language].pricing;
   const tHeader = translations[language].header;
@@ -66,14 +66,14 @@ export default function ServicesCatalog() {
     <main className="servicesCatalogPage">
       <header className="catalogHeader">
         <div className="catalogNav shell">
-          <Link href="/" aria-label={tHeader.brandHome}>
+          <Link href={href("/")} aria-label={tHeader.brandHome}>
             <Image src="/images/brand/logo-vita-lima-white.png" alt="Vita Lima Spa" width={180} height={78} priority />
           </Link>
           <div className="catalogNavActions">
             <button type="button" className="langToggle" onClick={toggleLanguage} aria-label={language === "es" ? "Switch to English" : "Cambiar a español"}>
               {language === "es" ? "EN" : "ES"}
             </button>
-            <Link className="catalogBackLink" href="/">{t.backHome}</Link>
+            <Link className="catalogBackLink" href={href("/")}>{t.backHome}</Link>
           </div>
         </div>
         <div className="catalogHero shell">
@@ -134,7 +134,7 @@ export default function ServicesCatalog() {
                               cada servicio tiene ahora su URL indexable en
                               /servicios/[slug] con descripción larga y FAQ. */}
                           <h3>
-                            <Link className="catalogCardTitleLink" href={`/servicios/${service.slug}`}>
+                            <Link className="catalogCardTitleLink" href={href(`/servicios/${service.slug}`)}>
                               {text.name}
                             </Link>
                           </h3>
@@ -166,7 +166,7 @@ export default function ServicesCatalog() {
                               ariaLabel={t.addToCartAria(text.name)}
                               item={{ id: service.slug, name: text.name, price: service.price, meta: `${service.duration} min` }}
                             />
-                            <Link className="catalogDetailLink" href={`/servicios/${service.slug}`}>
+                            <Link className="catalogDetailLink" href={href(`/servicios/${service.slug}`)}>
                               {tDetail.seeDetails} <span aria-hidden="true">→</span>
                             </Link>
                           </div>

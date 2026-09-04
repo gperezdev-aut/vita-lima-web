@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import ServiceRoute, { buildServiceMetadata } from "@/components/ServiceRoute";
 import { services } from "@/content/services";
 
-// Todas las páginas de servicio se generan en el build: son estáticas y no
-// dependen de nada en tiempo de ejecución.
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
 }
@@ -16,10 +14,10 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  return buildServiceMetadata(slug, "es");
+  return buildServiceMetadata(slug, "en");
 }
 
 export default async function Page({ params }: PageProps) {
   const { slug } = await params;
-  return <ServiceRoute slug={slug} language="es" />;
+  return <ServiceRoute slug={slug} language="en" />;
 }

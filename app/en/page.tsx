@@ -3,16 +3,16 @@ import HomePageView from "@/components/HomePageView";
 import { languageAlternates } from "@/lib/i18n/routes";
 
 export const metadata: Metadata = {
-  title: "Vita Lima Spa | Masajes y bienestar en Lima",
+  title: "Vita Lima Spa | Massage and wellbeing in Lima",
   description:
-    "Masajes relajantes, terapéuticos, para parejas, Gift Cards y bienestar corporativo en San Borja y Miraflores.",
-  alternates: { canonical: "/", languages: languageAlternates("/") },
+    "Relaxing, deep-tissue and couples massages, facials, gift cards and corporate wellbeing in San Borja and Miraflores, Lima.",
+  alternates: { canonical: "/en", languages: languageAlternates("/") },
   openGraph: {
     title: "Vita Lima Spa",
-    description: "Es momento de volver a ti. Masajes y bienestar premium en Lima.",
+    description: "It's time to come back to you. Massage and wellbeing in Lima.",
     type: "website",
-    url: "/",
-    locale: "es_PE",
+    url: "/en",
+    locale: "en",
     images: ["/images/signature/hero.webp"],
   },
 };

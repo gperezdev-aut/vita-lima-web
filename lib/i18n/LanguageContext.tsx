@@ -1,52 +1,56 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useMemo, type ReactNode } from "react";
+import { counterpartPath, languageFromPathname, localizedPath } from "./routes";
 
 export type Language = "es" | "en";
 
 type LanguageContextValue = {
   language: Language;
+  /** Cambia de idioma navegando a la misma página en la otra URL. */
   toggleLanguage: () => void;
+  /**
+   * Href de un enlace interno en el idioma activo. Los componentes escriben
+   * siempre la ruta en español ("/servicios") y esta función la traduce.
+   */
+  href: (esPath: string) => string;
 };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
-const STORAGE_KEY = "vita-lima-language";
 
+/**
+ * El idioma se deduce de la URL, no del almacenamiento local.
+ *
+ * Antes vivía en localStorage y el botón EN cambiaba el texto sin cambiar la
+ * dirección: cómodo de programar, pero invisible para Google e imposible de
+ * compartir por enlace. Ahora `/miraflores` es la página en español y
+ * `/en/miraflores` la misma página en inglés, y el botón es un enlace entre
+ * las dos. Como consecuencia, ya no hay estado que hidratar ni preferencia
+ * que recordar: la URL es la única fuente de verdad.
+ */
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  // El servidor siempre renderiza en español (mismo criterio que CartProvider
-  // con el carrito vacío): evita un mismatch de hidratado. Si el visitante ya
-  // había elegido inglés antes, lo aplicamos apenas montamos en el cliente.
-  const [language, setLanguage] = useState<Language>("es");
-  const [hydrated, setHydrated] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const language = languageFromPathname(pathname || "/");
 
   useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored === "en" || stored === "es") {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setLanguage(stored);
-      }
-    } catch {
-      // localStorage no disponible: seguimos en español.
-    }
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    try {
-      window.localStorage.setItem(STORAGE_KEY, language);
-    } catch {
-      // Sin acceso a almacenamiento local: no persistimos, pero no rompemos la UI.
-    }
+    // El <html lang> del layout raíz es estático ("es"); aquí se corrige en
+    // el cliente para que los lectores de pantalla y el navegador anuncien
+    // el idioma real de la página.
     document.documentElement.lang = language;
-  }, [language, hydrated]);
+  }, [language]);
 
-  function toggleLanguage() {
-    setLanguage((current) => (current === "es" ? "en" : "es"));
-  }
+  const value = useMemo<LanguageContextValue>(
+    () => ({
+      language,
+      toggleLanguage: () => router.push(counterpartPath(pathname || "/")),
+      href: (esPath: string) => localizedPath(esPath, language),
+    }),
+    [language, pathname, router],
+  );
 
-  return <LanguageContext.Provider value={{ language, toggleLanguage }}>{children}</LanguageContext.Provider>;
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }
 
 export function useLanguage() {
