@@ -2,6 +2,26 @@
 
 Registro de cambios relevantes del sitio (`vita-lima-web`). No sigue un formato semántico de versiones; cada entrada referencia el/los commits donde se aplicó el cambio en `main`.
 
+## 2026-09-04 — Traducción al inglés del contenido nuevo y foto del mapa
+
+Continuación del despliegue del 3 de setiembre. Dos cosas: el selector EN no traducía el contenido largo de las páginas nuevas, y la foto del botón "Ver mapa" de San Borja no comunicaba nada.
+
+### Traducción al inglés
+
+- **`content/service-details-en.ts`** (nuevo): la versión en inglés de los 50 servicios — tagline, descripción, cómo es la sesión, para quién es, beneficios y las 3 preguntas frecuentes de cada uno. Es traducción editorial, no literal: se mantuvo el tono del original.
+- **`content/locations-en.ts`** (nuevo): lo mismo para San Borja y Miraflores. Las direcciones quedan tal cual en español ("Av. Aviación 3358, oficina 204"): quien se la muestra a un taxista necesita el texto real, no su traducción.
+- **`lib/i18n/serviceDetailText.ts`** y **`lib/i18n/locationText.ts`** (nuevos): eligen el idioma activo con respaldo **campo por campo**. Si mañana se agrega un servicio y su traducción queda a medias, la página igual se muestra completa mezclando inglés y español, en vez de quedarse con secciones vacías. Mismo criterio que ya usaba `serviceText.ts` con el catálogo.
+- **`content/service-details.ts`** y **`content/locations.ts`**: se separó la parte traducible en los tipos `ServiceDetailCopy` y `LocationCopy`. Los datos que no son texto (precio, duración, dirección, horario estructurado, coordenadas, fotos) siguen viviendo solo en el archivo en español.
+- **`lib/i18n/translations.ts`**: se tradujo lo que quedaba suelto — el texto alternativo de las fotos de sede y la etiqueta "Disponible en", que mostraba el valor crudo del catálogo ("Ambas") también en la versión en inglés.
+
+La metadata para buscadores (title, description, JSON-LD) se mantiene en español, como el resto del sitio: el selector ES/EN sigue siendo un cambio de texto en el cliente y no hay URLs `/en/` indexables. Eso queda pendiente aparte.
+
+### Foto del botón "Ver mapa"
+
+`content/locations.ts`: el `heroImage` de San Borja pasó de `san-borja-01.webp` (un detalle oscuro de la pared) a `san-borja-03.webp` (la recepción con el letrero de la marca). Se ve mucho mejor bajo la capa oscura del botón y comunica "este es el lugar". La foto anterior no se pierde: entra a la galería. El cambio también mejora el `og:image` y la imagen del JSON-LD de esa sede, que usan el mismo campo.
+
+Validado con `npm run typecheck`, `npm run lint` y `npm run build`, y revisado con capturas de las páginas con el idioma en inglés.
+
 ## 2026-09-03 — Páginas por servicio y por sede + consentimiento de datos
 
 Dos bloques de trabajo derivados de la revisión del sitio del 3 de setiembre de 2026.

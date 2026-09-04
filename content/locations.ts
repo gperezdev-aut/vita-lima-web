@@ -18,16 +18,30 @@ export type LocationSchedule = {
   closes: string;
 };
 
-export type Location = {
-  slug: "san-borja" | "miraflores";
-  name: string;
+/**
+ * La parte traducible de una sede. `content/locations-en.ts` publica esta
+ * misma forma en inglés y `lib/i18n/locationText.ts` elige según el idioma
+ * activo, campo por campo.
+ */
+export type LocationCopy = {
   /** Título de la página, orientado a búsqueda local. */
   heading: string;
   tagline: string;
-  streetAddress: string;
-  district: string;
   /** Texto de horario para mostrar al visitante. */
   scheduleText: string;
+  intro: string[];
+  /** Referencias del barrio para llegar. */
+  gettingHere: string[];
+  /** Qué distingue a esta sede. */
+  highlights: string[];
+  faqs: { q: string; a: string }[];
+};
+
+export type Location = LocationCopy & {
+  slug: "san-borja" | "miraflores";
+  name: string;
+  streetAddress: string;
+  district: string;
   /** Horario estructurado para el JSON-LD. Vacío = no se publica. */
   openingHours: LocationSchedule[];
   /** TODO: reemplazar por las coordenadas reales del local. */
@@ -36,14 +50,8 @@ export type Location = {
   /** Imagen estática que se muestra antes de cargar el iframe de Google Maps. */
   heroImage: string;
   gallery: string[];
-  intro: string[];
-  /** Referencias del barrio para llegar. */
-  gettingHere: string[];
-  /** Qué distingue a esta sede. */
-  highlights: string[];
   /** Slugs de servicios que se destacan en esta sede. */
   featuredServiceSlugs: string[];
-  faqs: { q: string; a: string }[];
 };
 
 export const locations: Location[] = [
@@ -59,10 +67,10 @@ export const locations: Location[] = [
       { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "15:00", closes: "20:00" },
     ],
     mapQuery: "Av. Aviacion 3358 San Borja Lima",
-    heroImage: "/images/sede-san-borja/san-borja-01.webp",
+    heroImage: "/images/sede-san-borja/san-borja-03.webp",
     gallery: [
+      "/images/sede-san-borja/san-borja-01.webp",
       "/images/sede-san-borja/san-borja-02.webp",
-      "/images/sede-san-borja/san-borja-03.webp",
       "/images/sede-san-borja/san-borja-04.webp",
       "/images/sede-san-borja/san-borja-05.webp",
       "/images/sede-san-borja/san-borja-06.webp",

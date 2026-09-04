@@ -9,6 +9,7 @@ import { BLUR_DATA_URL } from "@/lib/blurPlaceholder";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { translations } from "@/lib/i18n/translations";
 import { serviceText } from "@/lib/i18n/serviceText";
+import { locationText } from "@/lib/i18n/locationText";
 import type { Location } from "@/content/locations";
 import type { Service } from "@/content/services";
 
@@ -25,6 +26,9 @@ export default function LocationPageView({ location, featuredServices, otherLoca
   const t = translations[language].locationPage;
   const tService = translations[language].serviceDetail;
   const tHeader = translations[language].header;
+
+  // Textos de la sede en el idioma activo (respaldo al español por campo).
+  const copy = locationText(location, language);
 
   const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t.whatsappMessage(location.name))}`;
 
@@ -60,8 +64,8 @@ export default function LocationPageView({ location, featuredServices, otherLoca
             </ol>
           </nav>
           <p className="eyebrow catalogEyebrow">{t.eyebrow}</p>
-          <h1>{location.heading}</h1>
-          <p>{location.tagline}</p>
+          <h1>{copy.heading}</h1>
+          <p>{copy.tagline}</p>
           <a className="button orangeButton" href={whatsappHref} target="_blank" rel="noreferrer">
             {t.book} <span aria-hidden="true">→</span>
           </a>
@@ -71,20 +75,20 @@ export default function LocationPageView({ location, featuredServices, otherLoca
       <section className="section locationIntroSection">
         <div className="shell locationIntroLayout">
           <div className="locationIntroCopy">
-            {location.intro.map((paragraph) => (
+            {copy.intro.map((paragraph) => (
               <p key={paragraph.slice(0, 40)}>{paragraph}</p>
             ))}
 
             <h2>{t.gettingHereHeading}</h2>
             <ul className="locationList">
-              {location.gettingHere.map((item) => (
+              {copy.gettingHere.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
 
             <h2>{t.highlightsHeading}</h2>
             <ul className="locationList">
-              {location.highlights.map((item) => (
+              {copy.highlights.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
@@ -96,7 +100,7 @@ export default function LocationPageView({ location, featuredServices, otherLoca
             <p className="locationDistrict">{location.district}, Lima</p>
 
             <h2>{t.scheduleHeading}</h2>
-            <p>{location.scheduleText}</p>
+            <p>{copy.scheduleText}</p>
 
             <a className="button orangeButton locationCardCta" href={whatsappHref} target="_blank" rel="noreferrer">
               {t.book} <span aria-hidden="true">→</span>
@@ -107,7 +111,7 @@ export default function LocationPageView({ location, featuredServices, otherLoca
                 name={location.name}
                 query={location.mapQuery}
                 previewImage={location.heroImage}
-                previewAlt={`Sede ${location.name} de Vita Lima Spa`}
+                previewAlt={t.photoAlt(location.name)}
               />
             </div>
           </aside>
@@ -158,7 +162,7 @@ export default function LocationPageView({ location, featuredServices, otherLoca
               <div className="locationGalleryItem" key={src}>
                 <Image
                   src={src}
-                  alt={`Sede ${location.name} de Vita Lima Spa`}
+                  alt={t.photoAlt(location.name)}
                   fill
                   sizes="(max-width: 760px) 80vw, 25vw"
                   placeholder="blur"
@@ -177,7 +181,7 @@ export default function LocationPageView({ location, featuredServices, otherLoca
             <h2>{t.faqHeading}</h2>
           </div>
           <div className="faqGrid">
-            {location.faqs.map(({ q, a }) => (
+            {copy.faqs.map(({ q, a }) => (
               <details key={q}>
                 <summary>
                   {q}

@@ -6,11 +6,11 @@ import type { Service, ServiceCategory } from "@/content/services";
  * única fuente de precio, duración, categoría y nombre: aquí solo vive el
  * texto editorial que no cabe en una tarjeta.
  *
- * Todo el texto está escrito en español (idioma principal del sitio). Los
- * campos opcionales `*En` quedan disponibles para una futura traducción; si
- * no están definidos, la versión en inglés del sitio muestra el texto en
- * español como respaldo, igual que hace `lib/i18n/serviceText.ts` con el
- * catálogo.
+ * Este archivo contiene la versión en español, que es el idioma principal
+ * del sitio. La versión en inglés vive en `content/service-details-en.ts`
+ * con la misma forma (`ServiceDetailCopy`); si a un servicio le falta la
+ * traducción, `lib/i18n/serviceDetailText.ts` muestra el texto en español
+ * como respaldo, igual que hace `lib/i18n/serviceText.ts` con el catálogo.
  *
  * Nota de contenido: ningún texto promete resultados médicos ni terapéuticos
  * verificables. Vita Lima Spa es un centro de masajes y bienestar, no un
@@ -22,7 +22,13 @@ export type ServiceFaq = {
   a: string;
 };
 
-export type ServiceDetail = {
+/**
+ * La parte traducible del contenido de un servicio. El archivo
+ * `content/service-details-en.ts` publica exactamente esta forma en inglés,
+ * y `lib/i18n/serviceDetailText.ts` elige una u otra según el idioma activo,
+ * campo por campo.
+ */
+export type ServiceDetailCopy = {
   /** Frase corta que acompaña al título en el hero de la página. */
   tagline: string;
   /** Dos o tres párrafos de descripción larga. */
@@ -35,6 +41,9 @@ export type ServiceDetail = {
   session: string;
   /** Preguntas frecuentes propias del servicio (alimentan el FAQPage JSON-LD). */
   faqs: ServiceFaq[];
+};
+
+export type ServiceDetail = ServiceDetailCopy & {
   /** Title de la página. Si no está, se arma con el nombre del servicio. */
   seoTitle?: string;
   /** Meta description. Si no está, se arma con el tagline. */

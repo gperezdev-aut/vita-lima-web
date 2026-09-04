@@ -9,6 +9,7 @@ import { BLUR_DATA_URL } from "@/lib/blurPlaceholder";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { translations } from "@/lib/i18n/translations";
 import { serviceText } from "@/lib/i18n/serviceText";
+import { serviceDetailText } from "@/lib/i18n/serviceDetailText";
 import type { Service } from "@/content/services";
 import type { ServiceDetail } from "@/content/service-details";
 
@@ -28,6 +29,8 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
   const tHeader = translations[language].header;
   const tCatalog = translations[language].servicesPage;
   const text = serviceText(service, language);
+  // Contenido largo en el idioma activo (respaldo al español por campo).
+  const copy = serviceDetailText(service.slug, detail, language);
 
   const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t.whatsappMessage(text.name))}`;
   const [heroImage, ...galleryImages] = images;
@@ -68,7 +71,7 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
           </nav>
 
           <h1>{text.name}</h1>
-          <p className="serviceDetailTagline">{detail.tagline}</p>
+          <p className="serviceDetailTagline">{copy.tagline}</p>
 
           <dl className="serviceDetailMeta">
             <div>
@@ -92,7 +95,7 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
             </div>
             <div>
               <dt>{t.venue}</dt>
-              <dd>{service.venue}</dd>
+              <dd>{t.venues[service.venue] ?? service.venue}</dd>
             </div>
           </dl>
 
@@ -114,17 +117,17 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
       <section className="section serviceDetailBody">
         <div className="shell serviceDetailLayout">
           <div className="serviceDetailMain">
-            {detail.intro.map((paragraph) => (
+            {copy.intro.map((paragraph) => (
               <p key={paragraph.slice(0, 40)} className="serviceDetailParagraph">
                 {paragraph}
               </p>
             ))}
 
             <h2>{t.sessionHeading}</h2>
-            <p className="serviceDetailParagraph">{detail.session}</p>
+            <p className="serviceDetailParagraph">{copy.session}</p>
 
             <h2>{t.forWhomHeading}</h2>
-            <p className="serviceDetailParagraph">{detail.forWhom}</p>
+            <p className="serviceDetailParagraph">{copy.forWhom}</p>
           </div>
 
           <aside className="serviceDetailAside">
@@ -135,7 +138,7 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
             <div className="serviceDetailCard">
               <h2>{t.benefitsHeading}</h2>
               <ul>
-                {detail.benefits.map((benefit) => (
+                {copy.benefits.map((benefit) => (
                   <li key={benefit}>{benefit}</li>
                 ))}
               </ul>
@@ -185,7 +188,7 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
             <h2>{t.faqHeading}</h2>
           </div>
           <div className="faqGrid">
-            {detail.faqs.map(({ q, a }) => (
+            {copy.faqs.map(({ q, a }) => (
               <details key={q}>
                 <summary>
                   {q}
