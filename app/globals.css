@@ -165,6 +165,12 @@ button.catalogReserveButton{font:inherit;-webkit-appearance:none;appearance:none
 /* Badge de destacado en las tarjetas del catálogo completo */
 .catalogCardImage>span{position:absolute;top:12px;left:12px;background:rgba(31,45,62,.9);color:white;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:7px 10px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;z-index:1}
 
+/* Control único para pausar las rotaciones automáticas del catálogo. */
+.catalogRotationControl{display:flex;justify-content:flex-end;padding-top:18px}
+.catalogRotationControl button{display:inline-flex;align-items:center;gap:9px;min-height:44px;border:1px solid var(--line);border-radius:999px;background:var(--surface-ivory);color:var(--ink);padding:10px 16px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:.25s}
+.catalogRotationControl button:hover{background:var(--charcoal);border-color:var(--charcoal);color:white}
+.catalogRotationControl button:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+
 /* Carrusel de reseñas con auto-scroll infinito (pausa con hover/touch) */
 .reviewsCarouselWrap{overflow:hidden}
 .reviewGrid{display:flex;gap:16px;width:max-content}
