@@ -169,7 +169,6 @@ button.catalogReserveButton{font:inherit;-webkit-appearance:none;appearance:none
 .catalogRotationControl{display:flex;justify-content:flex-end;padding-top:18px}
 .catalogRotationControl button{display:inline-flex;align-items:center;gap:9px;min-height:44px;border:1px solid var(--line);border-radius:999px;background:var(--surface-ivory);color:var(--ink);padding:10px 16px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:.25s}
 .catalogRotationControl button:hover{background:var(--charcoal);border-color:var(--charcoal);color:white}
-.catalogRotationControl button:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
 
 /* Carrusel de reseñas con auto-scroll infinito (pausa con hover/touch) */
 .reviewsCarouselWrap{overflow:hidden}
