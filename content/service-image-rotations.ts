@@ -56,6 +56,7 @@ export const serviceImageRotations: Record<string, string[]> = {
   ],
   "aroma-zen": [
     "/images/aroma-zen/aroma-zen-01-masaje-hombros.webp",
+    "/images/aroma-zen/aroma-zen-02-reflexologia-podal.webp",
     "/images/aroma-zen/aroma-zen-03-aromaterapia.webp",
     "/images/aroma-zen/aroma-zen-04-cuello-infusion.webp",
   ],
