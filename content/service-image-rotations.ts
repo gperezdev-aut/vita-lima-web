@@ -42,4 +42,51 @@ export const serviceImageRotations: Record<string, string[]> = {
     "/images/lifting-pestanas-cejas/lifting-03-tinturado.webp",
     "/images/lifting-pestanas-cejas/lifting-04-resultado.webp",
   ],
+  "terapia-vita": [
+    "/images/terapia-vita/terapia-vita-01-tens-aplicacion.webp",
+    "/images/terapia-vita/terapia-vita-02-tens-control.webp",
+    "/images/terapia-vita/terapia-vita-03-ventosas-colocacion.webp",
+    "/images/terapia-vita/terapia-vita-04-ventosas-ajuste.webp",
+  ],
+  "deep-balance-120": [
+    "/images/deep-balance-120/deep-balance-120-01-piedras-calientes.webp",
+    "/images/deep-balance-120/deep-balance-120-02-compresas-calientes.webp",
+    "/images/deep-balance-120/deep-balance-120-03-reflexologia-podal.webp",
+    "/images/deep-balance-120/deep-balance-120-04-masaje-hombros.webp",
+  ],
+  "aroma-zen": [
+    "/images/aroma-zen/aroma-zen-01-masaje-hombros.webp",
+    "/images/aroma-zen/aroma-zen-03-aromaterapia.webp",
+    "/images/aroma-zen/aroma-zen-04-cuello-infusion.webp",
+  ],
+  "coco-premium": [
+    "/images/coco-premium/coco-premium-01-piedras-calientes.webp",
+    "/images/coco-premium/coco-premium-02-exfoliacion-coco.webp",
+    "/images/coco-premium/coco-premium-03-reflexologia-podal.webp",
+    "/images/coco-premium/coco-premium-04-vino-o-infusion.webp",
+  ],
+  "piedras-calientes": [
+    "/images/piedras-calientes/piedras-calientes-01-aplicacion.webp",
+    "/images/piedras-calientes/piedras-calientes-02-hombros.webp",
+    "/images/piedras-calientes/piedras-calientes-03-preparacion.webp",
+    "/images/piedras-calientes/piedras-calientes-04-manos.webp",
+  ],
+  "drenaje-linfatico": [
+    "/images/drenaje-linfatico/drenaje-linfatico-01-brazo.webp",
+    "/images/drenaje-linfatico/drenaje-linfatico-02-pierna.webp",
+    "/images/drenaje-linfatico/drenaje-linfatico-03-hombros.webp",
+    "/images/drenaje-linfatico/drenaje-linfatico-04-preparacion.webp",
+  ],
+  ventosas: [
+    "/images/ventosas/ventosas-01-aplicacion-espalda.webp",
+    "/images/ventosas/ventosas-02-cuello.webp",
+    "/images/ventosas/ventosas-03-brazo.webp",
+    "/images/ventosas/ventosas-04-preparacion.webp",
+  ],
+  "glow-facial-plus": [
+    "/images/glow-facial-plus/glow-facial-plus-01-limpieza.webp",
+    "/images/glow-facial-plus/glow-facial-plus-02-mascarilla.webp",
+    "/images/glow-facial-plus/glow-facial-plus-03-piedras-hombros.webp",
+    "/images/glow-facial-plus/glow-facial-plus-04-infusion.webp",
+  ],
 };
