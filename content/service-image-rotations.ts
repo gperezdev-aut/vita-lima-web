@@ -90,4 +90,34 @@ export const serviceImageRotations: Record<string, string[]> = {
     "/images/glow-facial-plus/glow-facial-plus-03-piedras-hombros.webp",
     "/images/glow-facial-plus/glow-facial-plus-04-infusion.webp",
   ],
+  "para-regalar-60": [
+    "/images/para-regalar-60/para-regalar-01-masaje.webp",
+    "/images/para-regalar-60/para-regalar-02-piedras-calientes.webp",
+    "/images/para-regalar-60/para-regalar-03-reflexologia-podal.webp",
+    "/images/para-regalar-60/para-regalar-04-regalo-bebida.webp",
+  ],
+  "limpieza-facial-express": [
+    "/images/limpieza-facial-express/facial-express-01-limpieza.webp",
+    "/images/limpieza-facial-express/facial-express-02-preparacion.webp",
+    "/images/limpieza-facial-express/facial-express-03-gel.webp",
+    "/images/limpieza-facial-express/facial-express-04-retiro.webp",
+  ],
+  "facial-mascarilla-barro": [
+    "/images/facial-mascarilla-barro/barro-01-aplicacion.webp",
+    "/images/facial-mascarilla-barro/barro-02-tratamiento.webp",
+    "/images/facial-mascarilla-barro/barro-03-preparacion.webp",
+    "/images/facial-mascarilla-barro/barro-04-retiro.webp",
+  ],
+  "lifting-de-pestanas": [
+    "/images/lifting-de-pestanas/lifting-01-proteccion.webp",
+    "/images/lifting-de-pestanas/lifting-02-tinturado.webp",
+    "/images/lifting-de-pestanas/lifting-03-resultado.webp",
+    "/images/lifting-de-pestanas/lifting-04-procedimiento.webp",
+  ],
+  "planchado-de-cejas": [
+    "/images/planchado-de-cejas/cejas-01-peinado.webp",
+    "/images/planchado-de-cejas/cejas-02-alineacion.webp",
+    "/images/planchado-de-cejas/cejas-03-resultado.webp",
+    "/images/planchado-de-cejas/cejas-04-detalle.webp",
+  ],
 };
