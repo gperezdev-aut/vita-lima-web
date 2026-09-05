@@ -11,57 +11,11 @@ import FeaturedCarousel from "@/components/FeaturedCarousel";
 import ReviewsCarousel from "@/components/ReviewsCarousel";
 import ConsentMap from "@/components/ConsentMap";
 import { featuredServices } from "@/content/services";
+import { serviceImageRotations } from "@/content/service-image-rotations";
 import { locations } from "@/content/locations";
 import { buildOrganizationJsonLd, buildFaqJsonLd, buildWebSiteJsonLd } from "@/content/structured-data";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { translations } from "@/lib/i18n/translations";
-
-// Cada servicio muestra 2-3 fotos que rotan automáticamente en su tarjeta.
-const featuredServiceImages: Record<string, string[]> = {
-  "relax-vital": [
-    "/images/relax-vital/relax-01-shoulders.webp",
-    "/images/relax-vital/relax-02-pressure.webp",
-    "/images/relax-vital/relax-03-palms.webp",
-    "/images/relax-vital/relax-04-reflexology.webp",
-  ],
-  "alivio-integral": [
-    "/images/alivio-integral/alivio-01-hombros.webp",
-    "/images/alivio-integral/alivio-02-cuello.webp",
-    "/images/alivio-integral/alivio-03-reflexologia.webp",
-    "/images/alivio-integral/alivio-04-lumbar.webp",
-  ],
-  "balance-plus": [
-    "/images/balance-plus/balance-01-piedras-calientes.webp",
-    "/images/balance-plus/balance-02-reflexologia.webp",
-    "/images/balance-plus/balance-03-exfoliacion-espalda.webp",
-    "/images/balance-plus/balance-04-masaje.webp",
-  ],
-  relax: [
-    "/images/relax/relax-01-piedras-aromaterapia.webp",
-    "/images/relax/relax-02-reflexologia-podal.webp",
-    "/images/relax/relax-03-vino-o-infusion.webp",
-    "/images/relax/relax-04-masaje.webp",
-  ],
-  deluxe: [
-    "/images/deluxe/deluxe-01-piedras-aromaterapia.webp",
-    "/images/deluxe/deluxe-02-facial-colageno.webp",
-    "/images/deluxe/deluxe-03-reflexologia-podal.webp",
-    "/images/deluxe/deluxe-04-vino-o-infusion.webp",
-  ],
-  supreme: [
-    "/images/supreme/supreme-01-piedras-aromaterapia.webp",
-    "/images/supreme/supreme-02-exfoliacion-hidratacion.webp",
-    "/images/supreme/supreme-03-facial-hialuronico.webp",
-    "/images/supreme/supreme-04-reflexologia-podal.webp",
-    "/images/supreme/supreme-05-descanso-pareja.webp",
-  ],
-  "lifting-tinturado-planchado-cejas": [
-    "/images/lifting-pestanas-cejas/lifting-01-pestanas.webp",
-    "/images/lifting-pestanas-cejas/lifting-02-planchado-cejas.webp",
-    "/images/lifting-pestanas-cejas/lifting-03-tinturado.webp",
-    "/images/lifting-pestanas-cejas/lifting-04-resultado.webp",
-  ],
-};
 
 // Reseñas reales de clientes: se muestran siempre en su idioma original
 // (español), en ambas versiones del sitio. Traducir una reseña real y
@@ -149,7 +103,7 @@ export default function HomePageView() {
             <p>{t.servicesSection.lead}</p>
           </div>
 
-          <FeaturedCarousel services={featuredServices} images={featuredServiceImages} />
+          <FeaturedCarousel services={featuredServices} images={serviceImageRotations} />
 
           <div className="servicesAllAction">
             <Link className="button servicesAllButton" href={href("/servicios")}>{t.servicesSection.viewAll} <span>→</span></Link>

@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import SiteFooter from "@/components/SiteFooter";
 import AddToCartButton from "@/components/AddToCartButton";
+import RotatingCardImage from "@/components/RotatingCardImage";
+import { serviceImageRotations } from "@/content/service-image-rotations";
 import { servicesByCategory, type Service, type ServiceCategory } from "@/content/services";
-import { BLUR_DATA_URL } from "@/lib/blurPlaceholder";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { translations } from "@/lib/i18n/translations";
 import { serviceText } from "@/lib/i18n/serviceText";
@@ -52,7 +54,9 @@ function serviceImage(category: ServiceCategory, index: number) {
 
 export default function ServicesCatalog() {
   const { language, toggleLanguage, href } = useLanguage();
+  const [imagesPaused, setImagesPaused] = useState(false);
   const t = translations[language].servicesPage;
+  const tCarousel = translations[language].featuredCarousel;
   const tPricing = translations[language].pricing;
   const tHeader = translations[language].header;
   const tDetail = translations[language].serviceDetail;
@@ -100,6 +104,18 @@ export default function ServicesCatalog() {
         </div>
       </nav>
 
+      <div className="catalogRotationControl shell">
+        <button
+          type="button"
+          onClick={() => setImagesPaused((current) => !current)}
+          aria-pressed={imagesPaused}
+          aria-label={imagesPaused ? tCarousel.resume : tCarousel.pause}
+        >
+          <span aria-hidden="true">{imagesPaused ? "▶" : "❚❚"}</span>
+          {imagesPaused ? tCarousel.resume : tCarousel.pause}
+        </button>
+      </div>
+
       <div className="catalogSections" id="catalogo">
         {categoryOrder.map((category) => {
           const categoryServices = servicesByCategory[category];
@@ -123,10 +139,18 @@ export default function ServicesCatalog() {
                 <div className="catalogGrid">
                   {categoryServices.map((service, index) => {
                     const text = serviceText(service, language);
+                    const images = serviceImageRotations[service.slug] ?? [serviceImage(category, index)];
+                    const rotationIndex = Object.keys(serviceImageRotations).indexOf(service.slug);
                     return (
                       <article className="catalogCard" id={service.slug} key={service.code}>
                         <div className="catalogCardImage">
-                          <Image src={serviceImage(category, index)} alt={text.name} fill sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw" placeholder="blur" blurDataURL={BLUR_DATA_URL} />
+                          <RotatingCardImage
+                            images={images}
+                            alt={text.name}
+                            sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw"
+                            staggerMs={rotationIndex >= 0 ? rotationIndex * 500 : 0}
+                            paused={imagesPaused}
+                          />
                           {text.badge && <span>{text.badge}</span>}
                         </div>
                         <div className="catalogCardBody">
