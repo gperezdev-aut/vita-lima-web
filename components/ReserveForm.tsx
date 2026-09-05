@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import { trackWhatsappClick } from "./WhatsAppTracking";
+import { trackEvent, trackWhatsappClick } from "./WhatsAppTracking";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { translations } from "@/lib/i18n/translations";
 
@@ -37,8 +37,17 @@ export default function ReserveForm() {
       `${f.horario}: ${data.get("horario") || ""}`,
       `${f.detalle}: ${data.get("detalle") || ""}`,
     ].join("\n");
+    // Se registran la sede y el servicio elegidos —que son categorías del
+    // negocio, no datos del visitante— para poder ver qué pide la gente. El
+    // nombre, el teléfono y el email no salen del navegador.
+    trackEvent("generate_lead", {
+      event_category: "conversion",
+      sede: String(data.get("sede") || "sin_especificar"),
+      servicio: String(data.get("servicio") || "sin_especificar"),
+    });
+
     const href = `https://wa.me/51907308415?text=${encodeURIComponent(message)}`;
-    trackWhatsappClick(href);
+    trackWhatsappClick("formulario");
     window.open(href, "_blank", "noopener,noreferrer");
   }
 

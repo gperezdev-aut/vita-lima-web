@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "./CartContext";
-import { trackWhatsappClick } from "./WhatsAppTracking";
+import { trackEvent, trackWhatsappClick } from "./WhatsAppTracking";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { translations } from "@/lib/i18n/translations";
 
@@ -33,14 +33,28 @@ export default function CartWidget() {
       "",
       t.whatsappClosing,
     ].join("\n");
+    // Último paso del embudo: cuántas selecciones llegan realmente a WhatsApp
+    // y con qué valor. Los nombres de servicio son catálogo público.
+    trackEvent("begin_checkout", {
+      event_category: "conversion",
+      currency: "PEN",
+      value: total,
+      items: items.map((item) => ({ item_id: item.id, item_name: item.name, price: item.price })),
+    });
+
     const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-    trackWhatsappClick(href);
+    trackWhatsappClick("carrito");
     window.open(href, "_blank", "noopener,noreferrer");
+  }
+
+  function openCart() {
+    trackEvent("view_cart", { event_category: "engagement", currency: "PEN", value: total, items_count: items.length });
+    open();
   }
 
   return (
     <>
-      <button type="button" className="cartTrigger" onClick={open} aria-label={t.trigger}>
+      <button type="button" className="cartTrigger" onClick={openCart} aria-label={t.trigger}>
         <span aria-hidden="true">🛍️</span>
         <span className="cartLabel">{t.triggerLabel}</span>
         {items.length > 0 && <span className="cartBadge">{items.length}</span>}

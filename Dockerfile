@@ -17,9 +17,15 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ARG NEXT_PUBLIC_SITE_URL=https://www.vitalimaspa.com
 ARG NEXT_PUBLIC_WHATSAPP=51907308415
 ARG NEXT_PUBLIC_SITE_ENV=production
+# El ID de Analytics tambien se compila dentro del bundle. Sin este ARG,
+# apuntar a otra propiedad desde el compose no tenia ningun efecto: el build
+# caia en el valor por defecto del codigo y la medicion seguia yendo a la
+# propiedad de siempre, en silencio.
+ARG NEXT_PUBLIC_GA_MEASUREMENT_ID=G-L3PW7G43CY
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_WHATSAPP=$NEXT_PUBLIC_WHATSAPP
 ENV NEXT_PUBLIC_SITE_ENV=$NEXT_PUBLIC_SITE_ENV
+ENV NEXT_PUBLIC_GA_MEASUREMENT_ID=$NEXT_PUBLIC_GA_MEASUREMENT_ID
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .

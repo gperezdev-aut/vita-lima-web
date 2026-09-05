@@ -1,4 +1,5 @@
 import type { Service, ServiceCategory } from "@/content/services";
+import { serviceImageRotations } from "@/content/service-image-rotations";
 
 /**
  * Contenido largo de cada servicio, usado por las páginas individuales
@@ -1730,11 +1731,9 @@ const explicitServiceImages: Record<string, string[]> = {
     "/images/lifting-pestanas-cejas/lifting-04-resultado.webp",
     "/images/lifting-pestanas-cejas/lifting-01-pestanas.webp",
   ],
-  "piedras-calientes": [
-    "/images/balance-plus/balance-01-piedras-calientes.webp",
-    "/images/signature/room-stone.webp",
-    "/images/generated/hot_stones.webp",
-  ],
+  // "piedras-calientes" ya no se declara aquí: tiene sesión de fotos propia
+  // en las rotaciones del catálogo y este bloque —fotos prestadas de
+  // balance-plus más una genérica— ganaba sobre ellas.
   reflexologia: [
     "/images/main-hero/hero-03-reflexologia-podal.webp",
     "/images/alivio-integral/alivio-03-reflexologia.webp",
@@ -1745,7 +1744,8 @@ const explicitServiceImages: Record<string, string[]> = {
     "/images/main-hero/hero-03-reflexologia-podal.webp",
     "/images/generated/foot.webp",
   ],
-  ventosas: ["/images/signature/cupping.webp", "/images/v4/cupping-wide.webp", "/images/v4/cupping.webp"],
+  // "ventosas" tampoco se declara aquí, por lo mismo que piedras-calientes:
+  // sus fotos propias viven en las rotaciones del catálogo.
   renace: ["/images/signature/electro.webp", "/images/v4/electro.webp", "/images/signature/couple-room.webp"],
   "espalda-libre": [
     "/images/main-hero/hero-04-cuello-hombros.webp",
@@ -1791,6 +1791,14 @@ const categoryImagePools: Record<ServiceCategory, string[]> = {
 export function getServiceImages(service: Service): string[] {
   const explicit = explicitServiceImages[service.slug];
   if (explicit) return explicit;
+
+  // Un servicio con sesión de fotos propia ya tiene sus imágenes declaradas
+  // en las rotaciones del catálogo. Antes solo se usaban en la tarjeta y la
+  // ficha caía en el pool genérico de la categoría: la foto real quedaba en
+  // el listado y la página del servicio —y con ella el JSON-LD y la imagen
+  // que se ve al compartir el enlace— mostraba la de otro servicio.
+  const rotation = serviceImageRotations[service.slug];
+  if (rotation && rotation.length > 0) return rotation;
 
   const pool = categoryImagePools[service.category];
   // Rotación determinista según el código del servicio, para que dos

@@ -11,13 +11,24 @@ declare global {
 const TOAST_EVENT = "vita:whatsapp-toast";
 const TOAST_DURATION_MS = 2400;
 
-export function trackWhatsappClick(label: string) {
-  if (typeof window !== "undefined" && window.gtag) {
-    window.gtag("event", "whatsapp_click", {
-      event_category: "engagement",
-      event_label: label,
-    });
-  }
+/**
+ * Origen del clic dentro del sitio. Es una etiqueta corta y cerrada, nunca
+ * la URL de wa.me: ese enlace lleva el mensaje completo —con el nombre y el
+ * teléfono que escribió el visitante— y mandarlo a Analytics sería tratar
+ * datos personales fuera de la finalidad consentida (Ley 29733), además de
+ * llegar truncado e ilegible a GA4.
+ */
+export type WhatsappSource = "carrito" | "formulario" | "boton_flotante" | "enlace_directo";
+
+/** Envío seguro de un evento a GA4: si el visitante no aceptó cookies, gtag no existe y no pasa nada. */
+export function trackEvent(name: string, params?: Record<string, unknown>) {
+  if (typeof window === "undefined" || !window.gtag) return;
+  window.gtag("event", name, params);
+}
+
+export function trackWhatsappClick(source: WhatsappSource) {
+  trackEvent("whatsapp_click", { event_category: "engagement", event_label: source });
+
   // Confirmación visual: cualquier CTA de WhatsApp del sitio (los <a> reales,
   // detectados abajo, y las llamadas explícitas desde ReserveForm/CartWidget
   // antes de window.open) pasan por esta función, así que un solo listener
@@ -36,7 +47,10 @@ export default function WhatsAppTracking() {
       const target = event.target as HTMLElement | null;
       const link = target?.closest<HTMLAnchorElement>('a[href*="wa.me"]');
       if (!link) return;
-      trackWhatsappClick(link.getAttribute("href") || "");
+      // Los enlaces pueden declarar su origen con data-wa-source; el resto
+      // cuenta como enlace suelto dentro del contenido.
+      const source = (link.dataset.waSource as WhatsappSource | undefined) || "enlace_directo";
+      trackWhatsappClick(source);
     }
 
     function handleToast() {

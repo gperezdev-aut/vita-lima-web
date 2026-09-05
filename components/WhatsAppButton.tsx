@@ -8,5 +8,5 @@ export default function WhatsAppButton() {
   const t = translations[language].whatsappButton;
   const href = `https://wa.me/51907308415?text=${encodeURIComponent(t.message)}`;
 
-  return <a className="floatingWhatsapp" href={href} target="_blank" rel="noreferrer" aria-label={t.aria}><span>◉</span><strong>{t.label}</strong></a>;
+  return <a className="floatingWhatsapp" href={href} target="_blank" rel="noreferrer" aria-label={t.aria} data-wa-source="boton_flotante"><span>◉</span><strong>{t.label}</strong></a>;
 }
