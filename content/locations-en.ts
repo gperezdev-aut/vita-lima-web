@@ -49,10 +49,10 @@ export const locationsEn: Record<string, LocationCopy> = {
 
   miraflores: {
     heading: "Massages in Miraflores",
-    tagline: "On Av. Larco, in the heart of Miraflores. By appointment only.",
-    scheduleText: "By appointment only.",
+    tagline: "On Av. Larco, in the heart of Miraflores. Monday to Saturday, 11:00 a.m. to 8:00 p.m.",
+    scheduleText: "Monday to Saturday, 11:00 a.m. to 8:00 p.m.",
     intro: [
-      "Our Miraflores location is on Av. Larco, a few blocks from Parque Kennedy and the boardwalk. We work by appointment only, so the room is prepared exclusively for your time slot.",
+      "Our Miraflores location is on Av. Larco, a few blocks from Parque Kennedy and the boardwalk. We are open Monday to Saturday, from 11:00 a.m. to 8:00 p.m.",
       "It is the most convenient location if you are staying in Miraflores — and our in-home massage includes travel at no extra cost anywhere within the district.",
     ],
     gettingHere: [
@@ -62,15 +62,15 @@ export const locationsEn: Record<string, LocationCopy> = {
       "Paid parking lots nearby on Av. Larco.",
     ],
     highlights: [
-      "By appointment only: the room is prepared just for your time slot",
+      "Monday to Saturday, 11:00 a.m. to 8:00 p.m.",
       "A few blocks from Parque Kennedy and the boardwalk",
       "In-home massage with no travel charge within Miraflores",
       "Close to most hotels in the district",
     ],
     faqs: [
       {
-        q: "Do you take walk-ins in Miraflores?",
-        a: "No. The Miraflores location works by appointment only: message us on WhatsApp at +51 907 308 415 and we'll arrange your time.",
+        q: "What are the opening hours in Miraflores?",
+        a: "We are open Monday to Saturday, from 11:00 a.m. to 8:00 p.m. We recommend booking ahead on WhatsApp at +51 907 308 415 so we can prepare the room for your time slot and secure your spot.",
       },
       {
         q: "Can I book a massage at my hotel?",

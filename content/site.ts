@@ -14,6 +14,6 @@ export const site = {
   ],
   locations: [
     { name: "San Borja", address: "Av. Aviación 3358, oficina 204", schedule: "Lunes a sábado, principalmente de 3:00 p. m. a 8:00 p. m." },
-    { name: "Miraflores", address: "Av. Larco 812, oficina 306", schedule: "Atención previa reserva." }
+    { name: "Miraflores", address: "Av. Larco 812, oficina 306", schedule: "Lunes a sábado, de 11:00 a. m. a 8:00 p. m." }
   ]
 };
