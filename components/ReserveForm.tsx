@@ -46,6 +46,33 @@ export default function ReserveForm() {
       servicio: String(data.get("servicio") || "sin_especificar"),
     });
 
+    // Se registra el lead en el servidor ANTES de abrir WhatsApp, para que
+    // quede constancia aunque el visitante nunca llegue a pulsar enviar allí
+    // —que hasta ahora era un lead perdido entero—.
+    //
+    // Sin `await` a propósito: `window.open` tiene que ejecutarse de forma
+    // síncrona dentro del handler del submit o el bloqueador de ventanas
+    // emergentes lo cancela, y se perdería la conversión justo por intentar
+    // medirla. `keepalive` deja la petición viva aunque la pestaña cambie.
+    // El error se traga: si n8n está caído, el visitante no tiene por qué
+    // enterarse ni ver su reserva interrumpida.
+    void fetch("/api/reservas", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      keepalive: true,
+      body: JSON.stringify({
+        nombre: data.get("nombre") || "",
+        whatsapp: data.get("whatsapp") || "",
+        email,
+        sede: data.get("sede") || "",
+        servicio: data.get("servicio") || "",
+        fecha: data.get("fecha") || "",
+        horario: data.get("horario") || "",
+        detalle: data.get("detalle") || "",
+        idioma: language,
+      }),
+    }).catch(() => {});
+
     const href = `https://wa.me/51907308415?text=${encodeURIComponent(message)}`;
     trackWhatsappClick("formulario");
     window.open(href, "_blank", "noopener,noreferrer");
