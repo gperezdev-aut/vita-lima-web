@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "check:images": "node scripts/check-images.mjs",
+    "check:catalogo": "node scripts/check-catalogo.mjs",
     "validate": "npm run typecheck && npm run lint && npm run check:images && npm run build"
   },
   "dependencies": {
