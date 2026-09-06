@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 import SiteFooter from "@/components/SiteFooter";
 import AddToCartButton from "@/components/AddToCartButton";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { trackEvent } from "@/components/WhatsAppTracking";
 import { BLUR_DATA_URL } from "@/lib/blurPlaceholder";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { translations } from "@/lib/i18n/translations";
@@ -34,6 +36,17 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
 
   const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t.whatsappMessage(text.name))}`;
   const [heroImage, ...galleryImages] = images;
+
+  // Cierra el embudo por arriba: qué servicios se miran de verdad, no solo
+  // cuáles se agregan. Depende del slug para no repetirse al cambiar idioma.
+  useEffect(() => {
+    trackEvent("view_item", {
+      event_category: "engagement",
+      currency: "PEN",
+      value: service.price,
+      items: [{ item_id: service.slug, item_name: service.name, price: service.price }],
+    });
+  }, [service.slug, service.name, service.price]);
 
   return (
     <main className="servicesCatalogPage serviceDetailPage">
