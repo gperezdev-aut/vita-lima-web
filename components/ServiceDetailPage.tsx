@@ -44,9 +44,9 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
       event_category: "engagement",
       currency: "PEN",
       value: service.price,
-      items: [{ item_id: service.slug, item_name: service.name, price: service.price }],
+      items: [{ item_id: service.slug, item_name: text.name, price: service.price }],
     });
-  }, [service.slug, service.name, service.price]);
+  }, [service.slug, text.name, service.price]);
 
   return (
     <main className="servicesCatalogPage serviceDetailPage">
