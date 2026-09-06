@@ -30,7 +30,7 @@ const reviews = [
 const experienceImages = ["/images/signature/couple-room.webp", "/images/signature/buddha.webp", "/images/signature/room-wide.webp", "/images/signature/facial.webp"];
 const experienceHrefs = ["/servicios#couples", "/regalos", "/empresas", "/servicios#home"];
 
-const galleryImages = ["reception.webp", "room-wide.webp", "room-stone.webp", "ambience.webp"];
+const galleryImages = ["home-privacidad-recepcion.webp", "home-privacidad-cabina.webp", "home-privacidad-buda.webp"];
 
 export default function HomePageView() {
   const { language, href } = useLanguage();
@@ -113,7 +113,7 @@ export default function HomePageView() {
 
       <section className="brandStorySection">
         <div className="shell brandStoryLayout">
-          <div className="brandStoryImage"><Image src="/images/signature/room-stone.webp" alt="Cabina de Vita Lima Spa" fill sizes="(max-width: 900px) 100vw, 50vw" /></div>
+          <div className="brandStoryImage"><Image src="/images/home-real/home-nuestra-forma-cabina.webp" alt="Cabina de Vita Lima Spa" fill sizes="(max-width: 900px) 100vw, 50vw" /></div>
           <div className="brandStoryCopy">
             <p className="eyebrow">{t.brandStory.eyebrow}</p>
             <h2>{t.brandStory.title}</h2>
@@ -180,7 +180,7 @@ export default function HomePageView() {
         <div className="shell galleryLayout">
           <div className="galleryIntro"><p className="eyebrow">{t.gallery.eyebrow}</p><h2>{t.gallery.title}</h2><p>{t.gallery.lead}</p></div>
           <div className="galleryGrid">
-            {galleryImages.map((img, index) => <div className={`galleryItem galleryItem${index + 1}`} key={img}><Image src={`/images/signature/${img}`} alt={t.gallery.imageAlt} fill sizes="(max-width: 800px) 100vw, 30vw" /></div>)}
+            {galleryImages.map((img, index) => <div className={`galleryItem galleryItem${index + 1}`} key={img}><Image src={`/images/home-real/${img}`} alt={t.gallery.imageAlt} fill sizes="(max-width: 800px) 100vw, 30vw" /></div>)}
           </div>
         </div>
       </section>
