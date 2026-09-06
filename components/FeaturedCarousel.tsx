@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { Service } from "@/content/services";
 import { serviceSummary } from "@/lib/serviceSummary";
@@ -22,9 +23,13 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
   // Pausa compartida para la rotación de fotos de todas las tarjetas
   // (WCAG 2.2.2): un solo botón controla las N instancias de RotatingCardImage.
   const [imagesPaused, setImagesPaused] = useState(false);
-  const { language } = useLanguage();
+  const { language, href } = useLanguage();
   const t = translations[language].featuredCarousel;
   const tPricing = translations[language].pricing;
+  // Mismo enlace "Ver detalle" que ya existe en las tarjetas del catálogo
+  // (/servicios), para que desde el home también se pueda llegar a la ficha
+  // completa del servicio (fotos, FAQ) y no solo a la reserva por WhatsApp.
+  const tDetail = translations[language].serviceDetail;
 
   function updateArrowState() {
     const track = trackRef.current;
@@ -59,10 +64,8 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
       <div className="featuredCarousel" role="group" aria-label={t.groupLabel} ref={trackRef}>
         {services.map((service, index) => {
           const text = serviceText(service, language);
-          // Resumen corto que se muestra siempre en la tarjeta. Cuando coincide
-          // exactamente con el detalle completo (text.includes) no hay nada nuevo
-          // que revelar, así que no se muestra el botón "Saber más" para ese caso
-          // (evita repetir la misma línea dos veces).
+          // Resumen corto que se muestra siempre en la tarjeta; el detalle
+          // completo vive en /servicios/[slug] (enlace "Ver detalle" abajo).
           const summary = text.featuredSummary || serviceSummary(text.includes);
           const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t.whatsappMessage(text.name))}`;
 
@@ -79,7 +82,11 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
                 <span>{text.badge}</span>
               </div>
               <div className="featuredServiceBody">
-                <h3>{text.name}</h3>
+                <h3>
+                  <Link className="catalogCardTitleLink" href={href(`/servicios/${service.slug}`)}>
+                    {text.name}
+                  </Link>
+                </h3>
                 <div className="featuredServiceMeta">
                   <span>{service.duration} min</span>
                   <span className="priceNow">
@@ -96,13 +103,10 @@ export default function FeaturedCarousel({ services, images }: FeaturedCarouselP
                   </span>
                 </div>
                 <p className="featuredServiceSummary">{summary}</p>
-                {text.includes !== summary && (
-                  <details className="featuredServiceDetails">
-                    <summary>{t.learnMore}</summary>
-                    <p>{text.includes}</p>
-                  </details>
-                )}
-                <a href={whatsappHref} target="_blank" rel="noreferrer" aria-label={t.bookAria(text.name)}>
+                <Link className="catalogDetailLink featuredServiceDetailLink" href={href(`/servicios/${service.slug}`)}>
+                  {tDetail.seeDetails} <span aria-hidden="true">→</span>
+                </Link>
+                <a className="featuredServiceBookLink" href={whatsappHref} target="_blank" rel="noreferrer" aria-label={t.bookAria(text.name)}>
                   {t.book} <span>→</span>
                 </a>
               </div>
