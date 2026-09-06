@@ -27,7 +27,13 @@ const reviews = [
   { quote: "Un servicio muy profesional, limpio y acogedor. Definitivamente volvería.", author: "Milagritos C.", source: "Tripadvisor", rating: "5.0" },
 ];
 
-const experienceImages = ["/images/signature/couple-room.webp", "/images/signature/buddha.webp", "/images/signature/room-wide.webp", "/images/signature/facial.webp"];
+const experienceImages = ["/images/signature/couple-room.webp", "/images/signature/buddha.webp", "/images/signature/room-wide.webp", "/images/signature/masajes-a-domicilio-v2.webp"];
+// La foto de "Masajes a domicilio" es vertical (1024x1536) y entra en una
+// tarjeta apaisada, así que `object-fit:cover` recorta arriba y abajo. Con el
+// encuadre centrado por defecto el rostro de la clienta y las manos de la
+// terapeuta caen justo detrás del bloque de texto en móvil; la clase mueve el
+// recorte hacia la parte baja de la foto para dejarlos por encima del titular.
+const experienceImageClasses = ["", "", "", "experienceTileImageHome"];
 const experienceHrefs = ["/servicios#couples", "/regalos", "/empresas", "/servicios#home"];
 
 const galleryImages = ["home-privacidad-recepcion.webp", "home-privacidad-cabina.webp", "home-privacidad-buda.webp"];
@@ -156,7 +162,7 @@ export default function HomePageView() {
           <div className="experienceTiles">
             {t.experiencesSection.tiles.map((item, index) => (
               <article className="experienceTile" key={item.title}>
-                <Image src={experienceImages[index]} alt={item.title} fill sizes="(max-width: 800px) 88vw, 25vw" />
+                <Image src={experienceImages[index]} alt={item.title} className={experienceImageClasses[index]} fill sizes="(max-width: 800px) 88vw, 25vw" />
                 <div className="tileShade" />
                 <div className="tileContent"><span>{item.kicker}</span><h3>{item.title}</h3><p>{item.text}</p><a href={href(experienceHrefs[index])}>{item.cta} →</a></div>
               </article>
