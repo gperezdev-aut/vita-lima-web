@@ -27,7 +27,7 @@ const reviews = [
   { quote: "Un servicio muy profesional, limpio y acogedor. Definitivamente volvería.", author: "Milagritos C.", source: "Tripadvisor", rating: "5.0" },
 ];
 
-const experienceImages = ["/images/signature/couple-room.webp", "/images/signature/buddha.webp", "/images/signature/room-wide.webp", "/images/signature/masajes-a-domicilio-v2.png"];
+const experienceImages = ["/images/signature/couple-room.webp", "/images/signature/buddha.webp", "/images/signature/room-wide.webp", "/images/signature/masajes-a-domicilio-v2.webp"];
 // La foto de "Masajes a domicilio" es vertical (1024x1536) y entra en una
 // tarjeta apaisada, así que `object-fit:cover` recorta arriba y abajo. Con el
 // encuadre centrado por defecto el rostro de la clienta y las manos de la
