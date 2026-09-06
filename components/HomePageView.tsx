@@ -92,7 +92,9 @@ export default function HomePageView() {
       </section>
 
       <section className="signatureStrip">
-        <div className="shell signatureGrid">
+        {/* tabIndex: en móvil la franja se desplaza en horizontal y sin esto
+            no se puede recorrer con el teclado (axe: scrollable-region-focusable). */}
+        <div className="shell signatureGrid" tabIndex={0} role="group" aria-label={t.scrollLabels.signature}>
           {t.signatureStrip.map((item, index) => (
             <div key={item.title}><span>0{index + 1}</span><strong>{item.title}</strong><p>{item.text}</p></div>
           ))}
@@ -133,7 +135,7 @@ export default function HomePageView() {
         <div className="shell">
           <div className="reviewsHeader">
             <div><p className="eyebrow orangeText">{t.reviewsSection.eyebrow}</p><h2>{t.reviewsSection.title}</h2></div>
-            <div className="ratingSummary">
+            <div className="ratingSummary" tabIndex={0} role="group" aria-label={t.scrollLabels.rating}>
               <div><strong>4.7</strong><span>{t.reviewsSection.googleLabel}</span><small>{t.reviewsSection.googleCount}</small></div>
               <div><strong>4.8</strong><span>{t.reviewsSection.tripadvisorLabel}</span><small>{t.reviewsSection.tripadvisorCount}</small></div>
               <div><strong>{t.reviewsSection.rankValue}</strong><span>{t.reviewsSection.rankLabel}</span><small>{t.reviewsSection.rankSub}</small></div>
@@ -174,7 +176,7 @@ export default function HomePageView() {
       <section className="section stepsSection">
         <div className="shell stepsLayout">
           <div className="stepsHeading"><p className="eyebrow">{t.steps.eyebrow}</p><h2>{t.steps.title}</h2><p>{t.steps.lead}</p></div>
-          <div className="stepsGrid">
+          <div className="stepsGrid" tabIndex={0} role="group" aria-label={t.scrollLabels.steps}>
             {t.steps.items.map((step, index) => (
               <article className="stepCard" key={step.title}><span>0{index + 1}</span><h3>{step.title}</h3><p>{step.text}</p></article>
             ))}
@@ -197,8 +199,8 @@ export default function HomePageView() {
           {/* Las tarjetas llevan ahora a la página propia de cada sede
               (/san-borja y /miraflores), que es donde vive el contenido local
               indexable: cómo llegar, horarios, fotos del local y su FAQ. */}
-          <article className="locationCard"><Image src="/images/sede-san-borja/san-borja-01.webp" alt="Sede San Borja" fill /><div className="locationShade" /><div className="locationContent"><span>{t.locations.sanBorja.tag}</span><h3>San Borja</h3><p>Av. Aviación 3358, oficina 204</p><small>{t.locations.sanBorja.hours}</small><Link href={href("/san-borja")}>{t.locations.sanBorja.directions}</Link></div></article>
-          <article className="locationCard"><Image src="/images/signature/buddha.webp" alt="Sede Miraflores" fill /><div className="locationShade" /><div className="locationContent"><span>{t.locations.miraflores.tag}</span><h3>Miraflores</h3><p>Av. Larco 812, oficina 306</p><small>{t.locations.miraflores.hours}</small><Link href={href("/miraflores")}>{t.locations.miraflores.directions}</Link></div></article>
+          <article className="locationCard"><Image src="/images/sede-san-borja/san-borja-01.webp" alt="Sede San Borja" fill sizes="(max-width: 900px) 100vw, 50vw" /><div className="locationShade" /><div className="locationContent"><span>{t.locations.sanBorja.tag}</span><h3>San Borja</h3><p>Av. Aviación 3358, oficina 204</p><small>{t.locations.sanBorja.hours}</small><Link href={href("/san-borja")}>{t.locations.sanBorja.directions}</Link></div></article>
+          <article className="locationCard"><Image src="/images/signature/buddha.webp" alt="Sede Miraflores" fill sizes="(max-width: 900px) 100vw, 50vw" /><div className="locationShade" /><div className="locationContent"><span>{t.locations.miraflores.tag}</span><h3>Miraflores</h3><p>Av. Larco 812, oficina 306</p><small>{t.locations.miraflores.hours}</small><Link href={href("/miraflores")}>{t.locations.miraflores.directions}</Link></div></article>
         </div>
         {/* Los mapas ya no se embeben en la carga inicial: cada uno muestra
             una foto de la sede y solo inserta el iframe de Google Maps —con
