@@ -1721,16 +1721,9 @@ const explicitServiceImages: Record<string, string[]> = {
     "/images/lifting-pestanas-cejas/lifting-03-tinturado.webp",
     "/images/lifting-pestanas-cejas/lifting-04-resultado.webp",
   ],
-  "lifting-de-pestanas": [
-    "/images/lifting-pestanas-cejas/lifting-01-pestanas.webp",
-    "/images/lifting-pestanas-cejas/lifting-03-tinturado.webp",
-    "/images/lifting-pestanas-cejas/lifting-04-resultado.webp",
-  ],
-  "planchado-de-cejas": [
-    "/images/lifting-pestanas-cejas/lifting-02-planchado-cejas.webp",
-    "/images/lifting-pestanas-cejas/lifting-04-resultado.webp",
-    "/images/lifting-pestanas-cejas/lifting-01-pestanas.webp",
-  ],
+  // "lifting-de-pestanas" y "planchado-de-cejas" tampoco se declaran aquí:
+  // el lote 02 les dio sesión de fotos propia y estos bloques —fotos del
+  // servicio combinado lifting-pestanas-cejas— ganaban sobre ellas.
   // "piedras-calientes" ya no se declara aquí: tiene sesión de fotos propia
   // en las rotaciones del catálogo y este bloque —fotos prestadas de
   // balance-plus más una genérica— ganaba sobre ellas.
