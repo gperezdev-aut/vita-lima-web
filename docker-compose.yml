@@ -17,6 +17,13 @@ services:
       NEXT_PUBLIC_WHATSAPP: "51907308415"
       NEXT_PUBLIC_SITE_ENV: production
       NEXT_PUBLIC_GA_MEASUREMENT_ID: G-L3PW7G43CY
+      # Estas dos SÍ van solo aquí y no en `args`: las lee el servidor en
+      # tiempo de ejecucion (app/api/reservas), no el build. Ponerlas en
+      # `args` ademas las hornearia en la imagen, que es justo lo que no
+      # queremos con un secreto. Se toman del entorno del host —del .env
+      # que vive en el servidor— para no versionar el secreto aqui.
+      N8N_RESERVAS_WEBHOOK_URL: ${N8N_RESERVAS_WEBHOOK_URL:-}
+      N8N_RESERVAS_WEBHOOK_SECRET: ${N8N_RESERVAS_WEBHOOK_SECRET:-}
     ports:
       - "127.0.0.1:3001:3000"
     networks:
