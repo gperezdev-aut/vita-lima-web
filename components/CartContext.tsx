@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { depositTotal, type DepositGroup } from "@/content/deposits";
+import { dependsOnPeople, depositTotal, type DepositGroup } from "@/content/deposits";
 
 export type CartItem = {
   id: string;
@@ -35,6 +35,8 @@ type CartContextValue = {
   setPeople: (value: number) => void;
   /** Lo que se pide para confirmar, según content/deposits.ts. */
   deposit: number;
+  /** Si preguntar por el número de personas cambia el adelanto. */
+  askPeople: boolean;
   preferredDate: string;
   preferredTime: string;
   setPreferredDate: (value: string) => void;
@@ -117,6 +119,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const total = useMemo(() => items.reduce((sum, line) => sum + line.price, 0), [items]);
   const deposit = useMemo(() => depositTotal(items, people), [items, people]);
+  const askPeople = useMemo(() => dependsOnPeople(items), [items]);
 
   const value: CartContextValue = {
     items,
@@ -130,6 +133,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     people,
     setPeople,
     deposit,
+    askPeople,
     preferredDate,
     preferredTime,
     setPreferredDate,

@@ -15,14 +15,16 @@ function formatDate(isoDate: string) {
 }
 
 export default function CartWidget() {
-  const { items, removeItem, clear, isOpen, open, close, total, people, setPeople, deposit, preferredDate, preferredTime, setPreferredDate, setPreferredTime } = useCart();
+  const { items, removeItem, clear, isOpen, open, close, total, people, setPeople, deposit, askPeople, preferredDate, preferredTime, setPreferredDate, setPreferredTime } = useCart();
   const { language } = useLanguage();
   const t = translations[language].cart;
   const minDate = useToday();
 
   function sendToWhatsapp() {
     const lines = items.map((item) => `- ${item.name}${item.meta ? ` (${item.meta})` : ""}: S/${item.price}`);
-    const scheduleLines = [`${t.whatsappPeople}: ${people >= 2 ? "2+" : "1"}`];
+    // Solo se manda el numero de personas si de verdad se pregunto: decir
+    // "Personas: 1" en un paquete para dos confundiria a quien atiende.
+    const scheduleLines = askPeople ? [`${t.whatsappPeople}: ${people >= 2 ? "2+" : "1"}`] : [];
     if (preferredDate) scheduleLines.push(`${t.whatsappDate}: ${formatDate(preferredDate)}`);
     if (preferredTime) scheduleLines.push(`${t.whatsappTime}: ${preferredTime}`);
 
@@ -98,6 +100,7 @@ export default function CartWidget() {
           <div className="cartPanelFooter">
             {/* Cuántas personas decide el tramo del adelanto: dos personas
                 bloquean dos terapeutas a la vez. Ver content/deposits.ts. */}
+            {askPeople && (
             <fieldset className="cartPeopleField">
               <legend>{t.peopleLabel}</legend>
               <div className="cartPeopleOptions">
@@ -111,6 +114,7 @@ export default function CartWidget() {
                 </label>
               </div>
             </fieldset>
+            )}
             <div className="cartScheduleFields">
               <label>
                 {t.dateLabel}
