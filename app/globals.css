@@ -562,3 +562,14 @@ body:has(.cookieBanner) .cartTrigger{bottom:184px}
    para robots. No se usa display:none — algunos rellenadores automáticos lo
    detectan y lo saltan. */
 .honeypotField{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+/* El banner de cookies es `position:fixed` abajo con z-index 80. Mientras el
+   carrito era un panel lateral de altura completa no se estorbaban; desde que
+   en móvil es una hoja inferior, los dos ocupan el mismo sitio y el banner
+   tapaba las filas de total y adelanto en la primera visita.
+   El carrito pasa por encima —de su overlay hacia arriba—, así que el banner
+   queda detrás del oscurecido mientras la hoja está abierta y vuelve a estar
+   disponible al cerrarla. El consentimiento no se salta: GA4 sigue sin
+   montarse hasta que la persona acepta. */
+.cartOverlay{z-index:90}
+.cartPanel{z-index:91}
