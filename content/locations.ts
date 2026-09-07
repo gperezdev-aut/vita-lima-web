@@ -145,7 +145,7 @@ export const locations: Location[] = [
       "/images/signature/facial-room.webp",
     ],
     intro: [
-      "La sede de Miraflores está sobre Av. Larco, a pocas cuadras del Parque Kennedy y del malecón. Atendemos de lunes a sábado, de 11:00 a. m. a 8:00 p. m.",
+      "La sede de Miraflores está sobre Av. Larco, a pocas cuadras del Parque Kennedy y del malecón. Atendemos de lunes a sábado, de 11:00 a. m. a 8:00 p. m., y puedes venir sin cita dentro de ese horario.",
       "Es la sede más conveniente si te hospedas en Miraflores: además, el masaje a domicilio incluye el traslado sin costo dentro del distrito.",
     ],
     gettingHere: [
@@ -156,6 +156,7 @@ export const locations: Location[] = [
     ],
     highlights: [
       "Lunes a sábado, de 11:00 a. m. a 8:00 p. m.",
+      "Atendemos sin cita previa dentro del horario",
       "A pocas cuadras del Parque Kennedy y el malecón",
       "Traslado sin costo para masaje a domicilio dentro de Miraflores",
       "Cerca de la mayoría de hoteles del distrito",
@@ -171,7 +172,7 @@ export const locations: Location[] = [
     faqs: [
       {
         q: "¿Cuál es el horario de la sede de Miraflores?",
-        a: "Atendemos de lunes a sábado, de 11:00 a. m. a 8:00 p. m. Te recomendamos reservar antes por WhatsApp al +51 907 308 415: así preparamos la sala para tu horario y te aseguras el cupo.",
+        a: "Atendemos de lunes a sábado, de 11:00 a. m. a 8:00 p. m. Puedes venir sin cita dentro de ese horario. Si prefieres asegurar tu cupo y que la sala esté lista al llegar, escríbenos antes por WhatsApp al +51 907 308 415.",
       },
       {
         q: "¿Puedo pedir el masaje en mi hotel?",

@@ -128,6 +128,7 @@ export const translations = {
       eyebrow: "Antes de tu visita",
       title: "Todo claro, desde el inicio.",
       items: [
+        { q: "¿Qué tipo de masajes ofrecen?", a: "Masaje terapéutico y de relajación, con terapeutas certificadas y en cabinas individuales. Todos nuestros servicios están en el catálogo con su duración y precio; no ofrecemos ningún servicio fuera de esa lista." },
         { q: "¿Cómo reservo?", a: "Completa el formulario o escríbenos por WhatsApp. Nuestro equipo confirma sede, horario y condiciones." },
         { q: "¿Trabajan con adelanto?", a: "Sí. Para una persona se solicita S/10; para dos personas, el 50 %." },
         { q: "¿Puedo reprogramar?", a: "Sí, avisando con al menos 24 horas de anticipación." },
@@ -425,6 +426,7 @@ export const translations = {
       eyebrow: "Before your visit",
       title: "Everything clear, from the start.",
       items: [
+        { q: "What kind of massages do you offer?", a: "Therapeutic and relaxation massage, with certified therapists in private rooms. Every service we offer is listed in the catalog with its duration and price; we do not offer anything outside that list." },
         { q: "How do I book?", a: "Fill out the form or message us on WhatsApp. Our team will confirm location, time, and details." },
         { q: "Do you require a deposit?", a: "Yes. For one person we ask for S/10; for two people, 50%." },
         { q: "Can I reschedule?", a: "Yes, with at least 24 hours' notice." },
