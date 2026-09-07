@@ -24,6 +24,12 @@ services:
       # que vive en el servidor— para no versionar el secreto aqui.
       N8N_RESERVAS_WEBHOOK_URL: ${N8N_RESERVAS_WEBHOOK_URL:-}
       N8N_RESERVAS_WEBHOOK_SECRET: ${N8N_RESERVAS_WEBHOOK_SECRET:-}
+    volumes:
+      # Cache de next/image. Sin volumen, cada `docker compose up --build`
+      # recrea el contenedor y nace vacio: los primeros visitantes tras cada
+      # despliegue pagan la conversion de ~170 imagenes en CPU del servidor
+      # mientras esperan. Con el volumen, el trabajo se hace una sola vez.
+      - vita-next-cache:/app/.next/cache
     ports:
       - "127.0.0.1:3001:3000"
     networks:
@@ -35,6 +41,9 @@ services:
       timeout: 5s
       retries: 3
       start_period: 20s
+
+volumes:
+  vita-next-cache:
 
 networks:
   nginx_proxy:

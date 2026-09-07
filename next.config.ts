@@ -134,11 +134,37 @@ const nextConfig: NextConfig = {
     return wixRedirects.map((redirect) => ({ ...redirect, statusCode: 301 as const }));
   },
   async headers() {
-    if (isProductionSite) return [];
+    /**
+     * Cabeceras de seguridad. Hasta ahora esta función devolvía una lista
+     * vacía en producción: solo emitía algo en los entornos de prueba, para
+     * bloquear la indexación.
+     *
+     * No se añade una política de contenido (CSP) todavía: el sitio carga
+     * GA4 y los iframes de Google Maps, así que una CSP mal calibrada rompe
+     * la medición o los mapas en silencio. Merece su propia tanda, probada
+     * primero en modo `report-only`.
+     *
+     * HSTS va sin `includeSubDomains` a propósito. Los cuatro subdominios de
+     * hoy son HTTPS, pero la directiva la aplicaría también a cualquiera que
+     * se cree en el futuro, y un subdominio nuevo servido por HTTP quedaría
+     * inaccesible en los navegadores que ya vieron la cabecera.
+     */
+    const seguridad = [
+      { key: "Strict-Transport-Security", value: "max-age=31536000" },
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      { key: "X-Frame-Options", value: "SAMEORIGIN" },
+      { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+    ];
+
+    if (isProductionSite) {
+      return [{ source: "/:path*", headers: seguridad }];
+    }
+
     return [
       {
         source: "/:path*",
-        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+        headers: [...seguridad, { key: "X-Robots-Tag", value: "noindex, nofollow" }],
       },
     ];
   },

@@ -5,11 +5,13 @@ import { FormEvent, useState } from "react";
 import { trackEvent, trackWhatsappClick } from "./WhatsAppTracking";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { translations } from "@/lib/i18n/translations";
+import { useToday } from "@/lib/useToday";
 
 export default function ReserveForm() {
   const { language } = useLanguage();
   const t = translations[language].reserveForm;
   const [consentError, setConsentError] = useState(false);
+  const minDate = useToday();
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -69,6 +71,7 @@ export default function ReserveForm() {
         fecha: data.get("fecha") || "",
         horario: data.get("horario") || "",
         detalle: data.get("detalle") || "",
+        apellido2: data.get("apellido2") || "",
         idioma: language,
       }),
     }).catch(() => {});
@@ -86,9 +89,18 @@ export default function ReserveForm() {
       <label>{t.emailLabel}<input name="email" type="email" autoComplete="email" placeholder={t.emailPlaceholder} /></label>
       <label>{t.venueLabel}<select name="sede" defaultValue=""><option value="" disabled>{t.venuePlaceholder}</option><option>San Borja</option><option>Miraflores</option></select></label>
       <label>{t.serviceLabel}<select name="servicio" defaultValue=""><option value="" disabled>{t.servicePlaceholder}</option>{t.serviceOptions.map((option) => <option key={option}>{option}</option>)}</select></label>
-      <label>{t.dateLabel}<input name="fecha" type="date" /></label>
+      <label>{t.dateLabel}<input name="fecha" type="date" min={minDate} /></label>
       <label>{t.timeLabel}<input name="horario" type="time" step={900} /></label>
       <label className="fullField">{t.detailLabel}<textarea name="detalle" rows={3} placeholder={t.detailPlaceholder} /></label>
+
+      {/* Campo trampa para robots: oculto y fuera del orden de tabulación, así
+          que una persona no lo ve ni lo alcanza con el teclado. Si llega
+          relleno, el servidor descarta el envío. aria-hidden para que ningún
+          lector de pantalla lo anuncie. */}
+      <div className="honeypotField" aria-hidden="true">
+        <label htmlFor="apellido2">No completar</label>
+        <input id="apellido2" name="apellido2" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
 
       {/* Casilla de autorización, sin marcar por defecto. */}
       <label className="fullField consentField">
