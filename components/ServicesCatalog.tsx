@@ -91,7 +91,7 @@ export default function ServicesCatalog() {
       </header>
 
       <nav className="catalogCategoryNav" aria-label={t.categoryNav.all}>
-        <div className="shell">
+        <div className="shell" tabIndex={0}>
           <a href="#catalogo">{t.categoryNav.all}</a>
           <a href="#individual">{t.categoryNav.individual}</a>
           <a href="#couples">{t.categoryNav.couples}</a>

@@ -41,6 +41,13 @@ export const translations = {
       { title: "Profesionales del bienestar", text: "Técnica, cuidado y trato cercano en cada visita." },
       { title: "Opiniones verificables", text: "Más de 600 experiencias compartidas públicamente." },
     ],
+    // Etiquetas de las franjas que se desplazan en horizontal en móvil. Sin
+    // ellas (y sin tabIndex) el teclado no puede recorrer su contenido.
+    scrollLabels: {
+      signature: "Lo que distingue a Vita Lima",
+      rating: "Resumen de calificaciones",
+      steps: "Cómo reservar, paso a paso",
+    },
     servicesSection: {
       eyebrow: "Experiencias Vita Lima",
       title: "Los favoritos de nuestros clientes",
@@ -109,7 +116,7 @@ export const translations = {
       eyebrow: "Dos sedes, una misma experiencia",
       title: "Encuentra tu pausa en Lima.",
       sanBorja: { tag: "01 · Sede principal", hours: "Lunes a sábado · 3:00 p. m. a 8:00 p. m.", directions: "Cómo llegar →", mapTitle: "Mapa de la sede San Borja" },
-      miraflores: { tag: "02 · Previa reserva", hours: "Atención coordinada previamente", directions: "Cómo llegar →", mapTitle: "Mapa de la sede Miraflores" },
+      miraflores: { tag: "02 · Av. Larco", hours: "Lunes a sábado · 11:00 a. m. a 8:00 p. m.", directions: "Cómo llegar →", mapTitle: "Mapa de la sede Miraflores" },
     },
     reservation: {
       eyebrow: "Concierge de reservas",
@@ -333,6 +340,11 @@ export const translations = {
       { title: "Wellness professionals", text: "Technique, care, and a personal touch in every visit." },
       { title: "Verified reviews", text: "Over 600 experiences shared publicly." },
     ],
+    scrollLabels: {
+      signature: "What sets Vita Lima apart",
+      rating: "Ratings summary",
+      steps: "How to book, step by step",
+    },
     servicesSection: {
       eyebrow: "Vita Lima Experiences",
       title: "Our clients' favorites",
@@ -401,7 +413,7 @@ export const translations = {
       eyebrow: "Two locations, one experience",
       title: "Find your pause in Lima.",
       sanBorja: { tag: "01 · Main location", hours: "Monday to Saturday · 3:00 p.m. to 8:00 p.m.", directions: "Get directions →", mapTitle: "Map of the San Borja location" },
-      miraflores: { tag: "02 · By appointment", hours: "Service by prior arrangement", directions: "Get directions →", mapTitle: "Map of the Miraflores location" },
+      miraflores: { tag: "02 · Av. Larco", hours: "Monday to Saturday · 11:00 a.m. to 8:00 p.m.", directions: "Get directions →", mapTitle: "Map of the Miraflores location" },
     },
     reservation: {
       eyebrow: "Booking Concierge",

@@ -108,7 +108,7 @@ export default function ReviewsCarousel({ reviews }: ReviewsCarouselProps) {
           </button>
         </div>
       )}
-      <div className="reviewGrid" ref={trackRef} role="group" aria-label="Opiniones de clientes">
+      <div className="reviewGrid" ref={trackRef} tabIndex={0} role="group" aria-label="Opiniones de clientes">
         {loopedReviews.map((review, index) => (
           <article
             className="reviewCard"

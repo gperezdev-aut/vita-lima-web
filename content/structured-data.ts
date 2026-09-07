@@ -24,12 +24,10 @@ export const reputation = {
   tripadvisor: { ratingValue: 4.8, reviewCount: 399 },
 };
 
-function cleanServiceName(name: string) {
-  // Los nombres de servicio llevan un emoji decorativo adelante (ej. "🌿 Relax Vital");
-  // para los datos estructurados usamos el nombre limpio.
-  return name.replace(/^[\p{Extended_Pictographic}️\s]+/u, "").trim();
-}
-
+// La función vive en `lib/serviceName.ts` desde que también la usa la capa de
+// presentación: el emoji ya no se muestra en ninguna parte del sitio. Se
+// reexporta aquí para no romper los imports que ya existían.
+import { cleanServiceName } from "@/lib/serviceName";
 export { cleanServiceName };
 
 // Excluye los programas de varias sesiones (paquetes) del rango de precios: son un
