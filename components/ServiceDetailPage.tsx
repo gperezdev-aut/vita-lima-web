@@ -12,6 +12,7 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { translations } from "@/lib/i18n/translations";
 import { serviceText } from "@/lib/i18n/serviceText";
 import { serviceDetailText } from "@/lib/i18n/serviceDetailText";
+import { depositForService } from "@/content/deposits";
 import type { Service } from "@/content/services";
 import type { ServiceDetail } from "@/content/service-details";
 
@@ -36,6 +37,9 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
 
   const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t.whatsappMessage(text.name))}`;
   const [heroImage, ...galleryImages] = images;
+  // Se muestra el tramo para una persona: es el caso por defecto de una
+  // ficha. El carrito recalcula si la reserva resulta ser para dos.
+  const deposit = depositForService(service);
 
   // Cierra el embudo por arriba: qué servicios se miran de verdad, no solo
   // cuáles se agregan. Depende del slug para no repetirse al cambiar idioma.
@@ -112,6 +116,14 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
             </div>
           </dl>
 
+          <p className="serviceDetailDeposit">
+            {deposit.kind === "total"
+              ? t.depositFull
+              : deposit.kind === "mitad"
+                ? t.depositHalf(deposit.amount)
+                : t.depositFixed(deposit.amount)}
+          </p>
+
           <div className="serviceDetailActions">
             <a className="button orangeButton" href={whatsappHref} target="_blank" rel="noreferrer">
               {t.book} <span aria-hidden="true">→</span>
@@ -121,7 +133,7 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
               label={t.addToCart}
               addedLabel={t.addedToCart}
               ariaLabel={tCatalog.addToCartAria(text.name)}
-              item={{ id: service.slug, name: text.name, price: service.price, meta: `${service.duration} min` }}
+              item={{ id: service.slug, name: text.name, price: service.price, meta: `${service.duration} min`, group: service.group }}
             />
           </div>
         </div>

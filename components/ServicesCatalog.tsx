@@ -188,7 +188,7 @@ export default function ServicesCatalog() {
                               label={t.addToCart}
                               addedLabel={t.addedToCart}
                               ariaLabel={t.addToCartAria(text.name)}
-                              item={{ id: service.slug, name: text.name, price: service.price, meta: `${service.duration} min` }}
+                              item={{ id: service.slug, name: text.name, price: service.price, meta: `${service.duration} min`, group: service.group }}
                             />
                             <Link className="catalogDetailLink" href={href(`/servicios/${service.slug}`)}>
                               {tDetail.seeDetails} <span aria-hidden="true">→</span>

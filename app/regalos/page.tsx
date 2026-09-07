@@ -82,7 +82,7 @@ export default function GiftCardsPage() {
                     <AddToCartButton
                       className="catalogReserveButton"
                       label="Agregar"
-                      item={{ id: box.slug, name: box.name, price: box.price, meta: "Incluye masaje" }}
+                      item={{ id: box.slug, name: box.name, price: box.price, meta: "Incluye masaje", group: "GIFT" }}
                     />
                   </div>
                 </article>
