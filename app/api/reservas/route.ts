@@ -23,6 +23,39 @@ export const dynamic = "force-dynamic";
 const MAX_LARGO_CAMPO = 500;
 const TIMEOUT_MS = 5000;
 
+/** Límite por IP: 5 envíos cada 10 minutos, los mismos márgenes que fail2ban
+ *  en el servidor. Amplios a propósito: una familia tras el mismo router o
+ *  alguien que corrige un dato no deben quedar bloqueados. */
+const LIMITE_ENVIOS = 5;
+const VENTANA_MS = 10 * 60 * 1000;
+
+/** Contador en memoria del proceso. Se pierde al reiniciar el contenedor, y
+ *  con varias réplicas cada una llevaría el suyo — pero aquí corre una sola y
+ *  el objetivo es frenar un script, no montar un antifraude. */
+const envios = new Map<string, number[]>();
+
+function demasiadosEnvios(ip: string) {
+  const ahora = Date.now();
+  const recientes = (envios.get(ip) ?? []).filter((t) => ahora - t < VENTANA_MS);
+  recientes.push(ahora);
+  envios.set(ip, recientes);
+  // Limpieza oportunista: sin esto el Map crece sin techo con el tiempo.
+  if (envios.size > 5000) {
+    for (const [clave, marcas] of envios) {
+      if (marcas.every((t) => ahora - t >= VENTANA_MS)) envios.delete(clave);
+    }
+  }
+  return recientes.length > LIMITE_ENVIOS;
+}
+
+/** La IP real llega en X-Forwarded-For porque el sitio vive detrás del nginx
+ *  del servidor; el primer valor de la lista es el cliente. */
+function ipDe(request: Request) {
+  const reenviada = request.headers.get("x-forwarded-for");
+  if (reenviada) return reenviada.split(",")[0]!.trim();
+  return request.headers.get("x-real-ip") ?? "desconocida";
+}
+
 const CAMPOS = ["nombre", "whatsapp", "email", "sede", "servicio", "fecha", "horario", "detalle", "idioma"] as const;
 
 function normalizar(valor: unknown) {
@@ -39,6 +72,19 @@ export async function POST(request: Request) {
   // entorno (local, staging) queda roto por no tener las variables.
   if (!webhookUrl) return new NextResponse(null, { status: 204 });
 
+  // Solo se aceptan envíos desde el propio sitio. No es una barrera fuerte
+  // —una cabecera se falsifica— pero descarta de una vez el script que
+  // encuentra la ruta y la aporrea desde fuera.
+  const origen = request.headers.get("origin");
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.vitalimaspa.com";
+  if (origen && origen !== siteUrl && !origen.startsWith("http://localhost")) {
+    return NextResponse.json({ error: "Origen no permitido" }, { status: 403 });
+  }
+
+  if (demasiadosEnvios(ipDe(request))) {
+    return NextResponse.json({ error: "Demasiados envíos, intenta en unos minutos" }, { status: 429 });
+  }
+
   let cuerpo: unknown;
   try {
     cuerpo = await request.json();
@@ -51,6 +97,13 @@ export async function POST(request: Request) {
     (typeof CAMPOS)[number],
     string
   >;
+
+  // Campo trampa: está oculto en el formulario, así que una persona nunca lo
+  // rellena y un robot que completa todo lo que encuentra, sí. Se responde 204
+  // —como un envío correcto— para no enseñarle al robot qué lo delató.
+  if (normalizar(datos?.["apellido2"])) {
+    return new NextResponse(null, { status: 204 });
+  }
 
   // Mínimos para que el lead sirva de algo: sin forma de contactar, no hay lead.
   if (!lead.nombre || !lead.whatsapp) {

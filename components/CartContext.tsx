@@ -1,12 +1,15 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { depositTotal, type DepositGroup } from "@/content/deposits";
 
 export type CartItem = {
   id: string;
   name: string;
   price: number;
   meta?: string;
+  /** Tramo de adelanto al que pertenece. Ver content/deposits.ts. */
+  group?: DepositGroup;
 };
 
 export type CartLine = CartItem & { cartId: string };
@@ -15,6 +18,7 @@ type StoredCart = {
   items: CartLine[];
   preferredDate: string;
   preferredTime: string;
+  people: number;
 };
 
 type CartContextValue = {
@@ -26,6 +30,11 @@ type CartContextValue = {
   open: () => void;
   close: () => void;
   total: number;
+  /** Cuántas personas van a la reserva. Decide el tramo del adelanto. */
+  people: number;
+  setPeople: (value: number) => void;
+  /** Lo que se pide para confirmar, según content/deposits.ts. */
+  deposit: number;
   preferredDate: string;
   preferredTime: string;
   setPreferredDate: (value: string) => void;
@@ -44,12 +53,13 @@ function parseStoredCart(raw: string): StoredCart {
   const parsed = JSON.parse(raw);
   // Compatibilidad con el formato anterior, donde solo se guardaba el array de items.
   if (Array.isArray(parsed)) {
-    return { items: parsed, preferredDate: "", preferredTime: "" };
+    return { items: parsed, preferredDate: "", preferredTime: "", people: 1 };
   }
   return {
     items: Array.isArray(parsed.items) ? parsed.items : [],
     preferredDate: typeof parsed.preferredDate === "string" ? parsed.preferredDate : "",
     preferredTime: typeof parsed.preferredTime === "string" ? parsed.preferredTime : "",
+    people: parsed.people === 2 ? 2 : 1,
   };
 }
 
@@ -57,6 +67,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartLine[]>([]);
   const [preferredDate, setPreferredDate] = useState("");
   const [preferredTime, setPreferredTime] = useState("");
+  const [people, setPeople] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
@@ -71,6 +82,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setItems(stored.items);
         setPreferredDate(stored.preferredDate);
         setPreferredTime(stored.preferredTime);
+        setPeople(stored.people);
       }
     } catch {
       // localStorage no disponible o corrupto: seguimos con carrito vacío.
@@ -81,12 +93,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     try {
-      const stored: StoredCart = { items, preferredDate, preferredTime };
+      const stored: StoredCart = { items, preferredDate, preferredTime, people };
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
     } catch {
       // Sin acceso a almacenamiento local: no persistimos, pero no rompemos la UI.
     }
-  }, [items, preferredDate, preferredTime, hydrated]);
+  }, [items, preferredDate, preferredTime, people, hydrated]);
 
   function addItem(item: CartItem) {
     setItems((prev) => [...prev, { ...item, cartId: makeCartId(item.id) }]);
@@ -100,9 +112,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems([]);
     setPreferredDate("");
     setPreferredTime("");
+    setPeople(1);
   }
 
   const total = useMemo(() => items.reduce((sum, line) => sum + line.price, 0), [items]);
+  const deposit = useMemo(() => depositTotal(items, people), [items, people]);
 
   const value: CartContextValue = {
     items,
@@ -113,6 +127,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     open: () => setIsOpen(true),
     close: () => setIsOpen(false),
     total,
+    people,
+    setPeople,
+    deposit,
     preferredDate,
     preferredTime,
     setPreferredDate,
