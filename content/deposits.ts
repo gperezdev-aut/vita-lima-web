@@ -85,6 +85,22 @@ export function depositForService(service: Service, people = 1): Deposit {
 
 export type DepositLine = { group?: DepositGroup; price: number };
 
+/**
+ * ¿La respuesta a "¿para cuántas personas?" cambia algo en esta selección?
+ *
+ * Solo las sesiones individuales suben al 50 % cuando van dos personas. Un
+ * paquete para dos ya es para dos, y los programas, el domicilio y las cajas
+ * se pagan completos: en esos casos preguntar no cambia el monto y además
+ * dice algo falso —"1 persona" sobre un paquete para dos—, así que el campo
+ * no se muestra.
+ */
+export function dependsOnPeople(lines: DepositLine[]) {
+  return lines.some((line) => {
+    const group = line.group ?? "PROMOS_1P";
+    return group !== "PACK_2P" && group !== "SESSIONS" && group !== "HOME" && group !== "GIFT";
+  });
+}
+
 /** Suma de los adelantos de una selección completa. */
 export function depositTotal(lines: DepositLine[], people = 1) {
   return lines.reduce((sum, line) => {
