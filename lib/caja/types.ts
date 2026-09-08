@@ -6,7 +6,7 @@
 export type Idioma = "es" | "en";
 export type Canal = "directo" | "cuponidad" | "bee";
 
-export type FichaServicio = { nombre: string; duracionMin: number };
+export type FichaServicio = { nombre: string; duracionMin: number | null };
 
 export type FichaData = {
   token: string;
@@ -16,12 +16,12 @@ export type FichaData = {
   cita: {
     fecha: string;
     hora: string;
-    sede: string;
-    sedeDireccion: string;
-    sedeMapsUrl: string;
+    sede: string | null;
+    sedeDireccion: string | null;
+    sedeMapsUrl: string | null;
     personas: number;
     servicios: FichaServicio[];
-    duracionTotalMin: number;
+    duracionTotalMin: number | null;
   };
   pago: {
     moneda: string;
@@ -36,11 +36,11 @@ export type FichaData = {
   };
   cliente: {
     conocido: boolean;
-    nombre: string;
-    emailEnmascarado?: string;
+    nombre: string | null;
+    emailEnmascarado?: string | null;
   };
-  politicaCancelacionUrl: string;
-  cupon?: { vigenteHasta: string };
+  politicaCancelacionUrl: string | null;
+  cupon?: { vigenteHasta: string | null };
 };
 
 /** Códigos legibles por máquina que manda caja. El texto que lee el cliente es de esta web. */
@@ -49,7 +49,10 @@ export type CajaErrorCode =
   | "token_vencido"
   | "ficha_ya_completa"
   | "cupon_ya_usado"
-  | "validacion";
+  | "validacion"
+  | "configuracion"
+  | "no_autorizado"
+  | "rate_limited";
 
 export type CajaError = { error: CajaErrorCode | string; mensaje?: string };
 
@@ -77,9 +80,9 @@ export type EnviarFichaPayload = {
 export type EnviarFichaResumen = {
   fecha: string;
   hora: string;
-  sede: string;
-  sedeDireccion: string;
-  sedeMapsUrl: string;
+  sede: string | null;
+  sedeDireccion: string | null;
+  sedeMapsUrl: string | null;
   servicios: FichaServicio[];
   moneda: string;
   adelantoRecibido: number;

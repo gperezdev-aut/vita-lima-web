@@ -5,7 +5,7 @@ import type { EnviarFichaData, Idioma } from "@/lib/caja/types";
 type Props = {
   idioma: Idioma;
   resultado: EnviarFichaData;
-  politicaCancelacionUrl: string;
+  politicaCancelacionUrl: string | null;
 };
 
 /**
@@ -37,7 +37,7 @@ export default function PantallaFinal({ idioma, resultado, politicaCancelacionUr
       </div>
       <div className="fichaSummaryRow">
         <span>{resumen.servicios.map((servicio) => servicio.nombre).join(", ")}</span>
-        <strong>{resumen.servicios.reduce((total, servicio) => total + servicio.duracionMin, 0)} min</strong>
+        <strong>{resumen.servicios.reduce((total, servicio) => total + (servicio.duracionMin ?? 0), 0)} min</strong>
       </div>
       <div className="fichaSummaryRow">
         <span>{t.adelanto}</span>
@@ -48,9 +48,11 @@ export default function PantallaFinal({ idioma, resultado, politicaCancelacionUr
         <strong>{formatearMoneda(resumen.saldo, resumen.moneda)}</strong>
       </div>
 
-      <a className="fichaChangeLink" href={resumen.sedeMapsUrl} target="_blank" rel="noopener noreferrer">
-        📍 {t.direccion}
-      </a>
+      {resumen.sedeMapsUrl && (
+        <a className="fichaChangeLink" href={resumen.sedeMapsUrl} target="_blank" rel="noopener noreferrer">
+          📍 {t.direccion}
+        </a>
+      )}
 
       <div className="fichaFinalActions">
         <a className="button orangeButton" href={resultado.icsUrl}>
@@ -62,7 +64,8 @@ export default function PantallaFinal({ idioma, resultado, politicaCancelacionUr
       </div>
 
       <p className="fichaHint fichaFinalPolicy">
-        {t.politica} <a href={politicaCancelacionUrl}>{t.politicaLink}</a>
+        {t.politica}{" "}
+        {politicaCancelacionUrl && <a href={politicaCancelacionUrl}>{t.politicaLink}</a>}
       </p>
     </div>
   );

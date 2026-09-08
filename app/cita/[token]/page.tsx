@@ -9,6 +9,8 @@ import FichaWizard from "./FichaWizard";
 // para leer CAJA_API_SECRET del entorno del servidor.
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
 
 // Enlace privado de un solo cliente: no debe indexarse ni aparecer en Google.
 export const metadata: Metadata = {

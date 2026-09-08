@@ -1,20 +1,33 @@
+import "server-only";
+
+import { resolveCajaConfig } from "./config";
 import { getStubFicha, postStubFicha } from "./stub";
 import type { CajaError, EnviarFichaPayload, EnviarFichaResult, FichaResult } from "./types";
 
 /**
  * Único punto de contacto con caja. Se llama siempre desde el servidor
  * (route handler o server action) — el secreto en CAJA_API_SECRET no puede
- * llegar al navegador. Sin CAJA_API_URL definida, cae al stub local: así la
- * página se construye y se revisa entera antes de que caja exista.
+ * llegar al navegador. El stub solo se habilita de forma explícita fuera de
+ * producción con CAJA_API_STUB_ENABLED=true.
  */
 
 const TIMEOUT_MS = 8000;
 
-function cajaHeaders(): Record<string, string> {
-  const secret = process.env.CAJA_API_SECRET;
+function cajaHeaders(secret: string): Record<string, string> {
   // El header se manda tal cual: caja lo lee en minúsculas (x-caja-secret),
   // que es como llegan las cabeceras HTTP de todos modos.
-  return secret ? { "X-Caja-Secret": secret } : {};
+  return { "X-Caja-Secret": secret };
+}
+
+function configurationError(missing: string[]): Extract<FichaResult, { ok: false }> {
+  return {
+    ok: false,
+    status: 500,
+    error: {
+      error: "configuracion",
+      mensaje: `Falta configuración del servidor: ${missing.join(", ")}.`,
+    },
+  };
 }
 
 async function leerError(response: Response): Promise<CajaError> {
@@ -30,12 +43,13 @@ async function leerError(response: Response): Promise<CajaError> {
 }
 
 export async function getFicha(token: string): Promise<FichaResult> {
-  const apiUrl = process.env.CAJA_API_URL;
-  if (!apiUrl) return getStubFicha(token);
+  const config = resolveCajaConfig(process.env);
+  if (config.mode === "stub") return getStubFicha(token);
+  if (config.mode === "error") return configurationError(config.missing);
 
   try {
-    const response = await fetch(`${apiUrl}/api/publico/ficha/${encodeURIComponent(token)}`, {
-      headers: cajaHeaders(),
+    const response = await fetch(`${config.apiUrl}/api/publico/ficha/${encodeURIComponent(token)}`, {
+      headers: cajaHeaders(config.secret),
       signal: AbortSignal.timeout(TIMEOUT_MS),
       cache: "no-store",
     });
@@ -48,13 +62,14 @@ export async function getFicha(token: string): Promise<FichaResult> {
 }
 
 export async function enviarFicha(token: string, payload: EnviarFichaPayload): Promise<EnviarFichaResult> {
-  const apiUrl = process.env.CAJA_API_URL;
-  if (!apiUrl) return postStubFicha(token, payload);
+  const config = resolveCajaConfig(process.env);
+  if (config.mode === "stub") return postStubFicha(token, payload);
+  if (config.mode === "error") return configurationError(config.missing);
 
   try {
-    const response = await fetch(`${apiUrl}/api/publico/ficha/${encodeURIComponent(token)}`, {
+    const response = await fetch(`${config.apiUrl}/api/publico/ficha/${encodeURIComponent(token)}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", ...cajaHeaders() },
+      headers: { "Content-Type": "application/json", ...cajaHeaders(config.secret) },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(TIMEOUT_MS),
       cache: "no-store",

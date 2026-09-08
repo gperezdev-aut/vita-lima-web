@@ -101,6 +101,10 @@ export const fichaText = {
         titulo: "Esta ficha ya está completa",
         texto: "Ya recibimos tus datos para esta cita. Si necesitas cambiar algo, escríbenos por WhatsApp.",
       },
+      configuracion: {
+        titulo: "La ficha no está configurada",
+        texto: "Falta completar la configuración segura del servidor. Escríbenos por WhatsApp mientras lo resolvemos.",
+      },
       generico: {
         titulo: "No pudimos cargar tu ficha",
         texto: "Intenta de nuevo en un momento, o escríbenos por WhatsApp y te ayudamos directamente.",
@@ -201,6 +205,10 @@ export const fichaText = {
       ficha_ya_completa: {
         titulo: "This form is already complete",
         texto: "We already received your details for this appointment. Message us on WhatsApp if you need to change something.",
+      },
+      configuracion: {
+        titulo: "This form is not configured",
+        texto: "The secure server configuration is incomplete. Message us on WhatsApp while we resolve it.",
       },
       generico: {
         titulo: "We couldn't load your form",

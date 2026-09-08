@@ -143,7 +143,11 @@ copy.** Usar `mensaje` solo como respaldo ante un código desconocido.
 
 ### Modo stub, para no esperar a caja
 
-Con `CAJA_API_URL` sin definir, las dos llamadas responden desde un archivo de ejemplos locales.
+El stub no es un fallback: solo se activa expresamente con
+`CAJA_API_STUB_ENABLED=true` en desarrollo o pruebas. En producción esa
+activación se ignora y tanto `CAJA_API_URL` como `CAJA_API_SECRET` son
+obligatorias; si falta cualquiera se muestra un error explícito de
+configuración. Las dos llamadas responden desde un archivo de ejemplos locales.
 Tokens fijos, para que las capturas y el QA sean reproducibles:
 
 | Token | Caso |
@@ -206,12 +210,13 @@ o cremas, zonas a evitar. Más un campo libre corto.
 **Un botón grande «Ninguna de las anteriores»** que salta la pantalla completa: la mayoría no
 tiene ninguna y hoy tendría que leer cinco casillas para decir que no.
 
-Tres consentimientos **separados y los tres desmarcados**. La Ley 29733 exige consentimiento
+Tres consentimientos **separados y desmarcados**. La Ley 29733 exige consentimiento
 expreso, y una casilla premarcada no lo es — hoy la del formulario de la web viene premarcada.
 
 1. Tratamiento de datos, con enlace a la política.
-2. **Datos de salud**, aparte del anterior: es categoría sensible y aceptar que le escriban por
-   WhatsApp no es lo mismo que aceptar que se guarde una condición médica.
+2. **Datos de salud**, aparte del anterior: aparece y es obligatorio únicamente cuando se marcó
+   una condición o se ingresó texto sensible. Con «Ninguna de las anteriores» no aparece y se
+   envía `consentimientos.salud = false`.
 3. Comunicaciones promocionales, **opcional**. Sin esta casilla no se le puede mandar nada del
    post-venta más adelante.
 

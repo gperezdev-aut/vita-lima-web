@@ -6,6 +6,7 @@ import PantallaFinal from "./PantallaFinal";
 import { site } from "@/content/site";
 import { borrarBorrador, guardarBorrador, leerBorrador } from "@/lib/ficha/draft";
 import { formatearFecha, formatearHora, formatearMoneda } from "@/lib/ficha/format";
+import { consentimientoSaludParaPayload, consentimientoSaludValido, tieneDatosSalud } from "@/lib/ficha/health";
 import { formatearMientrasEscribe, paisesOrdenados, telefonoValido, type CountryCode } from "@/lib/ficha/phone";
 import { fichaText } from "@/lib/ficha/text";
 import { esExito, type EnviarFichaData, type EnviarFichaPayload, type EnviarFichaResult, type FichaData, type Idioma } from "@/lib/caja/types";
@@ -35,7 +36,7 @@ export default function FichaWizard({ ficha, token }: Props) {
     { code: "PE", name: ficha.idioma === "es" ? "Perú" : "Peru" },
   ]);
   const [telefonoCrudo, setTelefonoCrudo] = useState("");
-  const [nombre, setNombre] = useState(ficha.cliente.conocido ? ficha.cliente.nombre : "");
+  const [nombre, setNombre] = useState(ficha.cliente.conocido ? ficha.cliente.nombre ?? "" : "");
   const [correo, setCorreo] = useState("");
   const [cumpleDia, setCumpleDia] = useState("");
   const [cumpleMes, setCumpleMes] = useState("");
@@ -85,7 +86,7 @@ export default function FichaWizard({ ficha, token }: Props) {
       setIdioma(borrador.idioma || ficha.idioma);
       setPais((borrador.pais as CountryCode) || "PE");
       setTelefonoCrudo(borrador.telefonoCrudo || "");
-      setNombre(borrador.nombre || (ficha.cliente.conocido ? ficha.cliente.nombre : ""));
+      setNombre(borrador.nombre || (ficha.cliente.conocido ? ficha.cliente.nombre ?? "" : ""));
       setCorreo(borrador.correo || "");
       setCumpleDia(borrador.cumpleDia || "");
       setCumpleMes(borrador.cumpleMes || "");
@@ -160,7 +161,16 @@ export default function FichaWizard({ ficha, token }: Props) {
   const boletaNumeroOk =
     !boletaRequiere ||
     (boletaTipo === "DNI" ? /^\d{8}$/.test(boletaNumero.trim()) : /^\d{11}$/.test(boletaNumero.trim()) && boletaRazonSocial.trim().length > 1);
-  const paso3Valido = consentDatos && consentSalud && boletaNumeroOk;
+  const salud: EnviarFichaPayload["salud"] = {
+    embarazo,
+    presion,
+    cirugiaReciente,
+    alergias: alergias.trim(),
+    zonasEvitar: zonasEvitar.trim(),
+    notas: notas.trim(),
+  };
+  const hayDatosSalud = tieneDatosSalud(salud);
+  const paso3Valido = consentDatos && consentimientoSaludValido(salud, consentSalud) && boletaNumeroOk;
 
   function alternarIdioma() {
     setIdioma((actual) => (actual === "es" ? "en" : "es"));
@@ -174,6 +184,7 @@ export default function FichaWizard({ ficha, token }: Props) {
     setAlergias("");
     setZonasEvitar("");
     setNotas("");
+    setConsentSalud(false);
   }
 
   async function enviar() {
@@ -192,15 +203,12 @@ export default function FichaWizard({ ficha, token }: Props) {
         numero: boletaRequiere ? boletaNumero.trim() : null,
         razonSocial: boletaRequiere && boletaTipo === "RUC" ? boletaRazonSocial.trim() : null,
       },
-      salud: {
-        embarazo,
-        presion,
-        cirugiaReciente,
-        alergias: alergias.trim(),
-        zonasEvitar: zonasEvitar.trim(),
-        notas: notas.trim(),
+      salud,
+      consentimientos: {
+        datos: consentDatos,
+        salud: consentimientoSaludParaPayload(salud, consentSalud),
+        promociones: consentPromos,
       },
-      consentimientos: { datos: consentDatos, salud: consentSalud, promociones: consentPromos },
       codigoCupon: ficha.requiere.codigoCupon ? codigoCupon.trim() || null : null,
       idioma,
     };
@@ -269,7 +277,7 @@ export default function FichaWizard({ ficha, token }: Props) {
 
               {ficha.cliente.conocido && !editarConocido ? (
                 <div className="fichaKnownCard">
-                  <strong>{t.paso1.holaConocido(nombre || ficha.cliente.nombre)}</strong>
+                  <strong>{t.paso1.holaConocido(nombre || ficha.cliente.nombre || "")}</strong>
                   <button type="button" onClick={() => setEditarConocido(true)}>
                     {t.paso1.noSoyYo}
                   </button>
@@ -373,7 +381,7 @@ export default function FichaWizard({ ficha, token }: Props) {
               </div>
               <div className="fichaSummaryRow">
                 <span>{ficha.cita.servicios.map((servicio) => servicio.nombre).join(", ")}</span>
-                <strong>{ficha.cita.duracionTotalMin} min</strong>
+                <strong>{ficha.cita.duracionTotalMin != null ? `${ficha.cita.duracionTotalMin} min` : "—"}</strong>
               </div>
               <div className="fichaSummaryRow">
                 <span>{ficha.pago.leyenda}</span>
@@ -526,10 +534,12 @@ export default function FichaWizard({ ficha, token }: Props) {
                     </a>
                   </span>
                 </label>
-                <label className="fichaConsent fichaConsentSalud">
-                  <input type="checkbox" checked={consentSalud} onChange={(evento) => setConsentSalud(evento.target.checked)} />
-                  <span>{t.paso3.consentimientos.salud}</span>
-                </label>
+                {hayDatosSalud && (
+                  <label className="fichaConsent fichaConsentSalud">
+                    <input type="checkbox" checked={consentSalud} onChange={(evento) => setConsentSalud(evento.target.checked)} />
+                    <span>{t.paso3.consentimientos.salud}</span>
+                  </label>
+                )}
                 <label className="fichaConsent">
                   <input type="checkbox" checked={consentPromos} onChange={(evento) => setConsentPromos(evento.target.checked)} />
                   <span>{t.paso3.consentimientos.promociones}</span>

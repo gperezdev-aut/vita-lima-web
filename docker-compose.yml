@@ -24,6 +24,11 @@ services:
       # que vive en el servidor— para no versionar el secreto aqui.
       N8N_RESERVAS_WEBHOOK_URL: ${N8N_RESERVAS_WEBHOOK_URL:-}
       N8N_RESERVAS_WEBHOOK_SECRET: ${N8N_RESERVAS_WEBHOOK_SECRET:-}
+      # Integración servidor-a-servidor de /cita/[token]. Compose falla con
+      # un mensaje explícito si falta alguna; nunca pasan como build args ni
+      # se exponen con prefijo NEXT_PUBLIC_.
+      CAJA_API_URL: ${CAJA_API_URL:?CAJA_API_URL is required}
+      CAJA_API_SECRET: ${CAJA_API_SECRET:?CAJA_API_SECRET is required}
     volumes:
       # Cache de next/image. Sin volumen, cada `docker compose up --build`
       # recrea el contenedor y nace vacio: los primeros visitantes tras cada

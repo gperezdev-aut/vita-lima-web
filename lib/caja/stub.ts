@@ -1,8 +1,8 @@
 import type { CajaErrorCode, EnviarFichaPayload, EnviarFichaResult, FichaData, FichaResult } from "./types";
 
 /**
- * Modo stub: sin CAJA_API_URL, la página entera se construye y revisa contra
- * estos casos. Tokens fijos para que las capturas y el QA sean reproducibles
+ * Modo stub: solo con CAJA_API_STUB_ENABLED=true fuera de producción, la
+ * página entera se construye y revisa contra estos casos. Tokens fijos
  * — ver docs/encargo-web-ficha-cita.md. Cualquier token que no esté aquí
  * responde como token_no_existe.
  */
@@ -108,10 +108,26 @@ export function getStubFicha(token: string): FichaResult {
 
 export function postStubFicha(token: string, payload: EnviarFichaPayload): EnviarFichaResult {
   const ficha = FICHAS[token];
-  if (!ficha) return { ok: false, status: 404, error: { error: "token_no_existe" } };
+  if (!ficha) {
+    const errorCode = ERRORES[token];
+    if (errorCode) return { ok: false, status: 410, error: { error: errorCode } };
+    return { ok: false, status: 404, error: { error: "token_no_existe" } };
+  }
 
   if (!payload.telefono.crudo.trim() || !payload.nombre.trim()) {
     return { ok: false, status: 422, error: { error: "validacion", mensaje: "Faltan datos obligatorios." } };
+  }
+
+  const tieneSalud = Boolean(
+    payload.salud.embarazo ||
+      payload.salud.presion ||
+      payload.salud.cirugiaReciente ||
+      payload.salud.alergias.trim() ||
+      payload.salud.zonasEvitar.trim() ||
+      payload.salud.notas.trim(),
+  );
+  if (!payload.consentimientos.datos || (tieneSalud && !payload.consentimientos.salud)) {
+    return { ok: false, status: 422, error: { error: "validacion", mensaje: "Falta consentimiento." } };
   }
 
   // Cupón reservado para probar el 409 sin necesitar un token aparte.
