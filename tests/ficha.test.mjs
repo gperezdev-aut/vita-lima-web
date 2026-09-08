@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { correoValido } from "../lib/ficha/email.ts";
 import { consentimientoSaludParaPayload, consentimientoSaludValido, tieneDatosSalud } from "../lib/ficha/health.ts";
 import { telefonoValido } from "../lib/ficha/phone.ts";
+import { fichaText } from "../lib/ficha/text.ts";
 import { getStubFicha, postStubFicha } from "../lib/caja/stub.ts";
 
 const saludVacia = {
@@ -73,4 +74,39 @@ test("el enlace ICS de la respuesta se usa directamente sin adjuntar el secreto"
   const finalScreen = await readFile(new URL("../app/cita/[token]/PantallaFinal.tsx", import.meta.url), "utf8");
   assert.match(finalScreen, /href=\{resultado\.icsUrl\}/);
   assert.doesNotMatch(finalScreen, /X-Caja-Secret/);
+});
+
+test("la cabecera normal conserva la reserva cuando caja no requiere confirmación manual", () => {
+  const resultado = getStubFicha("stub-nuevo");
+  assert.equal(resultado.ok, true);
+  assert.equal(resultado.data.requiere.confirmacionManual, false);
+  assert.equal(fichaText.es.cabecera.titulo, "Tu cita está reservada.");
+  assert.equal(fichaText.en.cabecera.titulo, "Your appointment is booked.");
+});
+
+test("el estado manual usa textos pendientes en español e inglés sin afirmar una cita definitiva", () => {
+  const resultado = getStubFicha("stub-domicilio");
+  assert.equal(resultado.ok, true);
+  assert.equal(resultado.data.requiere.confirmacionManual, true);
+
+  for (const idioma of ["es", "en"]) {
+    const texto = fichaText[idioma];
+    const manual = `${texto.cabeceraPendiente.titulo} ${texto.cabeceraPendiente.subtitulo} ${texto.final.pendiente.titulo} ${texto.final.pendiente.subtitulo}`;
+    assert.doesNotMatch(manual.toLowerCase(), /reservada|confirmada|booked|confirmed/);
+  }
+
+  assert.equal(fichaText.es.cabeceraPendiente.titulo, "Tu solicitud de cita fue registrada.");
+  assert.equal(fichaText.es.final.pendiente.titulo, "Recibimos tu ficha.");
+  assert.equal(fichaText.en.cabeceraPendiente.titulo, "Your appointment request has been received.");
+  assert.equal(fichaText.en.final.pendiente.titulo, "We received your form.");
+});
+
+test("el indicador manual procede exclusivamente del GET y llega a PantallaFinal", async () => {
+  const [wizard, finalScreen] = await Promise.all([
+    readFile(new URL("../app/cita/[token]/FichaWizard.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/cita/[token]/PantallaFinal.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(wizard, /confirmacionManual=\{ficha\.requiere\.confirmacionManual\}/);
+  assert.match(finalScreen, /const encabezado = confirmacionManual \? t\.pendiente : t/);
+  assert.match(finalScreen, /confirmacionManual \? t\.cuandoPendiente/);
 });

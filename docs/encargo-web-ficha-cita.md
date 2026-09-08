@@ -64,7 +64,8 @@ una vez con el webhook de n8n; no repetirlo aquí.
   "requiere": {
     "codigoCupon": false,
     "correoObligatorio": false,
-    "documentoParaBoleta": "opcional"
+    "documentoParaBoleta": "opcional",
+    "confirmacionManual": false
   },
   "cliente": { "conocido": true, "nombre": "Rosa", "emailEnmascarado": "r***@gmail.com" },
   "politicaCancelacionUrl": "…"
@@ -79,6 +80,11 @@ En canal cupón llega además `cupon.vigenteHasta`, y `requiere.codigoCupon = tr
 `requiere.documentoParaBoleta` tiene **solo dos valores: `"no"` y `"opcional"`.** No existe
 `"obligatorio"` — el DNI es opcional a propósito. En canal cupón siempre viene `"no"`, porque la
 boleta la emite la plataforma.
+
+`requiere.confirmacionManual` es obligatorio y lo decide exclusivamente caja. Cuando vale
+`true`, la web comunica que la solicitud fue registrada, pero no que la atención esté reservada
+o confirmada: Vita Lima valida por WhatsApp la cobertura y la disponibilidad antes de darla por
+definitiva.
 
 ### `POST {CAJA_API_URL}/api/publico/ficha/:token`
 
@@ -156,6 +162,7 @@ Tokens fijos, para que las capturas y el QA sean reproducibles:
 | `stub-conocido` | Cliente conocido (`cliente.conocido = true`) |
 | `stub-cupon` | Canal cupón, `requiere.codigoCupon = true` |
 | `stub-extranjero` | Teléfono no peruano, correo obligatorio |
+| `stub-domicilio` | Atención a domicilio pendiente de confirmación manual |
 | `stub-vencido` | `410 token_vencido` |
 | `stub-completa` | `410 ficha_ya_completa` |
 

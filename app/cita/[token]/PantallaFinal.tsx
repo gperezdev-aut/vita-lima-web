@@ -6,6 +6,7 @@ type Props = {
   idioma: Idioma;
   resultado: EnviarFichaData;
   politicaCancelacionUrl: string | null;
+  confirmacionManual: boolean;
 };
 
 /**
@@ -13,8 +14,9 @@ type Props = {
  * window.open): el cambio de pantalla no depende de si el botón de
  * WhatsApp de abajo logra abrirse o el navegador lo bloquea.
  */
-export default function PantallaFinal({ idioma, resultado, politicaCancelacionUrl }: Props) {
+export default function PantallaFinal({ idioma, resultado, politicaCancelacionUrl, confirmacionManual }: Props) {
   const t = fichaText[idioma].final;
+  const encabezado = confirmacionManual ? t.pendiente : t;
   const { resumen } = resultado;
 
   return (
@@ -22,11 +24,11 @@ export default function PantallaFinal({ idioma, resultado, politicaCancelacionUr
       <div className="fichaFinalCheck" aria-hidden="true">
         ✓
       </div>
-      <h2>{t.titulo}</h2>
-      <p className="fichaCardIntro">{t.subtitulo}</p>
+      <h2>{encabezado.titulo}</h2>
+      <p className="fichaCardIntro">{encabezado.subtitulo}</p>
 
       <div className="fichaSummaryRow">
-        <span>{idioma === "es" ? "Cuándo" : "When"}</span>
+        <span>{confirmacionManual ? t.cuandoPendiente : idioma === "es" ? "Cuándo" : "When"}</span>
         <strong>
           {formatearFecha(resumen.fecha, idioma)}, {formatearHora(resumen.hora, idioma)}
         </strong>

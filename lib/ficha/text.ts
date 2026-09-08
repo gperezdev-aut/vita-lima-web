@@ -14,6 +14,10 @@ export const fichaText = {
       titulo: "Tu cita está reservada.",
       subtitulo: "Solo faltan tus datos — toma menos de un minuto.",
     },
+    cabeceraPendiente: {
+      titulo: "Tu solicitud de cita fue registrada.",
+      subtitulo: "Vita Lima confirmará por WhatsApp la cobertura de la zona y la disponibilidad de terapistas.",
+    },
     paso1: {
       titulo: "Quién eres",
       intro: "Para confirmar tu cita y mandarte el recordatorio.",
@@ -80,6 +84,12 @@ export const fichaText = {
     final: {
       titulo: "¡Listo, tu ficha quedó completa!",
       subtitulo: "Te esperamos en la fecha y hora acordadas.",
+      pendiente: {
+        titulo: "Recibimos tu ficha.",
+        subtitulo:
+          "Tu atención todavía está pendiente de confirmación. Vita Lima verificará la cobertura de la zona y la disponibilidad de terapistas y te responderá por WhatsApp.",
+      },
+      cuandoPendiente: "Fecha y hora solicitadas",
       direccion: "Cómo llegar",
       adelanto: "Adelanto recibido",
       saldo: "Saldo a pagar al llegar",
@@ -118,6 +128,10 @@ export const fichaText = {
     cabecera: {
       titulo: "Your appointment is booked.",
       subtitulo: "Just need your details — takes less than a minute.",
+    },
+    cabeceraPendiente: {
+      titulo: "Your appointment request has been received.",
+      subtitulo: "Vita Lima will confirm service-area coverage and therapist availability via WhatsApp.",
     },
     paso1: {
       titulo: "Who you are",
@@ -185,6 +199,12 @@ export const fichaText = {
     final: {
       titulo: "All done, your form is complete!",
       subtitulo: "See you on the agreed date and time.",
+      pendiente: {
+        titulo: "We received your form.",
+        subtitulo:
+          "Your appointment is still pending confirmation. Vita Lima will verify service-area coverage and therapist availability and contact you via WhatsApp.",
+      },
+      cuandoPendiente: "Requested date and time",
       direccion: "How to get there",
       adelanto: "Deposit received",
       saldo: "Balance to pay on arrival",

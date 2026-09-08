@@ -33,6 +33,7 @@ export type FichaData = {
     codigoCupon: boolean;
     correoObligatorio: boolean;
     documentoParaBoleta: "no" | "opcional";
+    confirmacionManual: boolean;
   };
   cliente: {
     conocido: boolean;

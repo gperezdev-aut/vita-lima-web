@@ -67,6 +67,7 @@ export default function FichaWizard({ ficha, token }: Props) {
   const [errorEnvio, setErrorEnvio] = useState<string | null>(null);
 
   const t = fichaText[idioma];
+  const cabecera = ficha.requiere.confirmacionManual ? t.cabeceraPendiente : t.cabecera;
   const cargadoRef = useRef(false);
 
   // Cargar borrador del dispositivo, si no venció (24h) y es de este token.
@@ -235,7 +236,12 @@ export default function FichaWizard({ ficha, token }: Props) {
     return (
       <main className="fichaPage">
         <div className="fichaShell">
-          <PantallaFinal idioma={idioma} resultado={resultado} politicaCancelacionUrl={ficha.politicaCancelacionUrl} />
+          <PantallaFinal
+            idioma={idioma}
+            resultado={resultado}
+            politicaCancelacionUrl={ficha.politicaCancelacionUrl}
+            confirmacionManual={ficha.requiere.confirmacionManual}
+          />
         </div>
       </main>
     );
@@ -254,7 +260,7 @@ export default function FichaWizard({ ficha, token }: Props) {
         {paso === 1 && (
           <div className="fichaHeaderCard">
             <span className="eyebrow">Vita Lima Spa</span>
-            <strong>{t.cabecera.titulo}</strong>
+            <strong>{cabecera.titulo}</strong>
             <p>
               {formatearFecha(ficha.cita.fecha, idioma)}, {formatearHora(ficha.cita.hora, idioma)} · {ficha.cita.sede}
             </p>
@@ -262,7 +268,7 @@ export default function FichaWizard({ ficha, token }: Props) {
               {ficha.cita.servicios.map((servicio) => servicio.nombre).join(", ")}, {ficha.cita.duracionTotalMin} min ·{" "}
               {ficha.pago.leyenda} {formatearMoneda(ficha.pago.adelantoRecibido, ficha.pago.moneda)}
             </p>
-            <p>{t.cabecera.subtitulo}</p>
+            <p>{cabecera.subtitulo}</p>
           </div>
         )}
 
