@@ -1,7 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { correoValido } from "../lib/ficha/email.ts";
 import { consentimientoSaludParaPayload, consentimientoSaludValido, tieneDatosSalud } from "../lib/ficha/health.ts";
+import { telefonoValido } from "../lib/ficha/phone.ts";
 import { getStubFicha, postStubFicha } from "../lib/caja/stub.ts";
 
 const saludVacia = {
@@ -29,6 +31,17 @@ test("token inexistente, vencido y completado conservan códigos y estados", () 
   assert.deepEqual(getStubFicha("no-existe"), { ok: false, status: 404, error: { error: "token_no_existe" } });
   assert.deepEqual(getStubFicha("stub-vencido"), { ok: false, status: 410, error: { error: "token_vencido" } });
   assert.deepEqual(getStubFicha("stub-completa"), { ok: false, status: 410, error: { error: "ficha_ya_completa" } });
+});
+
+test("teléfono extranjero válido acepta correo vacío cuando el contrato no lo exige", () => {
+  assert.equal(telefonoValido("+1 202 555 0123", "US"), true);
+  assert.equal(correoValido("", false), true);
+  assert.equal(correoValido("correo-invalido", false), false);
+});
+
+test("el correo solo se exige cuando correoObligatorio es true", () => {
+  assert.equal(correoValido("", true), false);
+  assert.equal(correoValido("cliente@example.com", true), true);
 });
 
 test("Ninguna de las anteriores envía consentimiento de salud false", () => {

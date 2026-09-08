@@ -172,7 +172,7 @@ Tres pasos, uno por pantalla en móvil, con «Paso 1 de 3».
 
 Lo primero que se lee **no es un formulario**:
 
-> **Tu cupo está reservado y pagado.**
+> **Tu cita está reservada.**
 > Sábado 13 de setiembre, 4:00 p.m. · San Borja
 > Espalda Libre, 60 min · Adelanto recibido S/10
 >
@@ -190,7 +190,9 @@ Todo eso sale del JSON. En canal cupón la leyenda la manda caja («Pagado en Cu
 | `cumple` | Opcional, **día y mes sin año** |
 
 Un número peruano mal escrito se rechaza; uno de EE. UU., España o Chile **se acepta**. Un patrón
-peruano-solamente le impediría reservar a un turista, que es un cliente real de Vita Lima.
+peruano-solamente le impediría reservar a un turista, que es un cliente real de Vita Lima. El
+teléfono extranjero no vuelve obligatorio el correo: esa decisión llega únicamente en
+`requiere.correoObligatorio`; si el correo opcional se completa, su formato sí se valida.
 
 Si `cliente.conocido`, este paso se reduce a confirmar el correo y seguir.
 

@@ -11,7 +11,7 @@ export const fichaText = {
     idiomaBoton: "English",
     stepper: (paso: number) => `Paso ${paso} de 3`,
     cabecera: {
-      titulo: "Tu cupo está reservado y pagado.",
+      titulo: "Tu cita está reservada.",
       subtitulo: "Solo faltan tus datos — toma menos de un minuto.",
     },
     paso1: {
@@ -116,7 +116,7 @@ export const fichaText = {
     idiomaBoton: "Español",
     stepper: (paso: number) => `Step ${paso} of 3`,
     cabecera: {
-      titulo: "Your spot is booked and paid.",
+      titulo: "Your appointment is booked.",
       subtitulo: "Just need your details — takes less than a minute.",
     },
     paso1: {

@@ -5,6 +5,7 @@ import { enviarFichaAction } from "./actions";
 import PantallaFinal from "./PantallaFinal";
 import { site } from "@/content/site";
 import { borrarBorrador, guardarBorrador, leerBorrador } from "@/lib/ficha/draft";
+import { correoValido } from "@/lib/ficha/email";
 import { formatearFecha, formatearHora, formatearMoneda } from "@/lib/ficha/format";
 import { consentimientoSaludParaPayload, consentimientoSaludValido, tieneDatosSalud } from "@/lib/ficha/health";
 import { formatearMientrasEscribe, paisesOrdenados, telefonoValido, type CountryCode } from "@/lib/ficha/phone";
@@ -15,8 +16,6 @@ type Props = {
   ficha: FichaData;
   token: string;
 };
-
-const CORREO_RE = /^\S+@\S+\.\S+$/;
 
 export default function FichaWizard({ ficha, token }: Props) {
   const [idioma, setIdioma] = useState<Idioma>(ficha.idioma);
@@ -146,14 +145,12 @@ export default function FichaWizard({ ficha, token }: Props) {
     setPaises(paisesOrdenados(idioma));
   }, [idioma]);
 
-  // Un número no peruano suele ser de alguien sin WhatsApp local: sin correo
-  // no hay cómo contactarlo si el teléfono falla. Es un resguardo de UX del
-  // lado cliente, no una regla de negocio — la exigencia real llega en
-  // requiere.correoObligatorio.
-  const correoRequerido = ficha.requiere.correoObligatorio || pais !== "PE";
+  // Caja es la única fuente de verdad sobre qué campos son obligatorios.
+  // El país del teléfono no añade por sí solo una exigencia de correo.
+  const correoRequerido = ficha.requiere.correoObligatorio;
   const telefonoOk = telefonoValido(telefonoCrudo, pais);
   const nombreOk = nombre.trim().length > 1;
-  const correoOk = correoRequerido ? CORREO_RE.test(correo.trim()) : correo.trim() === "" || CORREO_RE.test(correo.trim());
+  const correoOk = correoValido(correo, correoRequerido);
   const paso1Valido = telefonoOk && nombreOk && correoOk;
 
   const cuponOk = !ficha.requiere.codigoCupon || /^[A-Za-z0-9-]{4,20}$/.test(codigoCupon.trim());
