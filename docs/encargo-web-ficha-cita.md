@@ -31,6 +31,12 @@ la pedía aquí; era un error, duplicaba lo que ya existe en «reserva futura».
 Dos llamadas, **siempre desde el servidor** (route handler o server action), nunca desde el
 navegador: el secreto compartido no puede llegar al cliente.
 
+### Autenticación
+
+Variable de entorno `CAJA_API_SECRET`, mandada en la cabecera `X-Caja-Secret`. **Las cabeceras
+llegan en minúsculas** — del lado de caja se compara contra `x-caja-secret`. Esto ya costó tiempo
+una vez con el webhook de n8n; no repetirlo aquí.
+
 ### `GET {CAJA_API_URL}/api/publico/ficha/:token`
 
 ```json
@@ -70,22 +76,87 @@ navegador: el secreto compartido no puede llegar al cliente.
 
 En canal cupón llega además `cupon.vigenteHasta`, y `requiere.codigoCupon = true`.
 
+`requiere.documentoParaBoleta` tiene **solo dos valores: `"no"` y `"opcional"`.** No existe
+`"obligatorio"` — el DNI es opcional a propósito. En canal cupón siempre viene `"no"`, porque la
+boleta la emite la plataforma.
+
 ### `POST {CAJA_API_URL}/api/publico/ficha/:token`
 
-Manda teléfono (crudo + país), nombre, correo, cumpleaños opcional, documento para boleta si
-corresponde, el bloque de salud, los tres consentimientos y `codigoCupon` si aplica. Devuelve el
-resumen para la pantalla final y una **`icsUrl`** — el `.ics` lo genera caja, para que la lógica
-de zona horaria viva en un solo sitio.
+Este es el contrato completo, no hay que inventar campos nuevos:
 
-`409` → el código de cupón ya estaba usado. Mostrar un mensaje que diga qué hacer, no un error
-genérico. `422` → validación.
+```json
+{
+  "telefono": { "crudo": "987 654 321", "pais": "PE" },
+  "nombre": "Rosa Quispe",
+  "correo": "rosa@ejemplo.com",
+  "cumple": { "dia": 14, "mes": 3 },
+  "boleta": { "requiere": true, "tipo": "DNI", "numero": "12345678", "razonSocial": null },
+  "salud": {
+    "embarazo": false, "presion": true, "cirugiaReciente": false,
+    "alergias": "", "zonasEvitar": "", "notas": ""
+  },
+  "consentimientos": { "datos": true, "salud": true, "promociones": false },
+  "codigoCupon": null,
+  "idioma": "es"
+}
+```
+
+`boleta.tipo` es `"DNI"` o `"RUC"`. `cumple` y `codigoCupon` pueden ser `null`.
+`idioma` manda el idioma elegido en la página, para que la próxima ficha del mismo cliente abra ya
+en ese idioma.
+
+Los consentimientos van como **booleanos**, no como fechas: la marca de tiempo la pone caja con su
+propio reloj al recibirlos, porque esa fecha es la prueba legal y no puede depender del reloj del
+celular del cliente.
+
+Respuesta `200`:
+
+```json
+{
+  "ok": true,
+  "icsUrl": "...",
+  "whatsappUrl": "...",
+  "resumen": {
+    "fecha": "2026-09-13", "hora": "16:00",
+    "sede": "San Borja", "sedeDireccion": "...", "sedeMapsUrl": "...",
+    "servicios": [{ "nombre": "Espalda Libre", "duracionMin": 60 }],
+    "moneda": "PEN", "adelantoRecibido": 10.0, "saldo": 65.0
+  }
+}
+```
+
+El `.ics` lo genera caja, para que la lógica de zona horaria viva en un solo sitio.
+
+### Errores
+
+Caja manda solo un código legible por máquina — `{ "error": "cupon_ya_usado", "mensaje": "..." }`.
+**Los textos que ve el cliente son de esta web, en español e inglés: caja no traduce ni escribe
+copy.** Usar `mensaje` solo como respaldo ante un código desconocido.
+
+| Código | HTTP | Pantalla |
+|---|---|---|
+| `token_no_existe` | 404 | «este enlace no existe», con WhatsApp |
+| `token_vencido` | 410 | «este enlace venció», con WhatsApp |
+| `ficha_ya_completa` | 410 | «esta ficha ya está completa», con WhatsApp |
+| `cupon_ya_usado` | 409 | qué hacer, no un error genérico |
+| `validacion` | 422 | errores de campo |
 
 ### Modo stub, para no esperar a caja
 
-Con `CAJA_API_URL` sin definir, las dos llamadas responden desde un archivo de ejemplos locales
-con al menos cuatro casos: cliente nuevo, cliente conocido, canal cupón, y teléfono extranjero.
-Así esta página se construye y se revisa entera antes de que caja exista, y conectarla después es
-cambiar una variable de entorno.
+Con `CAJA_API_URL` sin definir, las dos llamadas responden desde un archivo de ejemplos locales.
+Tokens fijos, para que las capturas y el QA sean reproducibles:
+
+| Token | Caso |
+|---|---|
+| `stub-nuevo` | Cliente nuevo |
+| `stub-conocido` | Cliente conocido (`cliente.conocido = true`) |
+| `stub-cupon` | Canal cupón, `requiere.codigoCupon = true` |
+| `stub-extranjero` | Teléfono no peruano, correo obligatorio |
+| `stub-vencido` | `410 token_vencido` |
+| `stub-completa` | `410 ficha_ya_completa` |
+
+Cualquier otro token responde `404 token_no_existe`. Así esta página se construye y se revisa
+entera antes de que caja exista, y conectarla después es cambiar una variable de entorno.
 
 ---
 
@@ -145,7 +216,8 @@ expreso, y una casilla premarcada no lo es — hoy la del formulario de la web v
    post-venta más adelante.
 
 **El DNI no aparece** hasta marcar «necesito boleta a mi nombre», y entonces despliega DNI (8
-dígitos) o RUC (11) + razón social. Solo si `requiere.documentoParaBoleta` lo permite.
+dígitos) o RUC (11) + razón social. Solo si `requiere.documentoParaBoleta = "opcional"`; con
+`"no"` (canal cupón, por ejemplo) esta casilla ni se muestra.
 
 ### Pantalla final
 
@@ -161,16 +233,19 @@ Esto hoy no existe: el formulario actual no cambia al enviar, y si el bloqueador
 - **Teclados correctos**: `inputmode="numeric"` en el teléfono, `type="email"` con
   `autocomplete="email"`, `autocomplete="name"`, `autocomplete="tel"`. Es lo que más acelera el
   llenado en celular y no cuesta nada.
-- **Guardar borrador en el dispositivo** mientras llena: la persona se sale a Yape y vuelve, y no
-  puede perder lo escrito. **Sin las respuestas de salud** — eso no se guarda en el navegador — y
-  borrando el borrador al enviar.
+- **Guardar borrador en el dispositivo** mientras llena, con clave por token (`vita:ficha:<token>`):
+  una pareja que reserva un paquete para dos puede abrir dos fichas en el mismo celular, y no
+  deben mezclarse. Guardar también la fecha y descartarlo pasadas 24 horas. **Sin las respuestas
+  de salud** — eso no se guarda en el navegador — y borrando el borrador al enviar con éxito.
 - **Nada de botón «limpiar formulario».** No existe el caso de uso y sí el de tocarlo por error.
 - **Sin cuenta, sin contraseña, sin registro.** El enlace es la autenticación.
 - **El botón de enviar no puede quedar tapado** por los flotantes «Mi selección» y WhatsApp — es
   un problema real del formulario actual en móvil.
-- **Idioma**: la página abre en `idioma` del JSON, con un selector visible para cambiarlo. Así se
-  resuelve el bilingüe, en vez de duplicar cada etiqueta dentro de la misma línea como hace el
-  Google Form.
+- **Idioma**: la página abre en `idioma` del JSON, con un selector visible para cambiarlo. **El
+  selector no toca la URL** — el enlace es uno solo por cliente y se pega en WhatsApp; si
+  navegara a otra dirección, dejaría de ser ese enlace. Solo cambia el texto en el cliente, y el
+  idioma elegido se manda en el `POST` para que la próxima ficha del mismo cliente abra ya en ese
+  idioma.
 
 ## Detalles del repo
 
