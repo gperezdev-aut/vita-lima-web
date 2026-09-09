@@ -6,7 +6,7 @@ type Props = {
   codigo: string;
 };
 
-const CODIGOS_CONOCIDOS = ["token_no_existe", "token_vencido", "ficha_ya_completa", "configuracion"] as const;
+const CODIGOS_CONOCIDOS = ["token_no_existe", "token_vencido", "ficha_ya_completa", "configuracion", "contrato_incompatible"] as const;
 
 /**
  * Pantallas de error de /cita/[token]. No hay idioma del cliente disponible

@@ -41,6 +41,7 @@ una vez con el webhook de n8n; no repetirlo aquí.
 
 ```json
 {
+  "contratoVersion": "ficha-cita-v1",
   "token": "…",
   "estado": "pendiente",
   "idioma": "es",
@@ -53,7 +54,9 @@ una vez con el webhook de n8n; no repetirlo aquí.
     "sedeMapsUrl": "…",
     "personas": 1,
     "servicios": [{ "nombre": "Espalda Libre", "duracionMin": 60 }],
-    "duracionTotalMin": 60
+    "duracionTotalMin": 60,
+    "tipoAtencion": "sede",
+    "domicilio": null
   },
   "pago": {
     "moneda": "PEN",
@@ -65,7 +68,8 @@ una vez con el webhook de n8n; no repetirlo aquí.
     "codigoCupon": false,
     "correoObligatorio": false,
     "documentoParaBoleta": "opcional",
-    "confirmacionManual": false
+    "confirmacionManual": false,
+    "motivoConfirmacion": null
   },
   "cliente": { "conocido": true, "nombre": "Rosa", "emailEnmascarado": "r***@gmail.com" },
   "politicaCancelacionUrl": "…"
@@ -81,10 +85,11 @@ En canal cupón llega además `cupon.vigenteHasta`, y `requiere.codigoCupon = tr
 `"obligatorio"` — el DNI es opcional a propósito. En canal cupón siempre viene `"no"`, porque la
 boleta la emite la plataforma.
 
-`requiere.confirmacionManual` es obligatorio y lo decide exclusivamente caja. Cuando vale
-`true`, la web comunica que la solicitud fue registrada, pero no que la atención esté reservada
-o confirmada: Vita Lima valida por WhatsApp la cobertura y la disponibilidad antes de darla por
-definitiva.
+`contratoVersion` debe ser exactamente `"ficha-cita-v1"`; la web valida el JSON real y rechaza
+una respuesta 200 con campos críticos ausentes o incompatibles. `requiere.confirmacionManual` y
+`requiere.motivoConfirmacion` los decide exclusivamente Caja. Con motivo `"domicilio"` se comunica
+la validación de cobertura y terapistas; con `"convenio"`, solo la validación de código/beneficio;
+con `null`, una revisión genérica prudente. Ningún caso manual se presenta como reservado o confirmado.
 
 ### `POST {CAJA_API_URL}/api/publico/ficha/:token`
 
@@ -125,7 +130,11 @@ Respuesta `200`:
   "resumen": {
     "fecha": "2026-09-13", "hora": "16:00",
     "sede": "San Borja", "sedeDireccion": "...", "sedeMapsUrl": "...",
+    "personas": 1,
     "servicios": [{ "nombre": "Espalda Libre", "duracionMin": 60 }],
+    "duracionTotalMin": 60,
+    "tipoAtencion": "sede",
+    "domicilio": null,
     "moneda": "PEN", "adelantoRecibido": 10.0, "saldo": 65.0
   }
 }
@@ -160,8 +169,9 @@ Tokens fijos, para que las capturas y el QA sean reproducibles:
 |---|---|
 | `stub-nuevo` | Cliente nuevo |
 | `stub-conocido` | Cliente conocido (`cliente.conocido = true`) |
-| `stub-cupon` | Canal cupón, `requiere.codigoCupon = true` |
-| `stub-extranjero` | Teléfono no peruano, correo obligatorio |
+| `stub-cupon` | Cuponidad pendiente de validación, saldo del cliente S/0 |
+| `stub-bee` | Bee pendiente de validación, saldo del cliente S/0 |
+| `stub-extranjero` | Teléfono no peruano, correo opcional |
 | `stub-domicilio` | Atención a domicilio pendiente de confirmación manual |
 | `stub-vencido` | `410 token_vencido` |
 | `stub-completa` | `410 ficha_ya_completa` |
@@ -185,7 +195,8 @@ Lo primero que se lee **no es un formulario**:
 >
 > Solo faltan tus datos — toma menos de un minuto.
 
-Todo eso sale del JSON. En canal cupón la leyenda la manda caja («Pagado en Cuponidad»).
+Todo eso sale del JSON. En convenio la leyenda viene de Caja («Pago gestionado por Cuponidad» o
+«Pago gestionado por Bee Beneficios») y el saldo visible del cliente es S/0.
 
 ### Paso 1 — Quién eres
 
@@ -278,13 +289,13 @@ Esto hoy no existe: el formulario actual no cambia al enviar, y si el bloqueador
 - [ ] Salir de la página a otra app y volver **no borra** lo ya escrito — y el borrador guardado
       **no contiene** ninguna respuesta de salud.
 - [ ] Un número de EE. UU., España o Chile **se acepta**; uno peruano mal escrito se rechaza.
-- [ ] Con número no peruano el correo es obligatorio y la página abre en inglés.
+- [ ] Un número no peruano se acepta sin volver obligatorio el correo.
 - [ ] Las tres casillas de consentimiento llegan desmarcadas y la de salud es independiente.
 - [ ] El DNI no aparece hasta marcar «necesito boleta a mi nombre».
 - [ ] Al enviar, la página cambia y muestra el resumen **aunque el `window.open` de WhatsApp
       falle**.
 - [ ] Token inexistente, vencido y ya usado tienen cada uno su pantalla, con salida a WhatsApp.
 - [ ] El código de cupón duplicado muestra qué hacer, no un error genérico.
-- [ ] Con `CAJA_API_URL` sin definir, la página funciona entera contra el stub.
+- [ ] El stub solo funciona con activación explícita fuera de producción; configuración faltante muestra error.
 - [ ] `npm run typecheck`, `npm run lint` y `npm run build` pasan.
 - [ ] Capturas en móvil de los tres pasos, la pantalla final y las tres pantallas de error.

@@ -1,12 +1,14 @@
 import { formatearFecha, formatearHora, formatearMoneda } from "@/lib/ficha/format";
-import { fichaText } from "@/lib/ficha/text";
-import type { EnviarFichaData, Idioma } from "@/lib/caja/types";
+import { fichaText, textoFinalPendiente } from "@/lib/ficha/text";
+import { duracionVisible, puedeMostrarMapaSede, ubicacionVisible } from "@/lib/ficha/resumen";
+import type { EnviarFichaData, Idioma, MotivoConfirmacion } from "@/lib/caja/types";
 
 type Props = {
   idioma: Idioma;
   resultado: EnviarFichaData;
   politicaCancelacionUrl: string | null;
   confirmacionManual: boolean;
+  motivoConfirmacion: MotivoConfirmacion;
 };
 
 /**
@@ -14,10 +16,11 @@ type Props = {
  * window.open): el cambio de pantalla no depende de si el botón de
  * WhatsApp de abajo logra abrirse o el navegador lo bloquea.
  */
-export default function PantallaFinal({ idioma, resultado, politicaCancelacionUrl, confirmacionManual }: Props) {
+export default function PantallaFinal({ idioma, resultado, politicaCancelacionUrl, confirmacionManual, motivoConfirmacion }: Props) {
   const t = fichaText[idioma].final;
-  const encabezado = confirmacionManual ? t.pendiente : t;
+  const encabezado = confirmacionManual ? textoFinalPendiente(idioma, motivoConfirmacion) : t;
   const { resumen } = resultado;
+  const ubicacion = ubicacionVisible(resumen);
 
   return (
     <div className="fichaCard fichaFinalCard">
@@ -35,11 +38,11 @@ export default function PantallaFinal({ idioma, resultado, politicaCancelacionUr
       </div>
       <div className="fichaSummaryRow">
         <span>{idioma === "es" ? "Dónde" : "Where"}</span>
-        <strong>{resumen.sede}</strong>
+        <strong>{ubicacion}</strong>
       </div>
       <div className="fichaSummaryRow">
         <span>{resumen.servicios.map((servicio) => servicio.nombre).join(", ")}</span>
-        <strong>{resumen.servicios.reduce((total, servicio) => total + (servicio.duracionMin ?? 0), 0)} min</strong>
+        <strong>{duracionVisible(resumen)} min</strong>
       </div>
       <div className="fichaSummaryRow">
         <span>{t.adelanto}</span>
@@ -50,7 +53,7 @@ export default function PantallaFinal({ idioma, resultado, politicaCancelacionUr
         <strong>{formatearMoneda(resumen.saldo, resumen.moneda)}</strong>
       </div>
 
-      {resumen.sedeMapsUrl && (
+      {puedeMostrarMapaSede(resumen) && resumen.sedeMapsUrl && (
         <a className="fichaChangeLink" href={resumen.sedeMapsUrl} target="_blank" rel="noopener noreferrer">
           📍 {t.direccion}
         </a>

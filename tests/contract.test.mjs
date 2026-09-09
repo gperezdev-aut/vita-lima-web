@@ -26,14 +26,15 @@ test("contrato GET compatible con caja PR #10", () => {
   assert.equal(resultado.ok, true);
   const data = resultado.data;
   assert.deepEqual(Object.keys(data).sort(), [
-    "canal", "cita", "cliente", "estado", "idioma", "pago", "politicaCancelacionUrl", "requiere", "token",
+    "canal", "cita", "cliente", "contratoVersion", "estado", "idioma", "pago", "politicaCancelacionUrl", "requiere", "token",
   ]);
   assert.deepEqual(Object.keys(data.cita).sort(), [
-    "duracionTotalMin", "fecha", "hora", "personas", "sede", "sedeDireccion", "sedeMapsUrl", "servicios",
+    "domicilio", "duracionTotalMin", "fecha", "hora", "personas", "sede", "sedeDireccion", "sedeMapsUrl", "servicios", "tipoAtencion",
   ]);
   assert.deepEqual(Object.keys(data.requiere).sort(), [
-    "codigoCupon", "confirmacionManual", "correoObligatorio", "documentoParaBoleta",
+    "codigoCupon", "confirmacionManual", "correoObligatorio", "documentoParaBoleta", "motivoConfirmacion",
   ]);
+  assert.equal(data.contratoVersion, "ficha-cita-v1");
   assert.equal(data.requiere.confirmacionManual, false);
 });
 
@@ -47,6 +48,9 @@ test("contrato POST y respuesta compatible con caja PR #10", () => {
   const resultado = postStubFicha("stub-nuevo", payload);
   assert.equal(resultado.ok, true);
   assert.deepEqual(Object.keys(resultado.data).sort(), ["icsUrl", "ok", "resumen", "whatsappUrl"]);
+  assert.deepEqual(Object.keys(resultado.data.resumen).sort(), [
+    "adelantoRecibido", "domicilio", "duracionTotalMin", "fecha", "hora", "moneda", "personas", "saldo", "sede", "sedeDireccion", "sedeMapsUrl", "servicios", "tipoAtencion",
+  ]);
 });
 
 test("contrato del cupón mantiene el bloque opcional y exige código", () => {
@@ -56,9 +60,11 @@ test("contrato del cupón mantiene el bloque opcional y exige código", () => {
   assert.equal(typeof resultado.data.cupon.vigenteHasta, "string");
 });
 
-test("contrato GET de domicilio conserva confirmación manual requerida por caja PR #10 f69c189d", () => {
+test("contrato GET de domicilio conserva confirmación manual requerida por caja PR #10 c5186de", () => {
   const resultado = getStubFicha("stub-domicilio");
   assert.equal(resultado.ok, true);
   assert.equal(resultado.data.requiere.confirmacionManual, true);
-  assert.match(resultado.data.cita.sede, /^Atención a domicilio/);
+  assert.equal(resultado.data.requiere.motivoConfirmacion, "domicilio");
+  assert.equal(resultado.data.cita.tipoAtencion, "domicilio");
+  assert.equal(resultado.data.cita.sedeMapsUrl, null);
 });

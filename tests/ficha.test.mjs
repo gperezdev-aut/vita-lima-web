@@ -91,14 +91,18 @@ test("el estado manual usa textos pendientes en español e inglés sin afirmar u
 
   for (const idioma of ["es", "en"]) {
     const texto = fichaText[idioma];
-    const manual = `${texto.cabeceraPendiente.titulo} ${texto.cabeceraPendiente.subtitulo} ${texto.final.pendiente.titulo} ${texto.final.pendiente.subtitulo}`;
+    const manual = ["domicilio", "convenio", "generico"].map((motivo) => {
+      const cabecera = texto.cabeceraPendiente[motivo];
+      const final = texto.final.pendiente[motivo];
+      return `${cabecera.titulo} ${cabecera.subtitulo} ${final.titulo} ${final.subtitulo}`;
+    }).join(" ");
     assert.doesNotMatch(manual.toLowerCase(), /reservada|confirmada|booked|confirmed/);
   }
 
-  assert.equal(fichaText.es.cabeceraPendiente.titulo, "Tu solicitud de cita fue registrada.");
-  assert.equal(fichaText.es.final.pendiente.titulo, "Recibimos tu ficha.");
-  assert.equal(fichaText.en.cabeceraPendiente.titulo, "Your appointment request has been received.");
-  assert.equal(fichaText.en.final.pendiente.titulo, "We received your form.");
+  assert.match(fichaText.es.cabeceraPendiente.domicilio.subtitulo, /cobertura.*terapistas/);
+  assert.match(fichaText.es.cabeceraPendiente.convenio.subtitulo, /código o beneficio/);
+  assert.doesNotMatch(fichaText.es.cabeceraPendiente.convenio.subtitulo, /cobertura|terapistas/);
+  assert.match(fichaText.en.final.pendiente.convenio.subtitulo, /code or benefit/);
 });
 
 test("el indicador manual procede exclusivamente del GET y llega a PantallaFinal", async () => {
@@ -106,7 +110,7 @@ test("el indicador manual procede exclusivamente del GET y llega a PantallaFinal
     readFile(new URL("../app/cita/[token]/FichaWizard.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/cita/[token]/PantallaFinal.tsx", import.meta.url), "utf8"),
   ]);
-  assert.match(wizard, /confirmacionManual=\{ficha\.requiere\.confirmacionManual\}/);
-  assert.match(finalScreen, /const encabezado = confirmacionManual \? t\.pendiente : t/);
+  assert.match(wizard, /motivoConfirmacion=\{ficha\.requiere\.motivoConfirmacion\}/);
+  assert.match(finalScreen, /textoFinalPendiente\(idioma, motivoConfirmacion\)/);
   assert.match(finalScreen, /confirmacionManual \? t\.cuandoPendiente/);
 });

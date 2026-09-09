@@ -3,6 +3,7 @@ import "server-only";
 import { resolveCajaConfig } from "./config";
 import { getStubFicha, postStubFicha } from "./stub";
 import type { CajaError, EnviarFichaPayload, EnviarFichaResult, FichaResult } from "./types";
+import { errorContratoIncompatible, validarFichaGet, validarFichaPost } from "./validation";
 
 /**
  * Único punto de contacto con caja. Se llama siempre desde el servidor
@@ -30,6 +31,14 @@ function configurationError(missing: string[]): Extract<FichaResult, { ok: false
   };
 }
 
+function contratoIncompatible(mensaje: string): Extract<FichaResult, { ok: false }> {
+  return {
+    ok: false,
+    status: 502,
+    error: errorContratoIncompatible(mensaje),
+  };
+}
+
 async function leerError(response: Response): Promise<CajaError> {
   try {
     const body = (await response.json()) as unknown;
@@ -54,7 +63,15 @@ export async function getFicha(token: string): Promise<FichaResult> {
       cache: "no-store",
     });
     if (!response.ok) return { ok: false, status: response.status, error: await leerError(response) };
-    return { ok: true, data: await response.json() };
+    let body: unknown;
+    try {
+      body = await response.json();
+    } catch {
+      return contratoIncompatible("Caja respondió un GET 200 que no contiene JSON válido.");
+    }
+    const validado = validarFichaGet(body);
+    if (validado.ok === false) return contratoIncompatible(validado.motivo);
+    return { ok: true, data: validado.data };
   } catch (error) {
     console.error("[ficha] fallo al pedir la ficha a caja:", error);
     return { ok: false, status: 502, error: { error: "caja_no_disponible" } };
@@ -75,7 +92,15 @@ export async function enviarFicha(token: string, payload: EnviarFichaPayload): P
       cache: "no-store",
     });
     if (!response.ok) return { ok: false, status: response.status, error: await leerError(response) };
-    return { ok: true, data: await response.json() };
+    let body: unknown;
+    try {
+      body = await response.json();
+    } catch {
+      return contratoIncompatible("Caja respondió un POST 200 que no contiene JSON válido.");
+    }
+    const validado = validarFichaPost(body);
+    if (validado.ok === false) return contratoIncompatible(validado.motivo);
+    return { ok: true, data: validado.data };
   } catch (error) {
     console.error("[ficha] fallo al mandar la ficha a caja:", error);
     return { ok: false, status: 502, error: { error: "caja_no_disponible" } };

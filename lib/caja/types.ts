@@ -7,8 +7,11 @@ export type Idioma = "es" | "en";
 export type Canal = "directo" | "cuponidad" | "bee";
 
 export type FichaServicio = { nombre: string; duracionMin: number | null };
+export type MotivoConfirmacion = "domicilio" | "convenio" | null;
+export type DomicilioFicha = { distrito: string; direccion: string; referencia: string | null };
 
 export type FichaData = {
+  contratoVersion: "ficha-cita-v1";
   token: string;
   estado: "pendiente" | "completa";
   idioma: Idioma;
@@ -21,7 +24,9 @@ export type FichaData = {
     sedeMapsUrl: string | null;
     personas: number;
     servicios: FichaServicio[];
-    duracionTotalMin: number | null;
+    duracionTotalMin: number;
+    tipoAtencion: "sede" | "domicilio";
+    domicilio: DomicilioFicha | null;
   };
   pago: {
     moneda: string;
@@ -34,11 +39,12 @@ export type FichaData = {
     correoObligatorio: boolean;
     documentoParaBoleta: "no" | "opcional";
     confirmacionManual: boolean;
+    motivoConfirmacion: MotivoConfirmacion;
   };
   cliente: {
     conocido: boolean;
     nombre: string | null;
-    emailEnmascarado?: string | null;
+    emailEnmascarado: string | null;
   };
   politicaCancelacionUrl: string | null;
   cupon?: { vigenteHasta: string | null };
@@ -52,6 +58,7 @@ export type CajaErrorCode =
   | "cupon_ya_usado"
   | "validacion"
   | "configuracion"
+  | "contrato_incompatible"
   | "no_autorizado"
   | "rate_limited";
 
@@ -84,7 +91,11 @@ export type EnviarFichaResumen = {
   sede: string | null;
   sedeDireccion: string | null;
   sedeMapsUrl: string | null;
+  personas: number;
   servicios: FichaServicio[];
+  duracionTotalMin: number;
+  tipoAtencion: "sede" | "domicilio";
+  domicilio: DomicilioFicha | null;
   moneda: string;
   adelantoRecibido: number;
   saldo: number;

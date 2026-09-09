@@ -6,10 +6,12 @@ import PantallaFinal from "./PantallaFinal";
 import { site } from "@/content/site";
 import { borrarBorrador, guardarBorrador, leerBorrador } from "@/lib/ficha/draft";
 import { correoValido } from "@/lib/ficha/email";
+import { codigoCuponParaPayload, comprobanteValido } from "@/lib/ficha/comprobante";
 import { formatearFecha, formatearHora, formatearMoneda } from "@/lib/ficha/format";
 import { consentimientoSaludParaPayload, consentimientoSaludValido, tieneDatosSalud } from "@/lib/ficha/health";
 import { formatearMientrasEscribe, paisesOrdenados, telefonoValido, type CountryCode } from "@/lib/ficha/phone";
-import { fichaText } from "@/lib/ficha/text";
+import { fichaText, textoCabeceraPendiente } from "@/lib/ficha/text";
+import { ubicacionVisible } from "@/lib/ficha/resumen";
 import { esExito, type EnviarFichaData, type EnviarFichaPayload, type EnviarFichaResult, type FichaData, type Idioma } from "@/lib/caja/types";
 
 type Props = {
@@ -67,7 +69,10 @@ export default function FichaWizard({ ficha, token }: Props) {
   const [errorEnvio, setErrorEnvio] = useState<string | null>(null);
 
   const t = fichaText[idioma];
-  const cabecera = ficha.requiere.confirmacionManual ? t.cabeceraPendiente : t.cabecera;
+  const cabecera = ficha.requiere.confirmacionManual
+    ? textoCabeceraPendiente(idioma, ficha.requiere.motivoConfirmacion)
+    : t.cabecera;
+  const ubicacion = ubicacionVisible(ficha.cita);
   const cargadoRef = useRef(false);
 
   // Cargar borrador del dispositivo, si no venció (24h) y es de este token.
@@ -156,9 +161,12 @@ export default function FichaWizard({ ficha, token }: Props) {
 
   const cuponOk = !ficha.requiere.codigoCupon || /^[A-Za-z0-9-]{4,20}$/.test(codigoCupon.trim());
 
-  const boletaNumeroOk =
-    !boletaRequiere ||
-    (boletaTipo === "DNI" ? /^\d{8}$/.test(boletaNumero.trim()) : /^\d{11}$/.test(boletaNumero.trim()) && boletaRazonSocial.trim().length > 1);
+  const boletaNumeroOk = comprobanteValido({
+    requiere: boletaRequiere,
+    tipo: boletaTipo,
+    numero: boletaNumero,
+    razonSocial: boletaRazonSocial,
+  });
   const salud: EnviarFichaPayload["salud"] = {
     embarazo,
     presion,
@@ -207,7 +215,7 @@ export default function FichaWizard({ ficha, token }: Props) {
         salud: consentimientoSaludParaPayload(salud, consentSalud),
         promociones: consentPromos,
       },
-      codigoCupon: ficha.requiere.codigoCupon ? codigoCupon.trim() || null : null,
+      codigoCupon: codigoCuponParaPayload(ficha.requiere.codigoCupon, codigoCupon),
       idioma,
     };
 
@@ -222,6 +230,10 @@ export default function FichaWizard({ ficha, token }: Props) {
       }
       if (respuesta.error.error === "validacion") {
         setErrorEnvio(t.errorEnvio.validacion);
+        return;
+      }
+      if (respuesta.error.error === "contrato_incompatible") {
+        setErrorEnvio(t.errorEnvio.contrato_incompatible);
         return;
       }
       setErrorEnvio(t.errorEnvio.generico);
@@ -241,6 +253,7 @@ export default function FichaWizard({ ficha, token }: Props) {
             resultado={resultado}
             politicaCancelacionUrl={ficha.politicaCancelacionUrl}
             confirmacionManual={ficha.requiere.confirmacionManual}
+            motivoConfirmacion={ficha.requiere.motivoConfirmacion}
           />
         </div>
       </main>
@@ -262,7 +275,7 @@ export default function FichaWizard({ ficha, token }: Props) {
             <span className="eyebrow">Vita Lima Spa</span>
             <strong>{cabecera.titulo}</strong>
             <p>
-              {formatearFecha(ficha.cita.fecha, idioma)}, {formatearHora(ficha.cita.hora, idioma)} · {ficha.cita.sede}
+              {formatearFecha(ficha.cita.fecha, idioma)}, {formatearHora(ficha.cita.hora, idioma)} · {ubicacion}
             </p>
             <p>
               {ficha.cita.servicios.map((servicio) => servicio.nombre).join(", ")}, {ficha.cita.duracionTotalMin} min ·{" "}
@@ -379,7 +392,7 @@ export default function FichaWizard({ ficha, token }: Props) {
                 <strong>{formatearHora(ficha.cita.hora, idioma)}</strong>
               </div>
               <div className="fichaSummaryRow">
-                <span>{ficha.cita.sede}</span>
+                <span>{ubicacion}</span>
                 <strong>{t.paso2.personas(ficha.cita.personas)}</strong>
               </div>
               <div className="fichaSummaryRow">

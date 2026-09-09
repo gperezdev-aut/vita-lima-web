@@ -1,4 +1,4 @@
-import type { Idioma } from "@/lib/caja/types";
+import type { Idioma, MotivoConfirmacion } from "@/lib/caja/types";
 
 /**
  * Textos de /cita/[token]. Diccionario propio y aparte de lib/i18n/translations
@@ -15,8 +15,18 @@ export const fichaText = {
       subtitulo: "Solo faltan tus datos — toma menos de un minuto.",
     },
     cabeceraPendiente: {
-      titulo: "Tu solicitud de cita fue registrada.",
-      subtitulo: "Vita Lima confirmará por WhatsApp la cobertura de la zona y la disponibilidad de terapistas.",
+      domicilio: {
+        titulo: "Tu solicitud de cita fue registrada.",
+        subtitulo: "Vita Lima confirmará por WhatsApp la cobertura de la zona y la disponibilidad de terapistas.",
+      },
+      convenio: {
+        titulo: "Tu solicitud de cita fue registrada.",
+        subtitulo: "Vita Lima validará el código o beneficio y te responderá por WhatsApp.",
+      },
+      generico: {
+        titulo: "Tu solicitud de cita fue registrada.",
+        subtitulo: "Vita Lima revisará tu solicitud y te responderá por WhatsApp.",
+      },
     },
     paso1: {
       titulo: "Quién eres",
@@ -58,8 +68,8 @@ export const fichaText = {
         notasLabel: "Algo más que debamos saber (opcional)",
       },
       boleta: {
-        requiereLabel: "Necesito boleta a mi nombre",
-        tipoLabel: "Tipo de documento",
+        requiereLabel: "Necesito comprobante",
+        tipoLabel: "Tipo de comprobante",
         numeroLabelDni: "DNI (8 dígitos)",
         numeroLabelRuc: "RUC (11 dígitos)",
         razonSocialLabel: "Razón social",
@@ -79,15 +89,26 @@ export const fichaText = {
     errorEnvio: {
       cupon_ya_usado: "Este código de cupón ya fue usado. Revísalo o escríbenos por WhatsApp y te ayudamos.",
       validacion: "Algo no cuadra en tus datos. Revísalos e intenta de nuevo.",
+      contrato_incompatible: "No mostraremos datos incompletos de tu cita. Escríbenos por WhatsApp mientras lo revisamos.",
       generico: "No pudimos enviar tu ficha. Intenta de nuevo o escríbenos por WhatsApp.",
     },
     final: {
       titulo: "¡Listo, tu ficha quedó completa!",
       subtitulo: "Te esperamos en la fecha y hora acordadas.",
       pendiente: {
-        titulo: "Recibimos tu ficha.",
-        subtitulo:
-          "Tu atención todavía está pendiente de confirmación. Vita Lima verificará la cobertura de la zona y la disponibilidad de terapistas y te responderá por WhatsApp.",
+        domicilio: {
+          titulo: "Recibimos tu ficha.",
+          subtitulo:
+            "Tu atención todavía está pendiente de confirmación. Vita Lima verificará la cobertura de la zona y la disponibilidad de terapistas y te responderá por WhatsApp.",
+        },
+        convenio: {
+          titulo: "Recibimos tu ficha.",
+          subtitulo: "Tu atención está pendiente de validación del código o beneficio. Vita Lima te responderá por WhatsApp.",
+        },
+        generico: {
+          titulo: "Recibimos tu ficha.",
+          subtitulo: "Tu solicitud está pendiente de revisión. Vita Lima te responderá por WhatsApp.",
+        },
       },
       cuandoPendiente: "Fecha y hora solicitadas",
       direccion: "Cómo llegar",
@@ -115,6 +136,10 @@ export const fichaText = {
         titulo: "La ficha no está configurada",
         texto: "Falta completar la configuración segura del servidor. Escríbenos por WhatsApp mientras lo resolvemos.",
       },
+      contrato_incompatible: {
+        titulo: "La ficha recibió una respuesta incompatible",
+        texto: "No mostraremos datos incompletos de tu cita. Escríbenos por WhatsApp mientras lo revisamos.",
+      },
       generico: {
         titulo: "No pudimos cargar tu ficha",
         texto: "Intenta de nuevo en un momento, o escríbenos por WhatsApp y te ayudamos directamente.",
@@ -130,8 +155,18 @@ export const fichaText = {
       subtitulo: "Just need your details — takes less than a minute.",
     },
     cabeceraPendiente: {
-      titulo: "Your appointment request has been received.",
-      subtitulo: "Vita Lima will confirm service-area coverage and therapist availability via WhatsApp.",
+      domicilio: {
+        titulo: "Your appointment request has been received.",
+        subtitulo: "Vita Lima will confirm service-area coverage and therapist availability via WhatsApp.",
+      },
+      convenio: {
+        titulo: "Your appointment request has been received.",
+        subtitulo: "Vita Lima will validate the code or benefit and contact you via WhatsApp.",
+      },
+      generico: {
+        titulo: "Your appointment request has been received.",
+        subtitulo: "Vita Lima will review your request and contact you via WhatsApp.",
+      },
     },
     paso1: {
       titulo: "Who you are",
@@ -173,8 +208,8 @@ export const fichaText = {
         notasLabel: "Anything else we should know (optional)",
       },
       boleta: {
-        requiereLabel: "I need a receipt under my name",
-        tipoLabel: "Document type",
+        requiereLabel: "I need a receipt or invoice",
+        tipoLabel: "Receipt type",
         numeroLabelDni: "DNI (8 digits)",
         numeroLabelRuc: "RUC (11 digits)",
         razonSocialLabel: "Business name",
@@ -194,15 +229,26 @@ export const fichaText = {
     errorEnvio: {
       cupon_ya_usado: "This coupon code was already used. Double-check it or message us on WhatsApp and we'll help.",
       validacion: "Something doesn't add up in your details. Check them and try again.",
+      contrato_incompatible: "We will not show incomplete appointment details. Message us on WhatsApp while we review it.",
       generico: "We couldn't send your form. Try again or message us on WhatsApp.",
     },
     final: {
       titulo: "All done, your form is complete!",
       subtitulo: "See you on the agreed date and time.",
       pendiente: {
-        titulo: "We received your form.",
-        subtitulo:
-          "Your appointment is still pending confirmation. Vita Lima will verify service-area coverage and therapist availability and contact you via WhatsApp.",
+        domicilio: {
+          titulo: "We received your form.",
+          subtitulo:
+            "Your appointment is still pending confirmation. Vita Lima will verify service-area coverage and therapist availability and contact you via WhatsApp.",
+        },
+        convenio: {
+          titulo: "We received your form.",
+          subtitulo: "Your appointment is pending code or benefit validation. Vita Lima will contact you via WhatsApp.",
+        },
+        generico: {
+          titulo: "We received your form.",
+          subtitulo: "Your request is pending review. Vita Lima will contact you via WhatsApp.",
+        },
       },
       cuandoPendiente: "Requested date and time",
       direccion: "How to get there",
@@ -230,6 +276,10 @@ export const fichaText = {
         titulo: "This form is not configured",
         texto: "The secure server configuration is incomplete. Message us on WhatsApp while we resolve it.",
       },
+      contrato_incompatible: {
+        titulo: "This form received an incompatible response",
+        texto: "We will not show incomplete appointment details. Message us on WhatsApp while we review it.",
+      },
       generico: {
         titulo: "We couldn't load your form",
         texto: "Try again in a moment, or message us on WhatsApp and we'll help you directly.",
@@ -238,3 +288,11 @@ export const fichaText = {
     },
   },
 } satisfies Record<Idioma, unknown>;
+
+export function textoCabeceraPendiente(idioma: Idioma, motivo: MotivoConfirmacion) {
+  return fichaText[idioma].cabeceraPendiente[motivo ?? "generico"];
+}
+
+export function textoFinalPendiente(idioma: Idioma, motivo: MotivoConfirmacion) {
+  return fichaText[idioma].final.pendiente[motivo ?? "generico"];
+}
