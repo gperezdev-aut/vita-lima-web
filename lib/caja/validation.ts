@@ -74,10 +74,10 @@ function motivo(value: unknown): value is MotivoConfirmacion {
   return value === null || value === "domicilio" || value === "convenio";
 }
 
-function cita(value: unknown) {
+function cita(value: unknown, maxPersonas = 2) {
   return record(value) && fecha(value.fecha) && hora(value.hora) && nullableString(value.sede) &&
     nullableString(value.sedeDireccion) && urlNullable(value.sedeMapsUrl) &&
-    (value.personas === 1 || value.personas === 2) && servicios(value.servicios) &&
+    numero(value.personas) && Number.isInteger(value.personas) && value.personas >= 1 && value.personas <= maxPersonas && servicios(value.servicios) &&
     enteroPositivo(value.duracionTotalMin) && (value.tipoAtencion === "sede" || value.tipoAtencion === "domicilio") &&
     domicilio(value.domicilio) &&
     (value.tipoAtencion === "domicilio" ? value.domicilio !== null && value.sedeMapsUrl === null : value.domicilio === null);
@@ -111,16 +111,20 @@ function incompatible(motivo: string): ContratoValidado<never> {
 /** Verifica el JSON real recibido de Caja; nunca usa una conversión `as`. */
 export function validarFichaGet(value: unknown): ContratoValidado<FichaData> {
   if (!record(value)) return incompatible("La respuesta GET no es un objeto.");
-  if (value.contratoVersion !== "ficha-cita-v1") return incompatible("La versión de contrato no es ficha-cita-v1.");
+  if (value.contratoVersion !== "ficha-cita-v1" && value.contratoVersion !== "ficha-cita-v2") return incompatible("La versión de contrato no es compatible.");
   if (!stringNoVacio(value.token) || (value.estado !== "pendiente" && value.estado !== "completa") ||
       (value.idioma !== "es" && value.idioma !== "en") ||
       (value.canal !== "directo" && value.canal !== "cuponidad" && value.canal !== "bee") ||
-      !cita(value.cita) || !pago(value.pago) || !requiere(value.requiere) || !cliente(value.cliente) ||
+      !cita(value.cita, value.contratoVersion === "ficha-cita-v2" ? 5 : 2) || !pago(value.pago) || !requiere(value.requiere) || !cliente(value.cliente) ||
       !urlNullable(value.politicaCancelacionUrl)) {
     return incompatible("La respuesta GET no cumple los campos críticos de ficha-cita-v1.");
   }
   if (value.cupon !== undefined && (!record(value.cupon) || !nullableString(value.cupon.vigenteHasta))) {
     return incompatible("El bloque de cupón no es válido.");
+  }
+  if (value.contratoVersion === "ficha-cita-v2") {
+    const c = value.cita;
+    if (!record(c) || (c.modalidad !== "simultanea" && c.modalidad !== "consecutiva") || !stringNoVacio(c.nombreFinal) || !numero(c.precioTotal) || c.precioTotal < 0 || !Array.isArray(c.componentesPorPersona) || c.componentesPorPersona.length !== c.personas || !c.componentesPorPersona.every((p, i) => record(p) && p.persona === i + 1 && Array.isArray(p.componentes) && p.componentes.length > 0 && p.componentes.every((x) => record(x) && (x.tipo === "catalogo" || x.tipo === "manual") && (x.codigo === undefined || nullableString(x.codigo)) && stringNoVacio(x.nombre) && numero(x.precio) && x.precio > 0 && enteroPositivo(x.duracion_min)))) return incompatible("La ficha-cita-v2 no contiene componentes válidos.");
   }
   return { ok: true, data: value as FichaData };
 }

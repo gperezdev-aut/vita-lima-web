@@ -39,6 +39,18 @@ test("contrato GET compatible con caja PR #10", () => {
   assert.deepEqual(data.cliente, { conocido: false, nombre: null, emailEnmascarado: null });
 });
 
+test("ficha-cita-v2 de Caja agrupa componentes sin exponer auditoría", async () => {
+  const { getStubFicha } = await import("../lib/caja/stub.ts");
+  const { validarFichaGet } = await import("../lib/caja/validation.ts");
+  const result = getStubFicha("stub-personalizada");
+  assert.equal(result.ok, true);
+  assert.equal(validarFichaGet(result.data).ok, true);
+  assert.equal(result.data.contratoVersion, "ficha-cita-v2");
+  assert.equal(result.data.cita.personas, 3);
+  assert.equal(result.data.cita.componentesPorPersona[0].componentes.length, 2);
+  assert.doesNotMatch(JSON.stringify(result.data), /motivo_ajuste|responsable_ajuste|precio_calculado|diferencia_precio/i);
+});
+
 test("contrato POST y respuesta compatible con caja PR #10", () => {
   assert.deepEqual(Object.keys(payload).sort(), [
     "boleta", "codigoCupon", "consentimientos", "correo", "cumple", "idioma", "nombre", "salud", "telefono",

@@ -163,7 +163,7 @@ const ERRORES: Record<string, CajaErrorCode> = {
   "stub-completa": "ficha_ya_completa",
 };
 
-const RECURRENTES: Record<string, FichaRecurrenteData> = {
+const RECURRENTES: Record<string, FichaRecurrenteData | FichaData> = {
   "stub-recurrente-salud": {
     contratoVersion: "ficha-recurrente-v1",
     clienteRecurrente: true,
@@ -185,6 +185,7 @@ const RECURRENTES: Record<string, FichaRecurrenteData> = {
     },
     comprobanteAnterior: null,
   },
+  "stub-personalizada": { contratoVersion:"ficha-cita-v2", token:"stub-personalizada", estado:"pendiente", idioma:"es", canal:"directo", cita:{fecha:"2026-09-18",hora:"16:00",sede:"Miraflores",sedeDireccion:"Av. Larco 812",sedeMapsUrl:"https://maps.google.com",personas:3,servicios:[{nombre:"Atención personalizada",duracionMin:90}],duracionTotalMin:90,tipoAtencion:"sede",domicilio:null,modalidad:"simultanea",nombreFinal:"Atención personalizada",precioTotal:300,componentesPorPersona:[{persona:1,componentes:[{tipo:"catalogo",codigo:"FACIAL",nombre:"Facial",precio:100,duracion_min:60},{tipo:"manual",nombre:"Lifting",precio:50,duracion_min:30}]},{persona:2,componentes:[{tipo:"manual",nombre:"Barras de Access",precio:75,duracion_min:90}]},{persona:3,componentes:[{tipo:"catalogo",codigo:"RELAX",nombre:"Relax",precio:75,duracion_min:60}]}]},pago:{moneda:"PEN",adelantoRecibido:150,saldo:150,leyenda:"Adelanto recibido"},requiere:{codigoCupon:false,correoObligatorio:false,documentoParaBoleta:"opcional",confirmacionManual:false,motivoConfirmacion:null},cliente:{conocido:true,nombre:null,emailEnmascarado:null},politicaCancelacionUrl:"https://vitalimaspa.com/politica-de-privacidad" },
   "stub-recurrente-sin-condiciones": {
     contratoVersion: "ficha-recurrente-v1",
     clienteRecurrente: true,
@@ -241,6 +242,8 @@ const RECURRENTES: Record<string, FichaRecurrenteData> = {
 function fichaParaToken(token: string): FichaData | undefined {
   const ficha = FICHAS[token];
   if (ficha) return ficha;
+  const especial = RECURRENTES[token];
+  if (especial && especial.contratoVersion === "ficha-cita-v2") return especial;
   if (RECURRENTES[token] || token === "stub-identificar-invalido" || token === "stub-identificar-rate") {
     return { ...FICHAS["stub-nuevo"], token };
   }
@@ -267,6 +270,7 @@ export function identificarStubFicha(
     return { ok: false, status: 403, error: { error: "identificacion_no_valida" } };
   }
   const data = RECURRENTES[token] ?? RECURRENTES["stub-sin-historial"];
+  if (data.contratoVersion !== "ficha-recurrente-v1") return { ok: false, status: 403, error: { error: "identificacion_no_valida" } };
   return { ok: true, data };
 }
 

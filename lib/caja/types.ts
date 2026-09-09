@@ -10,8 +10,8 @@ export type FichaServicio = { nombre: string; duracionMin: number | null };
 export type MotivoConfirmacion = "domicilio" | "convenio" | null;
 export type DomicilioFicha = { distrito: string; direccion: string; referencia: string | null };
 
-export type FichaData = {
-  contratoVersion: "ficha-cita-v1";
+export type FichaBase = {
+  contratoVersion: "ficha-cita-v1" | "ficha-cita-v2";
   token: string;
   estado: "pendiente" | "completa";
   idioma: Idioma;
@@ -96,6 +96,10 @@ export type FichaRecurrenteData = {
     solicitarEnNuevaCita: false;
   } | null;
 };
+export type FichaDataV1 = FichaBase & { contratoVersion: "ficha-cita-v1"; cita: FichaBase["cita"] };
+export type ComponentePersonalizadoPublico = { tipo: "catalogo" | "manual"; codigo?: string; nombre: string; precio: number; duracion_min: number };
+export type FichaDataV2 = FichaBase & { contratoVersion: "ficha-cita-v2"; cita: FichaBase["cita"] & { personas: 1|2|3|4|5; modalidad: "simultanea"|"consecutiva"; componentesPorPersona: Array<{ persona:number; componentes: ComponentePersonalizadoPublico[] }>; nombreFinal: string; precioTotal: number } };
+export type FichaData = FichaDataV1 | FichaDataV2;
 
 export type IdentificarFichaResult =
   | { ok: true; data: FichaRecurrenteData }

@@ -319,6 +319,16 @@ export default function FichaWizard({ ficha, token }: Props) {
           </div>
         )}
 
+        {ficha.contratoVersion === "ficha-cita-v2" && (
+          <section className="fichaCard fichaPersonalizada" aria-label="Atención personalizada">
+            <h2>{idioma === "es" ? "Atención personalizada" : "Personalized appointment"}</h2>
+            <p>{ficha.cita.personas} {idioma === "es" ? "personas" : "people"} · {ficha.cita.modalidad === "simultanea" ? (idioma === "es" ? "Atención simultánea" : "Simultaneous appointment") : (idioma === "es" ? "Atención consecutiva" : "Consecutive appointment")}</p>
+            {ficha.cita.componentesPorPersona.map((persona) => <div className="fichaReviewCard" key={persona.persona}><strong>{idioma === "es" ? `Persona ${persona.persona}` : `Person ${persona.persona}`}</strong>{persona.componentes.map((componente) => <span key={`${persona.persona}-${componente.nombre}`}>{componente.nombre}</span>)}</div>)}
+            <div className="fichaSummaryRow"><span>{idioma === "es" ? "Duración total" : "Total duration"}</span><strong>{ficha.cita.duracionTotalMin} min</strong></div>
+            <div className="fichaSummaryRow"><span>{idioma === "es" ? "Precio total" : "Total price"}</span><strong>{formatearMoneda(ficha.cita.precioTotal, ficha.pago.moneda)}</strong></div>
+          </section>
+        )}
+
         <div className="fichaCard">
           {flujo === "identificar" && (
             <>
