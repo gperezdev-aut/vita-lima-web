@@ -46,7 +46,7 @@ export default function LocationPageView({ location, featuredServices, otherLoca
               onClick={toggleLanguage}
               aria-label={language === "es" ? "Switch to English" : "Cambiar a español"}
             >
-              {language === "es" ? "EN" : "ES"}
+              {language === "es" ? "🇺🇸 EN" : "🇵🇪 ES"}
             </button>
             <Link className="catalogBackLink" href={href(`/${otherLocation.slug}`)}>
               {t.otherLocation}

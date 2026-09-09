@@ -39,7 +39,7 @@ export default function Header() {
         <a href="#sedes" onClick={close}>{t.links.sedes}</a>
         <a href="#preguntas" onClick={close}>{t.links.preguntas}</a>
         <button type="button" className="langToggle" onClick={toggleLanguage} aria-label={language === "es" ? "Switch to English" : "Cambiar a español"}>
-          {language === "es" ? "EN" : "ES"}
+          {language === "es" ? "🇺🇸 EN" : "🇵🇪 ES"}
         </button>
       </nav>
 

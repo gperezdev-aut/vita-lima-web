@@ -317,7 +317,7 @@ export const guides: Guide[] = [
       "El embarazo carga la espalda baja, la cadera y las piernas. El masaje prenatal ayuda con eso, pero tiene reglas claras — empezando por la autorización de tu médico.",
     date: "2026-09-04",
     readingMinutes: 4,
-    image: "/images/servicios/servicio-04.webp",
+    image: "/images/prenatal/masaje-prenatal-posicion-lateral.webp",
     body: [
       {
         type: "p",

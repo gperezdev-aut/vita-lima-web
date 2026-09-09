@@ -66,7 +66,7 @@ export default function ServiceDetailPage({ service, detail, images, related }: 
               onClick={toggleLanguage}
               aria-label={language === "es" ? "Switch to English" : "Cambiar a español"}
             >
-              {language === "es" ? "EN" : "ES"}
+              {language === "es" ? "🇺🇸 EN" : "🇵🇪 ES"}
             </button>
             <Link className="catalogBackLink" href={href("/servicios")}>
               {t.backToCatalog}
