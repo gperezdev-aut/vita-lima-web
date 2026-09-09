@@ -600,6 +600,11 @@ body:has(.cookieBanner) .cartTrigger{bottom:184px}
 .fichaKnownCard{display:flex;align-items:center;gap:12px;background:white;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:16px}
 .fichaKnownCard strong{font-family:var(--font-display),Georgia,serif;font-size:19px}
 .fichaKnownCard button{margin-left:auto;font-size:11px;font-weight:800;text-decoration:underline;text-underline-offset:3px;background:none;border:0;color:var(--muted-aa);cursor:pointer;font-family:inherit}
+.fichaReviewCard{display:flex;flex-direction:column;gap:4px;background:white;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;font-size:13px;line-height:1.45}
+.fichaReviewCard strong{font-family:var(--font-display),Georgia,serif;font-size:17px}
+.fichaReviewCard span{color:var(--muted-aa)}
+.fichaButtonStack{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.fichaVerifiedPhone{border:1px solid var(--line);border-radius:11px;background:rgba(20,120,88,.08);padding:12px 14px;margin-bottom:16px;font-size:13px;font-weight:700;color:var(--ink)}
 .fichaSummaryRow{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}
 .fichaSummaryRow:last-of-type{border-bottom:0}
 .fichaSummaryRow span:first-child{color:var(--muted-aa)}

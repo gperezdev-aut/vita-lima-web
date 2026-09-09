@@ -39,13 +39,13 @@ test("el secreto permanece en el módulo server-side y nunca usa NEXT_PUBLIC", a
   assert.doesNotMatch([client, ...sources].join("\n"), /NEXT_PUBLIC_CAJA/);
 });
 
-test("GET y POST fuerzan no-store y la página impide indexación", async () => {
+test("GET, POST e identificación fuerzan no-store y la página impide indexación", async () => {
   const [client, page, nextConfig] = await Promise.all([
     readFile(new URL("../lib/caja/client.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/cita/[token]/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
   ]);
-  assert.equal(client.match(/cache: "no-store"/g)?.length, 2);
+  assert.equal(client.match(/cache: "no-store"/g)?.length, 3);
   assert.match(page, /robots: \{ index: false, follow: false \}/);
   assert.match(page, /fetchCache = "force-no-store"/);
   assert.match(nextConfig, /source: "\/cita\/:path\*"/);

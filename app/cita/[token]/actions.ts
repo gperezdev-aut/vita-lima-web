@@ -1,7 +1,7 @@
 "use server";
 
-import { enviarFicha } from "@/lib/caja/client";
-import type { EnviarFichaPayload, EnviarFichaResult } from "@/lib/caja/types";
+import { enviarFicha, identificarFicha } from "@/lib/caja/client";
+import type { EnviarFichaPayload, EnviarFichaResult, IdentificarFichaResult } from "@/lib/caja/types";
 
 /**
  * Único puente entre el wizard (cliente) y caja. Vive en el servidor porque
@@ -10,4 +10,11 @@ import type { EnviarFichaPayload, EnviarFichaResult } from "@/lib/caja/types";
  */
 export async function enviarFichaAction(token: string, payload: EnviarFichaPayload): Promise<EnviarFichaResult> {
   return enviarFicha(token, payload);
+}
+
+export async function identificarFichaAction(
+  token: string,
+  telefono: { crudo: string; pais: string }
+): Promise<IdentificarFichaResult> {
+  return identificarFicha(token, telefono);
 }

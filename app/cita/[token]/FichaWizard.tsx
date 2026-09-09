@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { enviarFichaAction } from "./actions";
+import { enviarFichaAction, identificarFichaAction } from "./actions";
 import PantallaFinal from "./PantallaFinal";
 import { site } from "@/content/site";
 import { borrarBorrador, guardarBorrador, leerBorrador } from "@/lib/ficha/draft";
@@ -12,7 +12,16 @@ import { consentimientoSaludParaPayload, consentimientoSaludValido, tieneDatosSa
 import { formatearMientrasEscribe, paisesOrdenados, telefonoValido, type CountryCode } from "@/lib/ficha/phone";
 import { fichaText, textoCabeceraPendiente } from "@/lib/ficha/text";
 import { ubicacionVisible } from "@/lib/ficha/resumen";
-import { esExito, type EnviarFichaData, type EnviarFichaPayload, type EnviarFichaResult, type FichaData, type Idioma } from "@/lib/caja/types";
+import {
+  esExito,
+  type EnviarFichaData,
+  type EnviarFichaPayload,
+  type EnviarFichaResult,
+  type FichaData,
+  type FichaRecurrenteData,
+  type Idioma,
+  type IdentificarFichaResult,
+} from "@/lib/caja/types";
 
 type Props = {
   ficha: FichaData;
@@ -22,10 +31,15 @@ type Props = {
 export default function FichaWizard({ ficha, token }: Props) {
   const [idioma, setIdioma] = useState<Idioma>(ficha.idioma);
   const [paso, setPaso] = useState(1);
+  const [flujo, setFlujo] = useState<"identificar" | "decision" | "rapida" | "completa">("identificar");
+  const [identificacion, setIdentificacion] = useState<FichaRecurrenteData | null>(null);
+  const [identificando, setIdentificando] = useState(false);
+  const [errorIdentificacion, setErrorIdentificacion] = useState<string | null>(null);
+  const [observacionNueva, setObservacionNueva] = useState("");
+  const [usarComprobanteAnterior, setUsarComprobanteAnterior] = useState(false);
   const [resultado, setResultado] = useState<EnviarFichaData | null>(null);
 
   // Paso 1
-  const [editarConocido, setEditarConocido] = useState(false);
   const [pais, setPais] = useState<CountryCode>("PE");
   // Arranca con solo Perú (el país por defecto, sin depender de Intl) y se
   // completa después del montaje: Intl.DisplayNames no garantiza el mismo
@@ -37,7 +51,7 @@ export default function FichaWizard({ ficha, token }: Props) {
     { code: "PE", name: ficha.idioma === "es" ? "Perú" : "Peru" },
   ]);
   const [telefonoCrudo, setTelefonoCrudo] = useState("");
-  const [nombre, setNombre] = useState(ficha.cliente.conocido ? ficha.cliente.nombre ?? "" : "");
+  const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
   const [cumpleDia, setCumpleDia] = useState("");
   const [cumpleMes, setCumpleMes] = useState("");
@@ -75,8 +89,8 @@ export default function FichaWizard({ ficha, token }: Props) {
   const ubicacion = ubicacionVisible(ficha.cita);
   const cargadoRef = useRef(false);
 
-  // Cargar borrador del dispositivo, si no venció (24h) y es de este token.
-  // Nunca incluye salud: ese bloque siempre arranca vacío.
+  // Cargar únicamente preferencias no sensibles. Tras recargar se vuelve a
+  // pedir WhatsApp y los datos recuperados nunca se restauran desde disco.
   //
   // Se hace en un efecto (y no con un initializer perezoso de useState) a
   // propósito: localStorage no existe durante el render en el servidor, así
@@ -87,21 +101,9 @@ export default function FichaWizard({ ficha, token }: Props) {
     const borrador = leerBorrador(token);
     if (borrador) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- restaurar el borrador guardado es justo lo que este efecto sincroniza desde localStorage.
-      setPaso(borrador.paso || 1);
       setIdioma(borrador.idioma || ficha.idioma);
       setPais((borrador.pais as CountryCode) || "PE");
-      setTelefonoCrudo(borrador.telefonoCrudo || "");
-      setNombre(borrador.nombre || (ficha.cliente.conocido ? ficha.cliente.nombre ?? "" : ""));
-      setCorreo(borrador.correo || "");
-      setCumpleDia(borrador.cumpleDia || "");
-      setCumpleMes(borrador.cumpleMes || "");
-      setBoletaRequiere(borrador.boletaRequiere || false);
-      setBoletaTipo(borrador.boletaTipo || "DNI");
-      setBoletaNumero(borrador.boletaNumero || "");
-      setBoletaRazonSocial(borrador.boletaRazonSocial || "");
       setCodigoCupon(borrador.codigoCupon || "");
-      setConsentDatos(borrador.consentDatos || false);
-      setConsentPromos(borrador.consentPromos || false);
     }
     cargadoRef.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,18 +115,7 @@ export default function FichaWizard({ ficha, token }: Props) {
       paso,
       idioma,
       pais,
-      telefonoCrudo,
-      nombre,
-      correo,
-      cumpleDia,
-      cumpleMes,
-      boletaRequiere,
-      boletaTipo,
-      boletaNumero,
-      boletaRazonSocial,
       codigoCupon,
-      consentDatos,
-      consentPromos,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -132,18 +123,7 @@ export default function FichaWizard({ ficha, token }: Props) {
     paso,
     idioma,
     pais,
-    telefonoCrudo,
-    nombre,
-    correo,
-    cumpleDia,
-    cumpleMes,
-    boletaRequiere,
-    boletaTipo,
-    boletaNumero,
-    boletaRazonSocial,
     codigoCupon,
-    consentDatos,
-    consentPromos,
   ]);
 
   useEffect(() => {
@@ -167,7 +147,7 @@ export default function FichaWizard({ ficha, token }: Props) {
     numero: boletaNumero,
     razonSocial: boletaRazonSocial,
   });
-  const salud: EnviarFichaPayload["salud"] = {
+  const saludBase: EnviarFichaPayload["salud"] = {
     embarazo,
     presion,
     cirugiaReciente,
@@ -175,6 +155,12 @@ export default function FichaWizard({ ficha, token }: Props) {
     zonasEvitar: zonasEvitar.trim(),
     notas: notas.trim(),
   };
+  const salud: EnviarFichaPayload["salud"] = flujo === "rapida" && observacionNueva.trim()
+    ? {
+        ...saludBase,
+        notas: [saludBase.notas, observacionNueva.trim()].filter(Boolean).join("\n"),
+      }
+    : saludBase;
   const hayDatosSalud = tieneDatosSalud(salud);
   const paso3Valido = consentDatos && consentimientoSaludValido(salud, consentSalud) && boletaNumeroOk;
 
@@ -191,6 +177,79 @@ export default function FichaWizard({ ficha, token }: Props) {
     setZonasEvitar("");
     setNotas("");
     setConsentSalud(false);
+  }
+
+  function textoErrorIdentificacion(codigo: string) {
+    const errores = t.identificar.error;
+    if (codigo === "identificacion_no_valida") return errores.identificacion_no_valida;
+    if (codigo === "rate_limited") return errores.rate_limited;
+    if (codigo === "token_no_existe") return errores.token_no_existe;
+    if (codigo === "token_vencido") return errores.token_vencido;
+    if (codigo === "ficha_ya_completa") return errores.ficha_ya_completa;
+    if (codigo === "configuracion") return errores.configuracion;
+    if (codigo === "no_autorizado") return errores.no_autorizado;
+    if (codigo === "contrato_incompatible") return errores.contrato_incompatible;
+    return errores.generico;
+  }
+
+  function aplicarIdentificacion(data: FichaRecurrenteData) {
+    setIdentificacion(data);
+    setNombre(data.cliente.nombre ?? "");
+    setCorreo(data.cliente.correo ?? "");
+    setCumpleDia(data.cliente.cumple?.dia ? String(data.cliente.cumple.dia) : "");
+    setCumpleMes(data.cliente.cumple?.mes ? String(data.cliente.cumple.mes) : "");
+    setConsentPromos(false);
+    setConsentDatos(false);
+    setConsentSalud(false);
+    setUsarComprobanteAnterior(false);
+    setBoletaRequiere(false);
+    setBoletaNumero("");
+    setBoletaRazonSocial("");
+    setBoletaTipo("DNI");
+    setObservacionNueva("");
+
+    const saludAnterior = data.saludAnterior;
+    setNingunaSalud(Boolean(saludAnterior?.sinCondicionesDeclaradas));
+    setEmbarazo(Boolean(saludAnterior?.embarazo));
+    setPresion(Boolean(saludAnterior?.presion));
+    setCirugiaReciente(Boolean(saludAnterior?.cirugiaReciente));
+    setAlergias(saludAnterior?.alergias ?? "");
+    setZonasEvitar(saludAnterior?.zonasEvitar ?? "");
+    setNotas(saludAnterior?.notas ?? "");
+  }
+
+  async function identificar() {
+    if (!telefonoOk) {
+      setMostrarErroresPaso1(true);
+      return;
+    }
+    setIdentificando(true);
+    setErrorIdentificacion(null);
+    const respuesta: IdentificarFichaResult = await identificarFichaAction(token, { crudo: telefonoCrudo, pais });
+    setIdentificando(false);
+    if (!esExito(respuesta)) {
+      setErrorIdentificacion(textoErrorIdentificacion(respuesta.error.error));
+      return;
+    }
+    aplicarIdentificacion(respuesta.data);
+    setFlujo(respuesta.data.clienteRecurrente ? "decision" : "completa");
+    setPaso(1);
+  }
+
+  function cambiarUsoComprobanteAnterior(usar: boolean) {
+    setUsarComprobanteAnterior(usar);
+    const comprobante = identificacion?.comprobanteAnterior;
+    if (!usar || !comprobante) {
+      setBoletaRequiere(false);
+      setBoletaNumero("");
+      setBoletaRazonSocial("");
+      setBoletaTipo("DNI");
+      return;
+    }
+    setBoletaRequiere(true);
+    setBoletaTipo(comprobante.tipoDocumento);
+    setBoletaNumero(comprobante.numeroDocumento);
+    setBoletaRazonSocial(comprobante.razonSocial ?? "");
   }
 
   async function enviar() {
@@ -224,7 +283,7 @@ export default function FichaWizard({ ficha, token }: Props) {
 
     if (!esExito(respuesta)) {
       if (respuesta.error.error === "cupon_ya_usado") {
-        setPaso(2);
+        if (flujo === "completa") setPaso(2);
         setErrorEnvio(t.errorEnvio.cupon_ya_usado);
         return;
       }
@@ -264,13 +323,15 @@ export default function FichaWizard({ ficha, token }: Props) {
     <main className="fichaPage">
       <div className="fichaShell">
         <div className="fichaTopRow">
-          <span className="fichaStepper">{t.stepper(paso)}</span>
+          <span className="fichaStepper">
+            {flujo === "completa" ? t.stepper(paso) : flujo === "identificar" ? t.identificar.titulo : t.identificar.verificada}
+          </span>
           <button type="button" className="fichaLangToggle" onClick={alternarIdioma}>
             {t.idiomaBoton}
           </button>
         </div>
 
-        {paso === 1 && (
+        {(flujo !== "completa" || paso === 1) && (
           <div className="fichaHeaderCard">
             <span className="eyebrow">Vita Lima Spa</span>
             <strong>{cabecera.titulo}</strong>
@@ -286,39 +347,17 @@ export default function FichaWizard({ ficha, token }: Props) {
         )}
 
         <div className="fichaCard">
-          {paso === 1 && (
+          {flujo === "identificar" && (
             <>
-              <h2>{t.paso1.titulo}</h2>
-              <p className="fichaCardIntro">{t.paso1.intro}</p>
-
-              {ficha.cliente.conocido && !editarConocido ? (
-                <div className="fichaKnownCard">
-                  <strong>{t.paso1.holaConocido(nombre || ficha.cliente.nombre || "")}</strong>
-                  <button type="button" onClick={() => setEditarConocido(true)}>
-                    {t.paso1.noSoyYo}
-                  </button>
-                </div>
-              ) : (
-                <div className={`fichaField${mostrarErroresPaso1 && !nombreOk ? " fichaFieldError" : ""}`}>
-                  <label htmlFor="ficha-nombre">{t.paso1.nombreLabel}</label>
-                  <input
-                    id="ficha-nombre"
-                    type="text"
-                    autoComplete="name"
-                    value={nombre}
-                    onChange={(evento) => setNombre(evento.target.value)}
-                  />
-                </div>
-              )}
+              <h2>{t.identificar.titulo}</h2>
+              <p className="fichaCardIntro">{t.identificar.intro}</p>
 
               <div className="fichaField">
                 <label htmlFor="ficha-pais">{t.paso1.paisLabel}</label>
                 <div className="fichaPhoneRow">
                   <select id="ficha-pais" value={pais} onChange={(evento) => setPais(evento.target.value as CountryCode)}>
                     {paises.map((opcion) => (
-                      <option key={opcion.code} value={opcion.code}>
-                        {opcion.name}
-                      </option>
+                      <option key={opcion.code} value={opcion.code}>{opcion.name}</option>
                     ))}
                   </select>
                   <input
@@ -332,6 +371,128 @@ export default function FichaWizard({ ficha, token }: Props) {
                 </div>
                 {mostrarErroresPaso1 && !telefonoOk && <span className="fichaErrorText">{t.paso1.telefonoError}</span>}
               </div>
+
+              {errorIdentificacion && <div className="fichaBanner">{errorIdentificacion}</div>}
+              <div className="fichaButtonRow">
+                <button type="button" className="button orangeButton" onClick={identificar} disabled={identificando}>
+                  {identificando ? t.identificar.verificando : t.identificar.continuar}
+                </button>
+              </div>
+            </>
+          )}
+
+          {flujo === "decision" && identificacion && (
+            <>
+              <h2>{t.identificar.encontrada}</h2>
+              <p className="fichaCardIntro">{t.identificar.pregunta}</p>
+
+              <div className="fichaReviewCard">
+                <strong>{identificacion.cliente.nombre ?? "—"}</strong>
+                {identificacion.cliente.correo && <span>{identificacion.cliente.correo}</span>}
+                {identificacion.cliente.cumple && <span>{identificacion.cliente.cumple.dia}/{identificacion.cliente.cumple.mes}</span>}
+              </div>
+              <div className="fichaReviewCard">
+                <strong>{t.identificar.resumenSalud}</strong>
+                {identificacion.saludAnterior?.sinCondicionesDeclaradas || !identificacion.saludAnterior ? (
+                  <span>{t.identificar.sinCondiciones}</span>
+                ) : (
+                  <span>
+                    {[
+                      identificacion.saludAnterior.embarazo ? t.paso3.salud.embarazo : null,
+                      identificacion.saludAnterior.presion ? t.paso3.salud.presion : null,
+                      identificacion.saludAnterior.cirugiaReciente ? t.paso3.salud.cirugiaReciente : null,
+                      identificacion.saludAnterior.alergias,
+                      identificacion.saludAnterior.zonasEvitar,
+                      identificacion.saludAnterior.notas,
+                    ].filter(Boolean).join(" · ")}
+                  </span>
+                )}
+              </div>
+              {identificacion.comprobanteAnterior && (
+                <div className="fichaReviewCard">
+                  <strong>{identificacion.comprobanteAnterior.tipoComprobante}</strong>
+                  <span>{identificacion.comprobanteAnterior.tipoDocumento} · {identificacion.comprobanteAnterior.numeroDocumento}</span>
+                  {identificacion.comprobanteAnterior.razonSocial && <span>{identificacion.comprobanteAnterior.razonSocial}</span>}
+                </div>
+              )}
+
+              <div className="fichaButtonStack">
+                <button type="button" className="button orangeButton" onClick={() => setFlujo("rapida")}>{t.identificar.igual}</button>
+                <button type="button" className="button fichaBackButton" onClick={() => { setFlujo("completa"); setPaso(1); }}>{t.identificar.actualizar}</button>
+              </div>
+            </>
+          )}
+
+          {flujo === "rapida" && identificacion && (
+            <>
+              <h2>{t.identificar.encontrada}</h2>
+              <p className="fichaCardIntro">{t.identificar.pregunta}</p>
+
+              <div className="fichaField">
+                <label htmlFor="ficha-observacion-rapida">
+                  {t.identificar.observacionLabel} <span className="fichaHint">({t.identificar.observacionHint})</span>
+                </label>
+                <textarea id="ficha-observacion-rapida" rows={3} value={observacionNueva} onChange={(evento) => setObservacionNueva(evento.target.value)} />
+              </div>
+
+              {identificacion.comprobanteAnterior && (
+                <label className="fichaConsent">
+                  <input type="checkbox" checked={usarComprobanteAnterior} onChange={(evento) => cambiarUsoComprobanteAnterior(evento.target.checked)} />
+                  <span>{t.identificar.comprobante}</span>
+                </label>
+              )}
+
+              {ficha.requiere.codigoCupon && (
+                <div className={`fichaField fichaCuponField${mostrarErroresPaso2 && !cuponOk ? " fichaFieldError" : ""}`}>
+                  <label htmlFor="ficha-cupon-rapido">{t.paso2.cuponLabel}</label>
+                  <input id="ficha-cupon-rapido" type="text" autoCapitalize="characters" value={codigoCupon} onChange={(evento) => setCodigoCupon(evento.target.value)} />
+                  {mostrarErroresPaso2 && !cuponOk && <span className="fichaErrorText">{t.paso2.cuponError}</span>}
+                </div>
+              )}
+
+              <div className="fichaConsentGroup">
+                <label className="fichaConsent">
+                  <input type="checkbox" checked={consentDatos} onChange={(evento) => setConsentDatos(evento.target.checked)} />
+                  <span>{t.paso3.consentimientos.datos} <a href="/politica-de-privacidad" target="_blank" rel="noopener noreferrer">{t.paso3.consentimientos.datosLink}</a></span>
+                </label>
+                {hayDatosSalud && (
+                  <label className="fichaConsent fichaConsentSalud">
+                    <input type="checkbox" checked={consentSalud} onChange={(evento) => setConsentSalud(evento.target.checked)} />
+                    <span>{t.paso3.consentimientos.salud}</span>
+                  </label>
+                )}
+                <label className="fichaConsent">
+                  <input type="checkbox" checked={consentPromos} onChange={(evento) => setConsentPromos(evento.target.checked)} />
+                  <span>{t.paso3.consentimientos.promociones}</span>
+                </label>
+              </div>
+              {errorEnvio && <div className="fichaBanner">{errorEnvio}</div>}
+              <div className="fichaButtonRow">
+                <button type="button" className="button fichaBackButton" onClick={() => setFlujo("decision")} disabled={enviando}>{t.identificar.volver}</button>
+                <button type="button" className="button orangeButton" onClick={() => { if (cuponOk) enviar(); else setMostrarErroresPaso2(true); }} disabled={enviando || !paso3Valido}>
+                  {enviando ? t.paso3.enviando : t.identificar.enviarRapido}
+                </button>
+              </div>
+            </>
+          )}
+
+          {flujo === "completa" && paso === 1 && (
+            <>
+              <h2>{t.paso1.titulo}</h2>
+              <p className="fichaCardIntro">{t.paso1.intro}</p>
+
+              <div className={`fichaField${mostrarErroresPaso1 && !nombreOk ? " fichaFieldError" : ""}`}>
+                <label htmlFor="ficha-nombre">{t.paso1.nombreLabel}</label>
+                <input
+                  id="ficha-nombre"
+                  type="text"
+                  autoComplete="name"
+                  value={nombre}
+                  onChange={(evento) => setNombre(evento.target.value)}
+                />
+              </div>
+
+              <div className="fichaVerifiedPhone">✓ {t.identificar.verificada}</div>
 
               <div className={`fichaField${mostrarErroresPaso1 && !correoOk ? " fichaFieldError" : ""}`}>
                 <label htmlFor="ficha-correo">
@@ -383,7 +544,7 @@ export default function FichaWizard({ ficha, token }: Props) {
             </>
           )}
 
-          {paso === 2 && (
+          {flujo === "completa" && paso === 2 && (
             <>
               <h2>{t.paso2.titulo}</h2>
 
@@ -442,7 +603,7 @@ export default function FichaWizard({ ficha, token }: Props) {
             </>
           )}
 
-          {paso === 3 && (
+          {flujo === "completa" && paso === 3 && (
             <>
               <h2>{t.paso3.titulo}</h2>
               <p className="fichaCardIntro">{t.paso3.intro}</p>

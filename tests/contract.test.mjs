@@ -36,6 +36,7 @@ test("contrato GET compatible con caja PR #10", () => {
   ]);
   assert.equal(data.contratoVersion, "ficha-cita-v1");
   assert.equal(data.requiere.confirmacionManual, false);
+  assert.deepEqual(data.cliente, { conocido: false, nombre: null, emailEnmascarado: null });
 });
 
 test("contrato POST y respuesta compatible con caja PR #10", () => {

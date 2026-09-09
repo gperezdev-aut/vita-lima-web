@@ -1,4 +1,12 @@
-import type { CajaErrorCode, EnviarFichaPayload, EnviarFichaResult, FichaData, FichaResult } from "./types";
+import type {
+  CajaErrorCode,
+  EnviarFichaPayload,
+  EnviarFichaResult,
+  FichaData,
+  FichaRecurrenteData,
+  FichaResult,
+  IdentificarFichaResult,
+} from "./types";
 
 /**
  * Modo stub: solo con CAJA_API_STUB_ENABLED=true fuera de producción, la
@@ -28,7 +36,7 @@ const FICHAS: Record<string, FichaData> = {
     },
     pago: { moneda: "PEN", adelantoRecibido: 10, saldo: 65, leyenda: "Adelanto recibido" },
     requiere: { codigoCupon: false, correoObligatorio: false, documentoParaBoleta: "opcional", confirmacionManual: false, motivoConfirmacion: null },
-    cliente: { conocido: false, nombre: "", emailEnmascarado: null },
+    cliente: { conocido: false, nombre: null, emailEnmascarado: null },
     politicaCancelacionUrl: "https://vitalimaspa.com/politica-de-privacidad",
   },
   "stub-conocido": {
@@ -51,7 +59,7 @@ const FICHAS: Record<string, FichaData> = {
     },
     pago: { moneda: "PEN", adelantoRecibido: 15, saldo: 55, leyenda: "Adelanto recibido" },
     requiere: { codigoCupon: false, correoObligatorio: false, documentoParaBoleta: "opcional", confirmacionManual: false, motivoConfirmacion: null },
-    cliente: { conocido: true, nombre: "Rosa", emailEnmascarado: "r***@gmail.com" },
+    cliente: { conocido: true, nombre: null, emailEnmascarado: null },
     politicaCancelacionUrl: "https://vitalimaspa.com/politica-de-privacidad",
   },
   "stub-cupon": {
@@ -74,7 +82,7 @@ const FICHAS: Record<string, FichaData> = {
     },
     pago: { moneda: "PEN", adelantoRecibido: 0, saldo: 0, leyenda: "Pago gestionado por Cuponidad" },
     requiere: { codigoCupon: true, correoObligatorio: false, documentoParaBoleta: "no", confirmacionManual: true, motivoConfirmacion: "convenio" },
-    cliente: { conocido: false, nombre: "", emailEnmascarado: null },
+    cliente: { conocido: false, nombre: null, emailEnmascarado: null },
     politicaCancelacionUrl: "https://vitalimaspa.com/politica-de-privacidad",
     cupon: { vigenteHasta: "2026-09-20" },
   },
@@ -98,7 +106,7 @@ const FICHAS: Record<string, FichaData> = {
     },
     pago: { moneda: "PEN", adelantoRecibido: 0, saldo: 0, leyenda: "Pago gestionado por Bee Beneficios" },
     requiere: { codigoCupon: true, correoObligatorio: false, documentoParaBoleta: "no", confirmacionManual: true, motivoConfirmacion: "convenio" },
-    cliente: { conocido: false, nombre: "", emailEnmascarado: null },
+    cliente: { conocido: false, nombre: null, emailEnmascarado: null },
     politicaCancelacionUrl: "https://vitalimaspa.com/politica-de-privacidad",
     cupon: { vigenteHasta: "2026-09-20" },
   },
@@ -122,7 +130,7 @@ const FICHAS: Record<string, FichaData> = {
     },
     pago: { moneda: "PEN", adelantoRecibido: 20, saldo: 60, leyenda: "Deposit received" },
     requiere: { codigoCupon: false, correoObligatorio: false, documentoParaBoleta: "opcional", confirmacionManual: false, motivoConfirmacion: null },
-    cliente: { conocido: false, nombre: "", emailEnmascarado: null },
+    cliente: { conocido: false, nombre: null, emailEnmascarado: null },
     politicaCancelacionUrl: "https://vitalimaspa.com/politica-de-privacidad",
   },
   "stub-domicilio": {
@@ -145,7 +153,7 @@ const FICHAS: Record<string, FichaData> = {
     },
     pago: { moneda: "PEN", adelantoRecibido: 67.5, saldo: 67.5, leyenda: "Adelanto recibido" },
     requiere: { codigoCupon: false, correoObligatorio: false, documentoParaBoleta: "opcional", confirmacionManual: true, motivoConfirmacion: "domicilio" },
-    cliente: { conocido: false, nombre: "", emailEnmascarado: null },
+    cliente: { conocido: false, nombre: null, emailEnmascarado: null },
     politicaCancelacionUrl: "https://vitalimaspa.com/politica-de-privacidad",
   },
 };
@@ -155,8 +163,92 @@ const ERRORES: Record<string, CajaErrorCode> = {
   "stub-completa": "ficha_ya_completa",
 };
 
-export function getStubFicha(token: string): FichaResult {
+const RECURRENTES: Record<string, FichaRecurrenteData> = {
+  "stub-recurrente-salud": {
+    contratoVersion: "ficha-recurrente-v1",
+    clienteRecurrente: true,
+    cliente: {
+      nombre: "Rosa Quispe",
+      correo: "rosa@example.com",
+      cumple: { dia: 14, mes: 3 },
+      promociones: { autorizoAnteriormente: true, requiereNuevaAceptacion: true },
+    },
+    saludAnterior: {
+      disponible: true,
+      sinCondicionesDeclaradas: false,
+      embarazo: false,
+      presion: true,
+      cirugiaReciente: false,
+      alergias: "Látex",
+      zonasEvitar: "Rodilla izquierda",
+      notas: "Control médico",
+    },
+    comprobanteAnterior: null,
+  },
+  "stub-recurrente-sin-condiciones": {
+    contratoVersion: "ficha-recurrente-v1",
+    clienteRecurrente: true,
+    cliente: {
+      nombre: "Rosa Quispe",
+      correo: null,
+      cumple: null,
+      promociones: { autorizoAnteriormente: false, requiereNuevaAceptacion: true },
+    },
+    saludAnterior: {
+      disponible: true,
+      sinCondicionesDeclaradas: true,
+      embarazo: false,
+      presion: false,
+      cirugiaReciente: false,
+      alergias: null,
+      zonasEvitar: null,
+      notas: null,
+    },
+    comprobanteAnterior: null,
+  },
+  "stub-recurrente-comprobante": {
+    contratoVersion: "ficha-recurrente-v1",
+    clienteRecurrente: true,
+    cliente: {
+      nombre: "Rosa Quispe",
+      correo: "rosa@example.com",
+      cumple: { dia: 14, mes: 3 },
+      promociones: { autorizoAnteriormente: true, requiereNuevaAceptacion: true },
+    },
+    saludAnterior: null,
+    comprobanteAnterior: {
+      tipoComprobante: "FACTURA",
+      tipoDocumento: "RUC",
+      numeroDocumento: "20123456789",
+      razonSocial: "Rosa Servicios SAC",
+      solicitarEnNuevaCita: false,
+    },
+  },
+  "stub-sin-historial": {
+    contratoVersion: "ficha-recurrente-v1",
+    clienteRecurrente: false,
+    cliente: {
+      nombre: "Rosa Quispe",
+      correo: null,
+      cumple: null,
+      promociones: { autorizoAnteriormente: false, requiereNuevaAceptacion: true },
+    },
+    saludAnterior: null,
+    comprobanteAnterior: null,
+  },
+};
+
+function fichaParaToken(token: string): FichaData | undefined {
   const ficha = FICHAS[token];
+  if (ficha) return ficha;
+  if (RECURRENTES[token] || token === "stub-identificar-invalido" || token === "stub-identificar-rate") {
+    return { ...FICHAS["stub-nuevo"], token };
+  }
+  return undefined;
+}
+
+export function getStubFicha(token: string): FichaResult {
+  const ficha = fichaParaToken(token);
   if (ficha) return { ok: true, data: ficha };
 
   const errorCode = ERRORES[token];
@@ -165,8 +257,21 @@ export function getStubFicha(token: string): FichaResult {
   return { ok: false, status: 404, error: { error: "token_no_existe" } };
 }
 
+export function identificarStubFicha(
+  token: string,
+  telefono: { crudo: string; pais: string }
+): IdentificarFichaResult {
+  if (!fichaParaToken(token)) return { ok: false, status: 404, error: { error: "token_no_existe" } };
+  if (token === "stub-identificar-rate") return { ok: false, status: 429, error: { error: "rate_limited" } };
+  if (token === "stub-identificar-invalido" || !telefono.crudo.trim() || !telefono.pais.trim()) {
+    return { ok: false, status: 403, error: { error: "identificacion_no_valida" } };
+  }
+  const data = RECURRENTES[token] ?? RECURRENTES["stub-sin-historial"];
+  return { ok: true, data };
+}
+
 export function postStubFicha(token: string, payload: EnviarFichaPayload): EnviarFichaResult {
-  const ficha = FICHAS[token];
+  const ficha = fichaParaToken(token);
   if (!ficha) {
     const errorCode = ERRORES[token];
     if (errorCode) return { ok: false, status: 410, error: { error: errorCode } };

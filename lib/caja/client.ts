@@ -1,9 +1,15 @@
 import "server-only";
 
 import { resolveCajaConfig } from "./config";
-import { getStubFicha, postStubFicha } from "./stub";
-import type { CajaError, EnviarFichaPayload, EnviarFichaResult, FichaResult } from "./types";
-import { errorContratoIncompatible, validarFichaGet, validarFichaPost } from "./validation";
+import { getStubFicha, identificarStubFicha, postStubFicha } from "./stub";
+import type {
+  CajaError,
+  EnviarFichaPayload,
+  EnviarFichaResult,
+  FichaResult,
+  IdentificarFichaResult,
+} from "./types";
+import { errorContratoIncompatible, validarFichaGet, validarFichaPost, validarFichaRecurrente } from "./validation";
 
 /**
  * Único punto de contacto con caja. Se llama siempre desde el servidor
@@ -31,12 +37,27 @@ function configurationError(missing: string[]): Extract<FichaResult, { ok: false
   };
 }
 
+function configurationErrorIdentificar(missing: string[]): Extract<IdentificarFichaResult, { ok: false }> {
+  return {
+    ok: false,
+    status: 500,
+    error: {
+      error: "configuracion",
+      mensaje: `Falta configuración del servidor: ${missing.join(", ")}.`,
+    },
+  };
+}
+
 function contratoIncompatible(mensaje: string): Extract<FichaResult, { ok: false }> {
   return {
     ok: false,
     status: 502,
     error: errorContratoIncompatible(mensaje),
   };
+}
+
+function contratoIncompatibleIdentificar(mensaje: string): Extract<IdentificarFichaResult, { ok: false }> {
+  return { ok: false, status: 502, error: errorContratoIncompatible(mensaje) };
 }
 
 async function leerError(response: Response): Promise<CajaError> {
@@ -74,6 +95,41 @@ export async function getFicha(token: string): Promise<FichaResult> {
     return { ok: true, data: validado.data };
   } catch (error) {
     console.error("[ficha] fallo al pedir la ficha a caja:", error);
+    return { ok: false, status: 502, error: { error: "caja_no_disponible" } };
+  }
+}
+
+/**
+ * Identificación deliberadamente server-side: el secreto solo se lee en esta
+ * capa y nunca se pasa a FichaWizard ni al bundle del navegador.
+ */
+export async function identificarFicha(
+  token: string,
+  telefono: { crudo: string; pais: string }
+): Promise<IdentificarFichaResult> {
+  const config = resolveCajaConfig(process.env);
+  if (config.mode === "stub") return identificarStubFicha(token, telefono);
+  if (config.mode === "error") return configurationErrorIdentificar(config.missing);
+
+  try {
+    const response = await fetch(`${config.apiUrl}/api/publico/ficha/${encodeURIComponent(token)}/identificar`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...cajaHeaders(config.secret) },
+      body: JSON.stringify({ telefono }),
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+      cache: "no-store",
+    });
+    if (!response.ok) return { ok: false, status: response.status, error: await leerError(response) };
+    let body: unknown;
+    try {
+      body = await response.json();
+    } catch {
+      return contratoIncompatibleIdentificar("Caja respondió una identificación 200 sin JSON válido.");
+    }
+    const validado = validarFichaRecurrente(body);
+    if (validado.ok === false) return contratoIncompatibleIdentificar(validado.motivo);
+    return { ok: true, data: validado.data };
+  } catch {
     return { ok: false, status: 502, error: { error: "caja_no_disponible" } };
   }
 }

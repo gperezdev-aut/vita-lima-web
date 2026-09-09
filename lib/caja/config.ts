@@ -12,7 +12,7 @@ export type CajaConfig =
 
 /**
  * El stub requiere una activación deliberada y nunca está disponible en
- * producción. Para la API real, URL y secreto forman una sola configuración:
+ * producción ni staging. Para la API real, URL y secreto forman una sola configuración:
  * no se intenta una llamada incompleta ni se degrada silenciosamente al stub.
  */
 export function resolveCajaConfig(environment: CajaEnvironment): CajaConfig {

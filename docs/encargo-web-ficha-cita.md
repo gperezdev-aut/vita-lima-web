@@ -71,7 +71,7 @@ una vez con el webhook de n8n; no repetirlo aquí.
     "confirmacionManual": false,
     "motivoConfirmacion": null
   },
-  "cliente": { "conocido": true, "nombre": "Rosa", "emailEnmascarado": "r***@gmail.com" },
+  "cliente": { "conocido": true, "nombre": null, "emailEnmascarado": null },
   "politicaCancelacionUrl": "…"
 }
 ```
@@ -90,6 +90,31 @@ una respuesta 200 con campos críticos ausentes o incompatibles. `requiere.confi
 `requiere.motivoConfirmacion` los decide exclusivamente Caja. Con motivo `"domicilio"` se comunica
 la validación de cobertura y terapistas; con `"convenio"`, solo la validación de código/beneficio;
 con `null`, una revisión genérica prudente. Ningún caso manual se presenta como reservado o confirmado.
+
+El GET inicial no devuelve nombre ni correo, incluso enmascarado. `cliente.conocido` solo indica
+que la reserva está asociada a un cliente; ningún dato personal puede aparecer en el HTML antes de
+confirmar el WhatsApp.
+
+### `POST {CAJA_API_URL}/api/publico/ficha/:token/identificar`
+
+Esta llamada ocurre únicamente desde una Server Action con `X-Caja-Secret`, `Content-Type:
+application/json` y `cache: "no-store"`:
+
+```json
+{ "telefono": { "crudo": "987654321", "pais": "PE" } }
+```
+
+La respuesta debe validar estrictamente `contratoVersion: "ficha-recurrente-v1"`. Solo después de
+la coincidencia E.164 puede mostrar nombre, correo, cumpleaños, fotografía de salud y comprobante
+anterior. Un `clienteRecurrente=true` permite elegir entre «todo sigue igual» y actualizar el
+formulario completo; `false` continúa el formulario completo sin esa pregunta. Promociones y
+comprobante siempre empiezan desactivados. Un comprobante anterior solo se envía si el cliente
+marca una opción explícita.
+
+La ruta rápida reenvía una declaración nueva para la reserva actual. Conserva condiciones
+anteriores, agrega una observación nueva a `salud.notas` y solicita consentimiento de salud solo
+si hay condiciones u observación. Si no hay condiciones ni observación, manda salud vacía y
+`consentimientos.salud=false`.
 
 ### `POST {CAJA_API_URL}/api/publico/ficha/:token`
 
@@ -155,6 +180,9 @@ copy.** Usar `mensaje` solo como respaldo ante un código desconocido.
 | `ficha_ya_completa` | 410 | «esta ficha ya está completa», con WhatsApp |
 | `cupon_ya_usado` | 409 | qué hacer, no un error genérico |
 | `validacion` | 422 | errores de campo |
+| `identificacion_no_valida` | 403 | mensaje genérico, sin revelar a quién pertenece el número |
+| `rate_limited` | 429 | pedir esperar y reintentar |
+| `configuracion`, `no_autorizado`, `contrato_incompatible`, red | — | mensaje controlado en español e inglés |
 
 ### Modo stub, para no esperar a caja
 
@@ -175,6 +203,12 @@ Tokens fijos, para que las capturas y el QA sean reproducibles:
 | `stub-domicilio` | Atención a domicilio pendiente de confirmación manual |
 | `stub-vencido` | `410 token_vencido` |
 | `stub-completa` | `410 ficha_ya_completa` |
+| `stub-recurrente-salud` | Recurrente con salud, correo y cumpleaños |
+| `stub-recurrente-sin-condiciones` | Recurrente sin condiciones declaradas |
+| `stub-recurrente-comprobante` | Recurrente con comprobante anterior |
+| `stub-sin-historial` | Cliente identificado sin historial |
+| `stub-identificar-invalido` | `403 identificacion_no_valida` |
+| `stub-identificar-rate` | `429 rate_limited` |
 
 Cualquier otro token responde `404 token_no_existe`. Así esta página se construye y se revisa
 entera antes de que caja exista, y conectarla después es cambiar una variable de entorno.
@@ -198,12 +232,18 @@ Lo primero que se lee **no es un formulario**:
 Todo eso sale del JSON. En convenio la leyenda viene de Caja («Pago gestionado por Cuponidad» o
 «Pago gestionado por Bee Beneficios») y el saldo visible del cliente es S/0.
 
+### Antes del formulario — Identificación
+
+La primera interacción pide país y WhatsApp. No se saluda por nombre ni se precarga perfil desde
+el GET. Tras la identificación correcta, el cliente recurrente puede usar la ruta rápida o abrir
+el formulario completo prellenado; al recargar se pide WhatsApp nuevamente.
+
 ### Paso 1 — Quién eres
 
 | Campo | Regla |
 |---|---|
-| `telefono` | **Selector de país, Perú por defecto**, validación por país con `libphonenumber-js`. Se manda crudo + país; caja normaliza a E.164 |
-| `nombre` | Precargado desde `cliente.nombre` si `conocido`; editable |
+| `telefono` | Se verifica primero con selector de país, Perú por defecto, y validación por país con `libphonenumber-js`. Se manda crudo + país; caja normaliza a E.164 |
+| `nombre` | Llega solo desde la identificación correcta; editable en la ruta completa |
 | `correo` | Obligatorio si `requiere.correoObligatorio` |
 | `cumple` | Opcional, **día y mes sin año** |
 
@@ -212,7 +252,8 @@ peruano-solamente le impediría reservar a un turista, que es un cliente real de
 teléfono extranjero no vuelve obligatorio el correo: esa decisión llega únicamente en
 `requiere.correoObligatorio`; si el correo opcional se completa, su formato sí se valida.
 
-Si `cliente.conocido`, este paso se reduce a confirmar el correo y seguir.
+La información recuperada nunca se guarda en `localStorage`: tampoco salud, DNI, RUC, razón
+social, correo, cumpleaños o WhatsApp. El borrador conserva solo preferencias no sensibles.
 
 ### Paso 2 — La cita
 

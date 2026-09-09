@@ -60,11 +60,46 @@ export type CajaErrorCode =
   | "configuracion"
   | "contrato_incompatible"
   | "no_autorizado"
-  | "rate_limited";
+  | "rate_limited"
+  | "identificacion_no_valida"
+  | "error_interno";
 
 export type CajaError = { error: CajaErrorCode | string; mensaje?: string };
 
 export type FichaResult = { ok: true; data: FichaData } | { ok: false; status: number; error: CajaError };
+
+/** Contrato privado: solo llega al navegador después de validar el WhatsApp. */
+export type FichaRecurrenteData = {
+  contratoVersion: "ficha-recurrente-v1";
+  clienteRecurrente: boolean;
+  cliente: {
+    nombre: string | null;
+    correo: string | null;
+    cumple: { dia: number; mes: number } | null;
+    promociones: { autorizoAnteriormente: boolean; requiereNuevaAceptacion: true };
+  };
+  saludAnterior: {
+    disponible: true;
+    sinCondicionesDeclaradas: boolean;
+    embarazo: boolean;
+    presion: boolean;
+    cirugiaReciente: boolean;
+    alergias: string | null;
+    zonasEvitar: string | null;
+    notas: string | null;
+  } | null;
+  comprobanteAnterior: {
+    tipoComprobante: "BOLETA" | "FACTURA";
+    tipoDocumento: "DNI" | "RUC";
+    numeroDocumento: string;
+    razonSocial: string | null;
+    solicitarEnNuevaCita: false;
+  } | null;
+};
+
+export type IdentificarFichaResult =
+  | { ok: true; data: FichaRecurrenteData }
+  | { ok: false; status: number; error: CajaError };
 
 export type EnviarFichaPayload = {
   telefono: { crudo: string; pais: string };

@@ -3,26 +3,16 @@ import type { Idioma } from "@/lib/caja/types";
 /**
  * Borrador local de /cita/[token]. Clave por token (vita:ficha:<token>): una
  * pareja que reserva un paquete para dos puede abrir dos fichas en el mismo
- * celular y no deben mezclarse. Vence a las 24 horas y nunca incluye el
- * bloque de salud ni su consentimiento — ver docs/encargo-web-ficha-cita.md.
+ * celular y no deben mezclarse. Vence a las 24 horas y conserva únicamente
+ * preferencias no sensibles: nunca teléfono, perfil, salud, consentimiento ni
+ * datos de comprobante recuperados desde Caja.
  */
 
 export type FichaDraft = {
   paso: number;
   idioma: Idioma;
   pais: string;
-  telefonoCrudo: string;
-  nombre: string;
-  correo: string;
-  cumpleDia: string;
-  cumpleMes: string;
-  boletaRequiere: boolean;
-  boletaTipo: "DNI" | "RUC";
-  boletaNumero: string;
-  boletaRazonSocial: string;
   codigoCupon: string;
-  consentDatos: boolean;
-  consentPromos: boolean;
 };
 
 const VIGENCIA_MS = 24 * 60 * 60 * 1000;

@@ -4,6 +4,7 @@ import type {
   EnviarFichaResumen,
   FichaData,
   FichaServicio,
+  FichaRecurrenteData,
   MotivoConfirmacion,
 } from "./types";
 
@@ -131,4 +132,47 @@ export function validarFichaPost(value: unknown): ContratoValidado<EnviarFichaDa
     return incompatible("La respuesta POST no contiene un resumen compatible.");
   }
   return { ok: true, data: value as EnviarFichaData };
+}
+
+function cumple(value: unknown) {
+  return value === null || (
+    record(value) && numero(value.dia) && Number.isInteger(value.dia) && value.dia >= 1 && value.dia <= 31 &&
+    numero(value.mes) && Number.isInteger(value.mes) && value.mes >= 1 && value.mes <= 12
+  );
+}
+
+function clienteRecurrente(value: unknown) {
+  return record(value) && nullableString(value.nombre) && nullableString(value.correo) && cumple(value.cumple) &&
+    record(value.promociones) && typeof value.promociones.autorizoAnteriormente === "boolean" &&
+    value.promociones.requiereNuevaAceptacion === true;
+}
+
+function saludAnterior(value: unknown) {
+  return value === null || (
+    record(value) && value.disponible === true && typeof value.sinCondicionesDeclaradas === "boolean" &&
+    typeof value.embarazo === "boolean" && typeof value.presion === "boolean" &&
+    typeof value.cirugiaReciente === "boolean" && nullableString(value.alergias) &&
+    nullableString(value.zonasEvitar) && nullableString(value.notas)
+  );
+}
+
+function comprobanteAnterior(value: unknown) {
+  return value === null || (
+    record(value) && (value.tipoComprobante === "BOLETA" || value.tipoComprobante === "FACTURA") &&
+    (value.tipoDocumento === "DNI" || value.tipoDocumento === "RUC") && stringNoVacio(value.numeroDocumento) &&
+    nullableString(value.razonSocial) && value.solicitarEnNuevaCita === false
+  );
+}
+
+/** Verificación estricta del contrato privado ficha-recurrente-v1. */
+export function validarFichaRecurrente(value: unknown): ContratoValidado<FichaRecurrenteData> {
+  if (!record(value)) return incompatible("La respuesta de identificación no es un objeto.");
+  if (value.contratoVersion !== "ficha-recurrente-v1") {
+    return incompatible("La versión de identificación no es ficha-recurrente-v1.");
+  }
+  if (typeof value.clienteRecurrente !== "boolean" || !clienteRecurrente(value.cliente) ||
+      !saludAnterior(value.saludAnterior) || !comprobanteAnterior(value.comprobanteAnterior)) {
+    return incompatible("La respuesta de identificación no cumple ficha-recurrente-v1.");
+  }
+  return { ok: true, data: value as FichaRecurrenteData };
 }
