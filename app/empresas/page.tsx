@@ -3,10 +3,159 @@ import Image from "next/image";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 
-export const metadata: Metadata = { title: "Bienestar corporativo | Vita Lima Spa", description: "Pausas de masaje para empresas, activaciones y eventos en Lima.", alternates: { canonical: "/empresas" } };
+export const metadata: Metadata = {
+  title: "Bienestar corporativo | Vita Lima Spa",
+  description:
+    "Pausas de masaje para empresas, activaciones y eventos en Lima.",
+  alternates: { canonical: "/empresas" },
+  openGraph: {
+    title: "Bienestar que llega a tu equipo | Vita Lima Spa",
+    description:
+      "Pausas de masaje y bienestar para empresas, activaciones y eventos en Lima.",
+    type: "website",
+    images: [
+      {
+        url: "/images/corporate/jornada-corporativa-equipo.webp",
+        alt: "Jornada corporativa de bienestar Vita Lima",
+      },
+    ],
+  },
+};
+
 const modes = [
-  { value: "silla", title: "Servicio en silla", text: "Masajes breves en silla ergonómica, ideales para pausas dentro de la oficina." },
-  { value: "camilla", title: "Servicio en camilla", text: "Una experiencia más pausada en camilla portátil, preparada para el espacio de tu equipo." },
-  { value: "ambas", title: "Ambas modalidades", text: "Combinamos silla y camilla para diseñar una jornada según tu dinámica y asistentes." },
+  {
+    value: "silla",
+    title: "Servicio en silla",
+    text: "Masajes breves en silla ergonómica, ideales para pausas dentro de la oficina.",
+  },
+  {
+    value: "camilla",
+    title: "Servicio en camilla",
+    text: "Una experiencia más pausada en camilla portátil, preparada para el espacio de tu equipo.",
+  },
+  {
+    value: "ambas",
+    title: "Ambas modalidades",
+    text: "Combinamos silla y camilla para diseñar una jornada según tu dinámica y asistentes.",
+  },
 ];
-export default function CorporatePage() { return <main className="corporatePage"><header className="corporateHero"><div className="catalogNav shell"><Link href="/" aria-label="Vita Lima Spa - Inicio"><Image src="/images/brand/logo-vita-lima-white.png" alt="Vita Lima Spa" width={180} height={78} priority /></Link><Link className="catalogBackLink" href="/">Volver al inicio</Link></div><div className="shell corporateHeroContent"><p className="eyebrow">Bienestar corporativo Vita Lima</p><h1>Bienestar que llega a tu equipo</h1><p>Llevamos pausas de masaje a empresas, activaciones y eventos con una atención cálida, profesional y adaptable a cada espacio.</p><Link className="button orangeButton" href="/empresas/solicitar">Solicitar propuesta <span aria-hidden="true">→</span></Link></div></header><section className="corporateVisualSection section"><div className="shell corporateVisualGrid"><div className="corporateVisualCopy"><p className="eyebrow">En tu espacio</p><h2>Una pausa bien pensada cambia el ritmo del día.</h2><p>Coordinamos una experiencia a la medida de tu jornada: desde una atención individual hasta activaciones para varios colaboradores.</p></div><figure className="corporatePhoto corporatePhotoTall"><Image src="/images/corporate/atencion-individual-camilla.webp" alt="Atención individual en camilla portátil" fill sizes="(max-width: 760px) 100vw, 45vw" /></figure><figure className="corporatePhoto"><Image src="/images/corporate/jornada-corporativa-equipo.webp" alt="Jornada corporativa con terapeutas y camillas" fill sizes="(max-width: 760px) 100vw, 45vw" /></figure></div></section><section className="corporateModes section"><div className="shell"><div className="corporateSectionHeading"><p className="eyebrow">Modalidades</p><h2>Elige cómo quieres recibir a Vita Lima</h2></div><div className="corporateModesGrid">{modes.map((mode, index) => <Link className="corporateModeCard" href={`/empresas/solicitar?modalidad=${mode.value}`} key={mode.value}><span>0{index + 1}</span><h3>{mode.title}</h3><p>{mode.text}</p><strong>Solicitar esta modalidad <i aria-hidden="true">→</i></strong></Link>)}</div></div></section><section className="corporateBenefits section"><div className="shell corporateBenefitsLayout"><div><p className="eyebrow">Para tu equipo</p><h2>Una experiencia flexible, cuidada y cercana.</h2></div><ul><li>Pausas de bienestar dentro de la oficina.</li><li>Experiencia para colaboradores, activaciones y eventos.</li><li>Servicio adaptable al espacio, número de personas y tiempo disponible.</li></ul></div></section><section className="corporateFinal"><div className="shell"><p className="eyebrow">Propuesta a medida</p><h2>Cuéntanos qué imaginas para tu equipo.</h2><p>Revisaremos los detalles contigo antes de preparar una propuesta. Este formulario no confirma una reserva.</p><Link className="button orangeButton" href="/empresas/solicitar">Solicitar propuesta <span aria-hidden="true">→</span></Link></div></section><SiteFooter context="internal" /></main>; }
+
+export default function CorporatePage() {
+  return (
+    <main className="corporatePage">
+      <header className="corporateHero">
+        <div className="catalogNav shell">
+          <Link href="/" aria-label="Vita Lima Spa - Inicio">
+            <Image
+              src="/images/brand/logo-vita-lima-white.png"
+              alt="Vita Lima Spa"
+              width={180}
+              height={78}
+              priority
+            />
+          </Link>
+          <Link className="catalogBackLink" href="/">
+            Volver al inicio
+          </Link>
+        </div>
+        <div className="shell corporateHeroContent">
+          <p className="eyebrow">Bienestar corporativo Vita Lima</p>
+          <h1>Bienestar que llega a tu equipo</h1>
+          <p>
+            Llevamos pausas de masaje a empresas, activaciones y eventos con una
+            atención cálida, profesional y adaptable a cada espacio.
+          </p>
+          <Link className="button orangeButton" href="/empresas/solicitar">
+            Solicitar propuesta <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      </header>
+
+      <section className="corporateVisualSection section">
+        <div className="shell corporateVisualGrid">
+          <div className="corporateVisualCopy">
+            <p className="eyebrow">En tu espacio</p>
+            <h2>Una pausa bien pensada cambia el ritmo del día.</h2>
+            <p>
+              Coordinamos una experiencia a la medida de tu jornada: desde una
+              atención individual hasta activaciones para varios colaboradores.
+            </p>
+          </div>
+          <figure className="corporatePhoto corporatePhotoTall">
+            <Image
+              src="/images/corporate/atencion-individual-camilla.webp"
+              alt="Atención individual en camilla portátil"
+              fill
+              sizes="(max-width: 760px) 100vw, 45vw"
+            />
+          </figure>
+          <figure className="corporatePhoto">
+            <Image
+              src="/images/corporate/jornada-corporativa-equipo.webp"
+              alt="Jornada corporativa con terapeutas y camillas"
+              fill
+              sizes="(max-width: 760px) 100vw, 45vw"
+            />
+          </figure>
+        </div>
+      </section>
+
+      <section className="corporateModes section">
+        <div className="shell">
+          <div className="corporateSectionHeading">
+            <p className="eyebrow">Modalidades</p>
+            <h2>Elige cómo quieres recibir a Vita Lima</h2>
+          </div>
+          <div className="corporateModesGrid">
+            {modes.map((mode, index) => (
+              <Link
+                className="corporateModeCard"
+                href={`/empresas/solicitar?modalidad=${mode.value}`}
+                key={mode.value}
+              >
+                <span>0{index + 1}</span>
+                <h3>{mode.title}</h3>
+                <p>{mode.text}</p>
+                <strong>
+                  Solicitar esta modalidad <i aria-hidden="true">→</i>
+                </strong>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="corporateBenefits section">
+        <div className="shell corporateBenefitsLayout">
+          <div>
+            <p className="eyebrow">Para tu equipo</p>
+            <h2>Una experiencia flexible, cuidada y cercana.</h2>
+          </div>
+          <ul>
+            <li>Pausas de bienestar dentro de la oficina.</li>
+            <li>Experiencia para colaboradores, activaciones y eventos.</li>
+            <li>
+              Servicio adaptable al espacio, número de personas y tiempo
+              disponible.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="corporateFinal">
+        <div className="shell">
+          <p className="eyebrow">Propuesta a medida</p>
+          <h2>Cuéntanos qué imaginas para tu equipo.</h2>
+          <p>
+            Revisaremos los detalles contigo antes de preparar una propuesta.
+            Este formulario no confirma una reserva.
+          </p>
+          <Link className="button orangeButton" href="/empresas/solicitar">
+            Solicitar propuesta <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      </section>
+      <SiteFooter context="internal" />
+    </main>
+  );
+}
