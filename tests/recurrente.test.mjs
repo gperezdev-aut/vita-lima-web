@@ -1,9 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import { identificarStubFicha } from "../lib/caja/stub.ts";
 import { validarFichaRecurrente } from "../lib/caja/validation.ts";
 import { consentimientoSaludParaPayload, consentimientoSaludValido, tieneDatosSalud } from "../lib/ficha/health.ts";
+import { perfilRapidoValido } from "../lib/ficha/email.ts";
 
 const telefono = { crudo: "987654321", pais: "PE" };
 const saludVacia = {
@@ -18,6 +19,61 @@ test("valida estrictamente ficha-recurrente-v1 en runtime", () => {
   const invalido = structuredClone(resultado.data);
   invalido.contratoVersion = "ficha-recurrente-v2";
   assert.equal(validarFichaRecurrente(invalido).ok, false);
+});
+
+test("comprobante recurrente solo acepta las parejas y longitudes documentales válidas", () => {
+  const resultado = identificarStubFicha("stub-recurrente-comprobante", telefono);
+  assert.equal(resultado.ok, true);
+  const boletaDni = structuredClone(resultado.data);
+  boletaDni.comprobanteAnterior = {
+    tipoComprobante: "BOLETA", tipoDocumento: "DNI", numeroDocumento: "12345678", razonSocial: null, solicitarEnNuevaCita: false,
+  };
+  assert.equal(validarFichaRecurrente(boletaDni).ok, true);
+
+  const boletaRuc = structuredClone(boletaDni);
+  boletaRuc.comprobanteAnterior.tipoDocumento = "RUC";
+  boletaRuc.comprobanteAnterior.numeroDocumento = "20123456789";
+  assert.equal(validarFichaRecurrente(boletaRuc).ok, false);
+
+  const facturaRuc = structuredClone(resultado.data);
+  assert.equal(validarFichaRecurrente(facturaRuc).ok, true);
+
+  const facturaDni = structuredClone(facturaRuc);
+  facturaDni.comprobanteAnterior.tipoDocumento = "DNI";
+  facturaDni.comprobanteAnterior.numeroDocumento = "12345678";
+  assert.equal(validarFichaRecurrente(facturaDni).ok, false);
+
+  const dniCorto = structuredClone(boletaDni);
+  dniCorto.comprobanteAnterior.numeroDocumento = "1234567";
+  assert.equal(validarFichaRecurrente(dniCorto).ok, false);
+
+  const rucCorto = structuredClone(facturaRuc);
+  rucCorto.comprobanteAnterior.numeroDocumento = "2012345678";
+  assert.equal(validarFichaRecurrente(rucCorto).ok, false);
+
+  const facturaSinRazon = structuredClone(facturaRuc);
+  facturaSinRazon.comprobanteAnterior.razonSocial = " ";
+  assert.equal(validarFichaRecurrente(facturaSinRazon).ok, false);
+});
+
+test("salud recurrente sin condiciones debe ser internamente coherente", () => {
+  const resultado = identificarStubFicha("stub-recurrente-sin-condiciones", telefono);
+  assert.equal(resultado.ok, true);
+  assert.equal(validarFichaRecurrente(resultado.data).ok, true);
+
+  const contradictoria = structuredClone(resultado.data);
+  contradictoria.saludAnterior.presion = true;
+  assert.equal(validarFichaRecurrente(contradictoria).ok, false);
+
+  const conNota = structuredClone(resultado.data);
+  conNota.saludAnterior.notas = "No debe coexistir con sin condiciones.";
+  assert.equal(validarFichaRecurrente(conNota).ok, false);
+});
+
+test("perfil incompleto obliga la ruta completa y conserva correo opcional vacío", () => {
+  assert.equal(perfilRapidoValido({ nombre: "", correo: "rosa@example.com", correoObligatorio: false }), false);
+  assert.equal(perfilRapidoValido({ nombre: "Rosa Quispe", correo: "", correoObligatorio: true }), false);
+  assert.equal(perfilRapidoValido({ nombre: "Rosa Quispe", correo: "", correoObligatorio: false }), true);
 });
 
 test("identificación válida devuelve perfil solo después del flujo privado", () => {
@@ -86,27 +142,23 @@ test("cliente sin historial recibe el flujo completo sin pregunta rápida", () =
 
 test("wizard contiene las rutas rápida y de actualización sin saludo previo", async () => {
   const wizard = await readFile(new URL("../app/cita/[token]/FichaWizard.tsx", import.meta.url), "utf8");
-  assert.match(wizard, /setFlujo\(respuesta\.data\.clienteRecurrente \? "decision" : "completa"\)/);
+  assert.match(wizard, /setFlujo\(respuesta\.data\.clienteRecurrente && perfilCompleto \? "decision" : "completa"\)/);
+  assert.match(wizard, /perfilIncompleto/);
   assert.match(wizard, /setFlujo\("rapida"\)/);
   assert.match(wizard, /setFlujo\("completa"\); setPaso\(1\)/);
   assert.doesNotMatch(wizard, /holaConocido\(/);
   assert.match(wizard, /observacionNueva/);
 });
 
-test("datos sensibles y perfil recuperado no entran al borrador local", async () => {
-  const [draft, wizard] = await Promise.all([
-    readFile(new URL("../lib/ficha/draft.ts", import.meta.url), "utf8"),
+test("la ficha pública no usa almacenamiento persistente y recargar exige identificar otra vez", async () => {
+  const [wizard, docs] = await Promise.all([
     readFile(new URL("../app/cita/[token]/FichaWizard.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../docs/encargo-web-ficha-cita.md", import.meta.url), "utf8"),
   ]);
-  const tipo = /export type FichaDraft = \{([\s\S]*?)\n\};/.exec(draft)?.[1] ?? "";
-  for (const campo of ["telefonoCrudo", "nombre", "correo", "cumpleDia", "boletaNumero", "boletaRazonSocial", "salud", "DNI", "RUC"]) {
-    assert.doesNotMatch(tipo, new RegExp(`\\b${campo}\\b`));
-  }
+  await assert.rejects(access(new URL("../lib/ficha/draft.ts", import.meta.url)));
   assert.match(wizard, /useState<"identificar" \| "decision" \| "rapida" \| "completa">\("identificar"\)/);
-  const guardado = /guardarBorrador\(token, \{([\s\S]*?)\n    \}\);/.exec(wizard)?.[1] ?? "";
-  for (const campo of ["telefonoCrudo", "nombre", "correo", "cumpleDia", "boletaNumero", "boletaRazonSocial", "salud"]) {
-    assert.doesNotMatch(guardado, new RegExp(`\\b${campo}\\b`));
-  }
+  assert.doesNotMatch(wizard, /localStorage|sessionStorage|guardarBorrador|leerBorrador|borrarBorrador|vita:ficha/);
+  assert.match(docs, /0d335e9d142a6d4e12f7caec208a4c4d40dcd465/);
 });
 
 test("cliente Caja permanece solo server-side y usa endpoint identificar con no-store", async () => {

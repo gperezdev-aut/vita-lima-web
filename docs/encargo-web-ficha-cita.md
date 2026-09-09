@@ -3,6 +3,7 @@
 Repo: `github.com/gperezdev-aut/vita-lima-web` (Next.js 16 / React 19)
 Documento hermano, para el sistema interno: `caja-cambios-para-la-ficha-de-cita.md`
 Razonamiento completo: doc `claude/ficha-cita-formulario-propio.md` del proyecto vita-web.
+Contrato recurrente compatible con Caja PR #10, SHA `0d335e9d142a6d4e12f7caec208a4c4d40dcd465`.
 
 ## Qué se construye aquí, y qué no
 
@@ -252,8 +253,9 @@ peruano-solamente le impediría reservar a un turista, que es un cliente real de
 teléfono extranjero no vuelve obligatorio el correo: esa decisión llega únicamente en
 `requiere.correoObligatorio`; si el correo opcional se completa, su formato sí se valida.
 
-La información recuperada nunca se guarda en `localStorage`: tampoco salud, DNI, RUC, razón
-social, correo, cumpleaños o WhatsApp. El borrador conserva solo preferencias no sensibles.
+La ficha no usa almacenamiento persistente del navegador. Nunca guarda token, código de cupón,
+WhatsApp, perfil, salud, DNI, RUC, razón social, correo, cumpleaños ni consentimientos; al
+recargar solicita identificar el WhatsApp nuevamente.
 
 ### Paso 2 — La cita
 

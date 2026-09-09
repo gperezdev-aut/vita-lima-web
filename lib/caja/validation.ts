@@ -148,20 +148,26 @@ function clienteRecurrente(value: unknown) {
 }
 
 function saludAnterior(value: unknown) {
-  return value === null || (
-    record(value) && value.disponible === true && typeof value.sinCondicionesDeclaradas === "boolean" &&
-    typeof value.embarazo === "boolean" && typeof value.presion === "boolean" &&
-    typeof value.cirugiaReciente === "boolean" && nullableString(value.alergias) &&
-    nullableString(value.zonasEvitar) && nullableString(value.notas)
+  if (value === null) return true;
+  if (!record(value) || value.disponible !== true || typeof value.sinCondicionesDeclaradas !== "boolean" ||
+      typeof value.embarazo !== "boolean" || typeof value.presion !== "boolean" ||
+      typeof value.cirugiaReciente !== "boolean" || !nullableString(value.alergias) ||
+      !nullableString(value.zonasEvitar) || !nullableString(value.notas)) return false;
+  return !value.sinCondicionesDeclaradas || (
+    value.embarazo === false && value.presion === false && value.cirugiaReciente === false &&
+    value.alergias === null && value.zonasEvitar === null && value.notas === null
   );
 }
 
 function comprobanteAnterior(value: unknown) {
-  return value === null || (
-    record(value) && (value.tipoComprobante === "BOLETA" || value.tipoComprobante === "FACTURA") &&
-    (value.tipoDocumento === "DNI" || value.tipoDocumento === "RUC") && stringNoVacio(value.numeroDocumento) &&
-    nullableString(value.razonSocial) && value.solicitarEnNuevaCita === false
-  );
+  if (value === null) return true;
+  if (!record(value) || !nullableString(value.razonSocial) || value.solicitarEnNuevaCita !== false) return false;
+  if (value.tipoComprobante === "BOLETA" && value.tipoDocumento === "DNI") {
+    return typeof value.numeroDocumento === "string" && /^\d{8}$/.test(value.numeroDocumento);
+  }
+  return value.tipoComprobante === "FACTURA" && value.tipoDocumento === "RUC" &&
+    typeof value.numeroDocumento === "string" && /^\d{11}$/.test(value.numeroDocumento) &&
+    stringNoVacio(value.razonSocial);
 }
 
 /** Verificación estricta del contrato privado ficha-recurrente-v1. */

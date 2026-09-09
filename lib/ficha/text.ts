@@ -45,6 +45,7 @@ export const fichaText = {
       enviarRapido: "Enviar mi ficha",
       volver: "Volver",
       verificada: "WhatsApp verificado",
+      perfilIncompleto: "Necesitamos que completes tus datos antes de enviar la ficha.",
       error: {
         identificacion_no_valida: "No pudimos verificar tus datos. Revisa el país y WhatsApp e inténtalo nuevamente.",
         rate_limited: "Hiciste varios intentos. Espera unos minutos antes de volver a intentarlo.",
@@ -214,6 +215,7 @@ export const fichaText = {
       enviarRapido: "Send my form",
       volver: "Back",
       verificada: "WhatsApp verified",
+      perfilIncompleto: "Please complete your details before sending the form.",
       error: {
         identificacion_no_valida: "We could not verify your details. Check the country and WhatsApp number, then try again.",
         rate_limited: "You made several attempts. Please wait a few minutes before trying again.",

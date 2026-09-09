@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { enviarFichaAction, identificarFichaAction } from "./actions";
 import PantallaFinal from "./PantallaFinal";
 import { site } from "@/content/site";
-import { borrarBorrador, guardarBorrador, leerBorrador } from "@/lib/ficha/draft";
-import { correoValido } from "@/lib/ficha/email";
+import { correoValido, perfilRapidoValido } from "@/lib/ficha/email";
 import { codigoCuponParaPayload, comprobanteValido } from "@/lib/ficha/comprobante";
 import { formatearFecha, formatearHora, formatearMoneda } from "@/lib/ficha/format";
 import { consentimientoSaludParaPayload, consentimientoSaludValido, tieneDatosSalud } from "@/lib/ficha/health";
@@ -35,6 +34,7 @@ export default function FichaWizard({ ficha, token }: Props) {
   const [identificacion, setIdentificacion] = useState<FichaRecurrenteData | null>(null);
   const [identificando, setIdentificando] = useState(false);
   const [errorIdentificacion, setErrorIdentificacion] = useState<string | null>(null);
+  const [perfilIncompleto, setPerfilIncompleto] = useState(false);
   const [observacionNueva, setObservacionNueva] = useState("");
   const [usarComprobanteAnterior, setUsarComprobanteAnterior] = useState(false);
   const [resultado, setResultado] = useState<EnviarFichaData | null>(null);
@@ -87,45 +87,6 @@ export default function FichaWizard({ ficha, token }: Props) {
     ? textoCabeceraPendiente(idioma, ficha.requiere.motivoConfirmacion)
     : t.cabecera;
   const ubicacion = ubicacionVisible(ficha.cita);
-  const cargadoRef = useRef(false);
-
-  // Cargar únicamente preferencias no sensibles. Tras recargar se vuelve a
-  // pedir WhatsApp y los datos recuperados nunca se restauran desde disco.
-  //
-  // Se hace en un efecto (y no con un initializer perezoso de useState) a
-  // propósito: localStorage no existe durante el render en el servidor, así
-  // que leerlo ahí evita un mismatch de hidratación —el servidor y el primer
-  // pintado del cliente muestran el formulario vacío, y recién después del
-  // montaje se aplica el borrador—.
-  useEffect(() => {
-    const borrador = leerBorrador(token);
-    if (borrador) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- restaurar el borrador guardado es justo lo que este efecto sincroniza desde localStorage.
-      setIdioma(borrador.idioma || ficha.idioma);
-      setPais((borrador.pais as CountryCode) || "PE");
-      setCodigoCupon(borrador.codigoCupon || "");
-    }
-    cargadoRef.current = true;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
-
-  useEffect(() => {
-    if (!cargadoRef.current || resultado) return;
-    guardarBorrador(token, {
-      paso,
-      idioma,
-      pais,
-      codigoCupon,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    token,
-    paso,
-    idioma,
-    pais,
-    codigoCupon,
-  ]);
-
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza la lista de países con Intl, que solo puede leerse sin riesgo de hidratación después del montaje (ver el comentario junto al useState de arriba).
     setPaises(paisesOrdenados(idioma));
@@ -163,6 +124,7 @@ export default function FichaWizard({ ficha, token }: Props) {
     : saludBase;
   const hayDatosSalud = tieneDatosSalud(salud);
   const paso3Valido = consentDatos && consentimientoSaludValido(salud, consentSalud) && boletaNumeroOk;
+  const rutaRapidaValida = perfilRapidoValido({ nombre, correo, correoObligatorio: correoRequerido });
 
   function alternarIdioma() {
     setIdioma((actual) => (actual === "es" ? "en" : "es"));
@@ -232,7 +194,13 @@ export default function FichaWizard({ ficha, token }: Props) {
       return;
     }
     aplicarIdentificacion(respuesta.data);
-    setFlujo(respuesta.data.clienteRecurrente ? "decision" : "completa");
+    const perfilCompleto = perfilRapidoValido({
+      nombre: respuesta.data.cliente.nombre,
+      correo: respuesta.data.cliente.correo,
+      correoObligatorio: ficha.requiere.correoObligatorio,
+    });
+    setPerfilIncompleto(respuesta.data.clienteRecurrente && !perfilCompleto);
+    setFlujo(respuesta.data.clienteRecurrente && perfilCompleto ? "decision" : "completa");
     setPaso(1);
   }
 
@@ -254,6 +222,12 @@ export default function FichaWizard({ ficha, token }: Props) {
 
   async function enviar() {
     if (!paso3Valido) return;
+    if (flujo === "rapida" && !rutaRapidaValida) {
+      setPerfilIncompleto(true);
+      setFlujo("completa");
+      setPaso(1);
+      return;
+    }
     setErrorEnvio(null);
     setEnviando(true);
 
@@ -299,7 +273,6 @@ export default function FichaWizard({ ficha, token }: Props) {
       return;
     }
 
-    borrarBorrador(token);
     setResultado(respuesta.data);
   }
 
@@ -469,7 +442,7 @@ export default function FichaWizard({ ficha, token }: Props) {
               {errorEnvio && <div className="fichaBanner">{errorEnvio}</div>}
               <div className="fichaButtonRow">
                 <button type="button" className="button fichaBackButton" onClick={() => setFlujo("decision")} disabled={enviando}>{t.identificar.volver}</button>
-                <button type="button" className="button orangeButton" onClick={() => { if (cuponOk) enviar(); else setMostrarErroresPaso2(true); }} disabled={enviando || !paso3Valido}>
+                <button type="button" className="button orangeButton" onClick={() => { if (cuponOk) enviar(); else setMostrarErroresPaso2(true); }} disabled={enviando || !paso3Valido || !rutaRapidaValida}>
                   {enviando ? t.paso3.enviando : t.identificar.enviarRapido}
                 </button>
               </div>
@@ -480,6 +453,7 @@ export default function FichaWizard({ ficha, token }: Props) {
             <>
               <h2>{t.paso1.titulo}</h2>
               <p className="fichaCardIntro">{t.paso1.intro}</p>
+              {perfilIncompleto && <div className="fichaBanner">{t.identificar.perfilIncompleto}</div>}
 
               <div className={`fichaField${mostrarErroresPaso1 && !nombreOk ? " fichaFieldError" : ""}`}>
                 <label htmlFor="ficha-nombre">{t.paso1.nombreLabel}</label>
