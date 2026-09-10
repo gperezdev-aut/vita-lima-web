@@ -1,0 +1,168 @@
+"use client";
+
+import { FormEvent, useState } from "react";
+import { useSearchParams } from "next/navigation";
+
+const modes = ["silla", "camilla", "ambas"] as const;
+type Status = "idle" | "sending" | "success" | "error";
+
+function todayInLima() {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Lima",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  })
+    .formatToParts()
+    .reduce<Record<string, string>>(
+      (date, part) => ({ ...date, [part.type]: part.value }),
+      {},
+    );
+}
+
+export default function CorporateLeadForm() {
+  const params = useSearchParams();
+  const initial = params.get("modalidad");
+  const [status, setStatus] = useState<Status>("idle");
+  const [error, setError] = useState("");
+  const today = todayInLima();
+  const minimumDate = `${today.year}-${today.month}-${today.day}`;
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!form.reportValidity()) return;
+
+    setStatus("sending");
+    setError("");
+
+    try {
+      const response = await fetch("/api/solicitudes-corporativas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+      if (!response.ok) {
+        throw new Error(
+          (await response.json().catch(() => ({}))).error ||
+            "No pudimos enviar tu solicitud. Inténtalo nuevamente.",
+        );
+      }
+
+      setStatus("success");
+      form.reset();
+    } catch (cause) {
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "No pudimos enviar tu solicitud.",
+      );
+      setStatus("error");
+    }
+  }
+
+  if (status === "success") {
+    return (
+      <div className="corporateFormSuccess" role="status">
+        <h2>Gracias por contactarnos</h2>
+        <p>
+          Recibimos tu solicitud. Te contactaremos para preparar una propuesta a
+          medida.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <form className="corporateLeadForm" onSubmit={submit} noValidate>
+      <div className="corporateFormIntro">
+        <h2>Detalles de la solicitud</h2>
+        <p>Todos los campos marcados con * son obligatorios.</p>
+      </div>
+      <label>
+        Modalidad solicitada *
+        <select
+          name="modalidad"
+          defaultValue={
+            modes.includes(initial as (typeof modes)[number]) ? initial! : ""
+          }
+          required
+        >
+          <option value="">Selecciona una modalidad</option>
+          <option value="silla">Servicio en silla</option>
+          <option value="camilla">Servicio en camilla</option>
+          <option value="ambas">Ambas modalidades</option>
+        </select>
+      </label>
+      <label>
+        Empresa *<input name="empresa" autoComplete="organization" required />
+      </label>
+      <label>
+        RUC <input name="ruc" inputMode="numeric" />
+      </label>
+      <label>
+        Nombre y apellidos *<input name="nombre" autoComplete="name" required />
+      </label>
+      <label>
+        Cargo *<input name="cargo" required />
+      </label>
+      <label>
+        WhatsApp *
+        <input
+          name="whatsapp"
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          pattern="[0-9+ ()-]{7,25}"
+          title="Ingresa un número de WhatsApp válido"
+          required
+        />
+      </label>
+      <label>
+        Correo *
+        <input name="correo" type="email" autoComplete="email" required />
+      </label>
+      <label>
+        Cantidad estimada de colaboradores *
+        <input name="colaboradores" type="number" min="1" required />
+      </label>
+      <label>
+        Distrito o dirección del evento *
+        <input name="ubicacion" autoComplete="street-address" required />
+      </label>
+      <label>
+        Fecha tentativa *
+        <input name="fecha" type="date" min={minimumDate} required />
+      </label>
+      <label>
+        Horario tentativo *<input name="horario" type="time" required />
+      </label>
+      <label className="fullField">
+        Comentarios o necesidades especiales
+        <textarea name="comentarios" rows={4} />
+      </label>
+      <label className="honeypotField" aria-hidden="true">
+        No completar
+        <input name="website" tabIndex={-1} autoComplete="off" />
+      </label>
+      <label className="corporateConsent fullField">
+        <input name="consentimiento" type="checkbox" value="si" required />
+        <span>
+          Autorizo a Vita Lima Spa a contactarme para atender esta solicitud. *
+        </span>
+      </label>
+      {status === "error" && (
+        <p className="corporateFormError" role="alert">
+          {error}
+        </p>
+      )}
+      <button
+        className="button orangeButton"
+        type="submit"
+        disabled={status === "sending"}
+      >
+        {status === "sending" ? "Enviando…" : "Enviar solicitud →"}
+      </button>
+    </form>
+  );
+}

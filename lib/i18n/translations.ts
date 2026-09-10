@@ -149,7 +149,7 @@ export const translations = {
       infoLinks: { privacidad: "Privacidad", terminos: "Términos", faq: "Preguntas frecuentes" },
       followHeading: "Síguenos",
       rights: "© 2026 Vita Lima Spa. Todos los derechos reservados.",
-      staffLogin: "Staff",
+      staffLogin: "Empresas",
     },
     whatsappButton: {
       aria: "Reservar por WhatsApp",
@@ -458,7 +458,7 @@ export const translations = {
       infoLinks: { privacidad: "Privacy", terminos: "Terms", faq: "FAQ" },
       followHeading: "Follow us",
       rights: "© 2026 Vita Lima Spa. All rights reserved.",
-      staffLogin: "Staff",
+      staffLogin: "Companies",
     },
     whatsappButton: {
       aria: "Book via WhatsApp",
