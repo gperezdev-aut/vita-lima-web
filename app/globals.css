@@ -4091,13 +4091,77 @@ body:has(.cookieBanner) .cartTrigger {
    queda detrás del oscurecido mientras la hoja está abierta y vuelve a estar
    disponible al cerrarla. El consentimiento no se salta: GA4 sigue sin
    montarse hasta que la persona acepta. */
-.cartOverlay {
-  z-index: 90;
-}
-.cartPanel {
-  z-index: 91;
-}
+.cartOverlay{z-index:90}
+.cartPanel{z-index:91}
 
+/* Ficha de cita (/cita/[token]). Página aparte, sin cabecera ni footer del
+   sitio: es un enlace privado de un solo uso, no una página de navegación. */
+.fichaPage{min-height:100vh;background:var(--surface-sand);padding:28px 16px 56px;display:flex;justify-content:center}
+.fichaShell{width:100%;max-width:480px}
+.fichaTopRow{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.fichaStepper{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-aa)}
+.fichaHeaderCard{background:var(--charcoal-deep);color:white;border-radius:20px;padding:24px 22px;margin-bottom:20px}
+.fichaHeaderCard .eyebrow{color:var(--gold);margin-bottom:10px}
+.fichaHeaderCard p{margin:0;line-height:1.55;font-size:14px}
+.fichaHeaderCard strong{display:block;font-family:var(--font-display),Georgia,serif;font-size:22px;margin-bottom:4px;letter-spacing:-.02em}
+.fichaCard{background:var(--surface-ivory);border:1px solid var(--line);border-radius:18px;padding:22px 18px;box-shadow:var(--shadow)}
+.fichaCard h2{font-size:21px;margin-bottom:6px}
+.fichaCardIntro{color:var(--muted-aa);font-size:13px;line-height:1.55;margin-bottom:18px}
+.fichaField{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.fichaField label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted-aa)}
+.fichaField input,.fichaField select,.fichaField textarea{width:100%;border:1px solid var(--line);background:white;border-radius:11px;padding:13px 14px;font:inherit;color:var(--ink)}
+.fichaField input:focus,.fichaField select:focus,.fichaField textarea:focus{outline:3px solid var(--charcoal-deep);border-color:var(--charcoal-deep)}
+.fichaFieldError input,.fichaFieldError select{border-color:var(--terracotta)}
+.fichaHint{font-size:11px;color:var(--muted-aa);line-height:1.5}
+.fichaErrorText{font-size:12px;color:var(--terracotta);font-weight:700}
+.fichaPhoneRow{display:grid;grid-template-columns:128px 1fr;gap:8px}
+.fichaTwoCol{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fichaCuponField{margin-top:18px}
+.fichaKnownCard{display:flex;align-items:center;gap:12px;background:white;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:16px}
+.fichaKnownCard strong{font-family:var(--font-display),Georgia,serif;font-size:19px}
+.fichaKnownCard button{margin-left:auto;font-size:11px;font-weight:800;text-decoration:underline;text-underline-offset:3px;background:none;border:0;color:var(--muted-aa);cursor:pointer;font-family:inherit}
+.fichaReviewCard{display:flex;flex-direction:column;gap:4px;background:white;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;font-size:13px;line-height:1.45}
+.fichaReviewCard strong{font-family:var(--font-display),Georgia,serif;font-size:17px}
+.fichaReviewCard span{color:var(--muted-aa)}
+.fichaButtonStack{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.fichaVerifiedPhone{border:1px solid var(--line);border-radius:11px;background:rgba(20,120,88,.08);padding:12px 14px;margin-bottom:16px;font-size:13px;font-weight:700;color:var(--ink)}
+.fichaSummaryRow{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}
+.fichaSummaryRow:last-of-type{border-bottom:0}
+.fichaSummaryRow span:first-child{color:var(--muted-aa)}
+.fichaSummaryRow strong{text-align:right}
+.fichaChangeLink{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;text-decoration:underline;text-underline-offset:3px;color:var(--muted-aa);margin-top:14px}
+.fichaSkipAll{width:100%;border:2px dashed var(--line);border-radius:14px;padding:16px;text-align:center;font-weight:800;font-size:13px;margin-bottom:18px;background:transparent;color:var(--charcoal);cursor:pointer;font-family:inherit;transition:.2s}
+.fichaSkipAll:hover{background:var(--charcoal);border-color:var(--charcoal);color:white}
+.fichaHealthGrid{display:flex;flex-direction:column;gap:10px;margin-bottom:8px}
+.fichaCheckboxRow{display:flex;gap:10px;align-items:flex-start;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:white;font-size:13px;line-height:1.4}
+.fichaCheckboxRow input{margin-top:2px;width:18px;height:18px;flex-shrink:0}
+.fichaConsentGroup{display:flex;flex-direction:column;gap:12px;margin:18px 0}
+.fichaConsent{border:1px solid var(--line);border-radius:12px;padding:14px;background:white;display:flex;gap:10px;align-items:flex-start;font-size:12px;line-height:1.5}
+.fichaConsent input{margin-top:2px;width:18px;height:18px;flex-shrink:0}
+.fichaConsentSalud{border-color:var(--terracotta)}
+.fichaConsent a{text-decoration:underline;text-underline-offset:3px;font-weight:700}
+.fichaBoletaFields{border-top:1px solid var(--line);margin-top:4px;padding-top:16px}
+.fichaButtonRow{display:flex;gap:10px;margin-top:6px}
+.fichaButtonRow .button{flex:1}
+.fichaBackButton{border:1px solid var(--line);color:var(--charcoal);background:transparent}
+.fichaBackButton:hover{background:var(--charcoal);border-color:var(--charcoal);color:white}
+.fichaBanner{border-radius:12px;padding:13px 15px;font-size:13px;line-height:1.5;margin-bottom:16px;background:rgba(159,85,53,.1);border:1px solid var(--terracotta);color:var(--orange-text)}
+.fichaFinalCheck{width:56px;height:56px;border-radius:50%;background:var(--whatsapp);color:white;display:grid;place-items:center;font-size:26px;margin:0 auto 16px}
+.fichaFinalCard{text-align:center}
+.fichaFinalCard h2{margin-bottom:6px}
+.fichaFinalActions{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.fichaWhatsappButton{background:var(--whatsapp);color:white}
+.fichaFinalPolicy{margin-top:18px}
+.fichaFinalPolicy a{text-decoration:underline;text-underline-offset:3px;font-weight:700}
+.fichaLangToggle{font:inherit;font-size:11px;font-weight:800;letter-spacing:.04em;cursor:pointer;background:rgba(255,255,255,.14);color:inherit;border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:6px 13px}
+.fichaLangToggle:hover{background:var(--orange);border-color:var(--orange-text);color:var(--charcoal-deep)}
+.fichaErrorScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px 16px;background:var(--surface-sand)}
+.fichaErrorCard{max-width:420px;width:100%;text-align:center;background:var(--surface-ivory);border:1px solid var(--line);border-radius:20px;padding:36px 26px;box-shadow:var(--shadow)}
+.fichaErrorCard .fichaFinalCheck{background:var(--terracotta)}
+.fichaErrorCard h1{font-size:24px;margin-bottom:10px}
+.fichaErrorCard p{color:var(--muted-aa);line-height:1.6;margin-bottom:6px}
+.fichaErrorCard .fichaErrorEn{font-size:12px;color:var(--muted-aa);margin-top:14px;font-style:italic}
+@media(max-width:400px){.fichaPhoneRow{grid-template-columns:1fr}}
 /* Bienestar corporativo y ficha de propuesta. */
 .corporatePage {
   background: var(--surface-sand);

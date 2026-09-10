@@ -157,11 +157,20 @@ const nextConfig: NextConfig = {
       { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
     ];
 
+    const fichaPrivada = {
+      source: "/cita/:path*",
+      headers: [
+        { key: "Cache-Control", value: "private, no-store, max-age=0" },
+        { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+      ],
+    };
+
     if (isProductionSite) {
-      return [{ source: "/:path*", headers: seguridad }];
+      return [fichaPrivada, { source: "/:path*", headers: seguridad }];
     }
 
     return [
+      fichaPrivada,
       {
         source: "/:path*",
         headers: [...seguridad, { key: "X-Robots-Tag", value: "noindex, nofollow" }],

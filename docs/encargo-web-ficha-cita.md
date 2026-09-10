@@ -3,6 +3,7 @@
 Repo: `github.com/gperezdev-aut/vita-lima-web` (Next.js 16 / React 19)
 Documento hermano, para el sistema interno: `caja-cambios-para-la-ficha-de-cita.md`
 Razonamiento completo: doc `claude/ficha-cita-formulario-propio.md` del proyecto vita-web.
+Contrato recurrente compatible con Caja PR #10, SHA `0d335e9d142a6d4e12f7caec208a4c4d40dcd465`.
 
 ## Qué se construye aquí, y qué no
 
@@ -41,6 +42,7 @@ una vez con el webhook de n8n; no repetirlo aquí.
 
 ```json
 {
+  "contratoVersion": "ficha-cita-v1",
   "token": "…",
   "estado": "pendiente",
   "idioma": "es",
@@ -53,7 +55,9 @@ una vez con el webhook de n8n; no repetirlo aquí.
     "sedeMapsUrl": "…",
     "personas": 1,
     "servicios": [{ "nombre": "Espalda Libre", "duracionMin": 60 }],
-    "duracionTotalMin": 60
+    "duracionTotalMin": 60,
+    "tipoAtencion": "sede",
+    "domicilio": null
   },
   "pago": {
     "moneda": "PEN",
@@ -64,9 +68,11 @@ una vez con el webhook de n8n; no repetirlo aquí.
   "requiere": {
     "codigoCupon": false,
     "correoObligatorio": false,
-    "documentoParaBoleta": "opcional"
+    "documentoParaBoleta": "opcional",
+    "confirmacionManual": false,
+    "motivoConfirmacion": null
   },
-  "cliente": { "conocido": true, "nombre": "Rosa", "emailEnmascarado": "r***@gmail.com" },
+  "cliente": { "conocido": true, "nombre": null, "emailEnmascarado": null },
   "politicaCancelacionUrl": "…"
 }
 ```
@@ -79,6 +85,37 @@ En canal cupón llega además `cupon.vigenteHasta`, y `requiere.codigoCupon = tr
 `requiere.documentoParaBoleta` tiene **solo dos valores: `"no"` y `"opcional"`.** No existe
 `"obligatorio"` — el DNI es opcional a propósito. En canal cupón siempre viene `"no"`, porque la
 boleta la emite la plataforma.
+
+`contratoVersion` debe ser exactamente `"ficha-cita-v1"`; la web valida el JSON real y rechaza
+una respuesta 200 con campos críticos ausentes o incompatibles. `requiere.confirmacionManual` y
+`requiere.motivoConfirmacion` los decide exclusivamente Caja. Con motivo `"domicilio"` se comunica
+la validación de cobertura y terapistas; con `"convenio"`, solo la validación de código/beneficio;
+con `null`, una revisión genérica prudente. Ningún caso manual se presenta como reservado o confirmado.
+
+El GET inicial no devuelve nombre ni correo, incluso enmascarado. `cliente.conocido` solo indica
+que la reserva está asociada a un cliente; ningún dato personal puede aparecer en el HTML antes de
+confirmar el WhatsApp.
+
+### `POST {CAJA_API_URL}/api/publico/ficha/:token/identificar`
+
+Esta llamada ocurre únicamente desde una Server Action con `X-Caja-Secret`, `Content-Type:
+application/json` y `cache: "no-store"`:
+
+```json
+{ "telefono": { "crudo": "987654321", "pais": "PE" } }
+```
+
+La respuesta debe validar estrictamente `contratoVersion: "ficha-recurrente-v1"`. Solo después de
+la coincidencia E.164 puede mostrar nombre, correo, cumpleaños, fotografía de salud y comprobante
+anterior. Un `clienteRecurrente=true` permite elegir entre «todo sigue igual» y actualizar el
+formulario completo; `false` continúa el formulario completo sin esa pregunta. Promociones y
+comprobante siempre empiezan desactivados. Un comprobante anterior solo se envía si el cliente
+marca una opción explícita.
+
+La ruta rápida reenvía una declaración nueva para la reserva actual. Conserva condiciones
+anteriores, agrega una observación nueva a `salud.notas` y solicita consentimiento de salud solo
+si hay condiciones u observación. Si no hay condiciones ni observación, manda salud vacía y
+`consentimientos.salud=false`.
 
 ### `POST {CAJA_API_URL}/api/publico/ficha/:token`
 
@@ -119,7 +156,11 @@ Respuesta `200`:
   "resumen": {
     "fecha": "2026-09-13", "hora": "16:00",
     "sede": "San Borja", "sedeDireccion": "...", "sedeMapsUrl": "...",
+    "personas": 1,
     "servicios": [{ "nombre": "Espalda Libre", "duracionMin": 60 }],
+    "duracionTotalMin": 60,
+    "tipoAtencion": "sede",
+    "domicilio": null,
     "moneda": "PEN", "adelantoRecibido": 10.0, "saldo": 65.0
   }
 }
@@ -140,20 +181,35 @@ copy.** Usar `mensaje` solo como respaldo ante un código desconocido.
 | `ficha_ya_completa` | 410 | «esta ficha ya está completa», con WhatsApp |
 | `cupon_ya_usado` | 409 | qué hacer, no un error genérico |
 | `validacion` | 422 | errores de campo |
+| `identificacion_no_valida` | 403 | mensaje genérico, sin revelar a quién pertenece el número |
+| `rate_limited` | 429 | pedir esperar y reintentar |
+| `configuracion`, `no_autorizado`, `contrato_incompatible`, red | — | mensaje controlado en español e inglés |
 
 ### Modo stub, para no esperar a caja
 
-Con `CAJA_API_URL` sin definir, las dos llamadas responden desde un archivo de ejemplos locales.
+El stub no es un fallback: solo se activa expresamente con
+`CAJA_API_STUB_ENABLED=true` en desarrollo o pruebas. En producción esa
+activación se ignora y tanto `CAJA_API_URL` como `CAJA_API_SECRET` son
+obligatorias; si falta cualquiera se muestra un error explícito de
+configuración. Las dos llamadas responden desde un archivo de ejemplos locales.
 Tokens fijos, para que las capturas y el QA sean reproducibles:
 
 | Token | Caso |
 |---|---|
 | `stub-nuevo` | Cliente nuevo |
 | `stub-conocido` | Cliente conocido (`cliente.conocido = true`) |
-| `stub-cupon` | Canal cupón, `requiere.codigoCupon = true` |
-| `stub-extranjero` | Teléfono no peruano, correo obligatorio |
+| `stub-cupon` | Cuponidad pendiente de validación, saldo del cliente S/0 |
+| `stub-bee` | Bee pendiente de validación, saldo del cliente S/0 |
+| `stub-extranjero` | Teléfono no peruano, correo opcional |
+| `stub-domicilio` | Atención a domicilio pendiente de confirmación manual |
 | `stub-vencido` | `410 token_vencido` |
 | `stub-completa` | `410 ficha_ya_completa` |
+| `stub-recurrente-salud` | Recurrente con salud, correo y cumpleaños |
+| `stub-recurrente-sin-condiciones` | Recurrente sin condiciones declaradas |
+| `stub-recurrente-comprobante` | Recurrente con comprobante anterior |
+| `stub-sin-historial` | Cliente identificado sin historial |
+| `stub-identificar-invalido` | `403 identificacion_no_valida` |
+| `stub-identificar-rate` | `429 rate_limited` |
 
 Cualquier otro token responde `404 token_no_existe`. Así esta página se construye y se revisa
 entera antes de que caja exista, y conectarla después es cambiar una variable de entorno.
@@ -168,27 +224,38 @@ Tres pasos, uno por pantalla en móvil, con «Paso 1 de 3».
 
 Lo primero que se lee **no es un formulario**:
 
-> **Tu cupo está reservado y pagado.**
+> **Tu cita está reservada.**
 > Sábado 13 de setiembre, 4:00 p.m. · San Borja
 > Espalda Libre, 60 min · Adelanto recibido S/10
 >
 > Solo faltan tus datos — toma menos de un minuto.
 
-Todo eso sale del JSON. En canal cupón la leyenda la manda caja («Pagado en Cuponidad»).
+Todo eso sale del JSON. En convenio la leyenda viene de Caja («Pago gestionado por Cuponidad» o
+«Pago gestionado por Bee Beneficios») y el saldo visible del cliente es S/0.
+
+### Antes del formulario — Identificación
+
+La primera interacción pide país y WhatsApp. No se saluda por nombre ni se precarga perfil desde
+el GET. Tras la identificación correcta, el cliente recurrente puede usar la ruta rápida o abrir
+el formulario completo prellenado; al recargar se pide WhatsApp nuevamente.
 
 ### Paso 1 — Quién eres
 
 | Campo | Regla |
 |---|---|
-| `telefono` | **Selector de país, Perú por defecto**, validación por país con `libphonenumber-js`. Se manda crudo + país; caja normaliza a E.164 |
-| `nombre` | Precargado desde `cliente.nombre` si `conocido`; editable |
+| `telefono` | Se verifica primero con selector de país, Perú por defecto, y validación por país con `libphonenumber-js`. Se manda crudo + país; caja normaliza a E.164 |
+| `nombre` | Llega solo desde la identificación correcta; editable en la ruta completa |
 | `correo` | Obligatorio si `requiere.correoObligatorio` |
 | `cumple` | Opcional, **día y mes sin año** |
 
 Un número peruano mal escrito se rechaza; uno de EE. UU., España o Chile **se acepta**. Un patrón
-peruano-solamente le impediría reservar a un turista, que es un cliente real de Vita Lima.
+peruano-solamente le impediría reservar a un turista, que es un cliente real de Vita Lima. El
+teléfono extranjero no vuelve obligatorio el correo: esa decisión llega únicamente en
+`requiere.correoObligatorio`; si el correo opcional se completa, su formato sí se valida.
 
-Si `cliente.conocido`, este paso se reduce a confirmar el correo y seguir.
+La ficha no usa almacenamiento persistente del navegador. Nunca guarda token, código de cupón,
+WhatsApp, perfil, salud, DNI, RUC, razón social, correo, cumpleaños ni consentimientos; al
+recargar solicita identificar el WhatsApp nuevamente.
 
 ### Paso 2 — La cita
 
@@ -206,12 +273,13 @@ o cremas, zonas a evitar. Más un campo libre corto.
 **Un botón grande «Ninguna de las anteriores»** que salta la pantalla completa: la mayoría no
 tiene ninguna y hoy tendría que leer cinco casillas para decir que no.
 
-Tres consentimientos **separados y los tres desmarcados**. La Ley 29733 exige consentimiento
+Tres consentimientos **separados y desmarcados**. La Ley 29733 exige consentimiento
 expreso, y una casilla premarcada no lo es — hoy la del formulario de la web viene premarcada.
 
 1. Tratamiento de datos, con enlace a la política.
-2. **Datos de salud**, aparte del anterior: es categoría sensible y aceptar que le escriban por
-   WhatsApp no es lo mismo que aceptar que se guarde una condición médica.
+2. **Datos de salud**, aparte del anterior: aparece y es obligatorio únicamente cuando se marcó
+   una condición o se ingresó texto sensible. Con «Ninguna de las anteriores» no aparece y se
+   envía `consentimientos.salud = false`.
 3. Comunicaciones promocionales, **opcional**. Sin esta casilla no se le puede mandar nada del
    post-venta más adelante.
 
@@ -264,13 +332,13 @@ Esto hoy no existe: el formulario actual no cambia al enviar, y si el bloqueador
 - [ ] Salir de la página a otra app y volver **no borra** lo ya escrito — y el borrador guardado
       **no contiene** ninguna respuesta de salud.
 - [ ] Un número de EE. UU., España o Chile **se acepta**; uno peruano mal escrito se rechaza.
-- [ ] Con número no peruano el correo es obligatorio y la página abre en inglés.
+- [ ] Un número no peruano se acepta sin volver obligatorio el correo.
 - [ ] Las tres casillas de consentimiento llegan desmarcadas y la de salud es independiente.
 - [ ] El DNI no aparece hasta marcar «necesito boleta a mi nombre».
 - [ ] Al enviar, la página cambia y muestra el resumen **aunque el `window.open` de WhatsApp
       falle**.
 - [ ] Token inexistente, vencido y ya usado tienen cada uno su pantalla, con salida a WhatsApp.
 - [ ] El código de cupón duplicado muestra qué hacer, no un error genérico.
-- [ ] Con `CAJA_API_URL` sin definir, la página funciona entera contra el stub.
+- [ ] El stub solo funciona con activación explícita fuera de producción; configuración faltante muestra error.
 - [ ] `npm run typecheck`, `npm run lint` y `npm run build` pasan.
 - [ ] Capturas en móvil de los tres pasos, la pantalla final y las tres pantallas de error.

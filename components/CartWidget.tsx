@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useCart } from "./CartContext";
 import { trackEvent, trackWhatsappClick } from "./WhatsAppTracking";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
@@ -18,6 +19,7 @@ export default function CartWidget() {
   const { items, removeItem, clear, isOpen, open, close, total, people, setPeople, deposit, askPeople, preferredDate, preferredTime, setPreferredDate, setPreferredTime } = useCart();
   const { language } = useLanguage();
   const t = translations[language].cart;
+  const pathname = usePathname();
   const minDate = useToday();
 
   function sendToWhatsapp() {
@@ -60,6 +62,11 @@ export default function CartWidget() {
     trackEvent("view_cart", { event_category: "engagement", currency: "PEN", value: total, items_count: items.length });
     open();
   }
+
+  // La ficha de cita (/cita/[token]) no usa el catálogo ni el carrito: mostrar
+  // "Mi selección" ahí no tiene sentido y además taparía el botón de enviar,
+  // justo el problema que ese flujo tiene que evitar.
+  if (pathname?.startsWith("/cita/")) return null;
 
   return (
     <>
