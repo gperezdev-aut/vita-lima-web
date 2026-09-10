@@ -20,10 +20,19 @@ import { errorContratoIncompatible, validarFichaGet, validarFichaPost, validarFi
 
 const TIMEOUT_MS = 8000;
 
-function cajaHeaders(secret: string): Record<string, string> {
+function cajaHeaders(secret: string, protectionBypass?: string): Record<string, string> {
   // El header se manda tal cual: caja lo lee en minúsculas (x-caja-secret),
   // que es como llegan las cabeceras HTTP de todos modos.
-  return { "X-Caja-Secret": secret };
+  return {
+    "X-Caja-Secret": secret,
+    // Vercel solo evalúa este secreto antes de alcanzar Caja. Es opcional para
+    // que los entornos sin Deployment Protection conserven el flujo actual.
+    ...(protectionBypass ? { "x-vercel-protection-bypass": protectionBypass } : {}),
+  };
+}
+
+function protectionBypass(): string | undefined {
+  return process.env.CAJA_VERCEL_PROTECTION_BYPASS?.trim() || undefined;
 }
 
 function configurationError(missing: string[]): Extract<FichaResult, { ok: false }> {
@@ -79,7 +88,7 @@ export async function getFicha(token: string): Promise<FichaResult> {
 
   try {
     const response = await fetch(`${config.apiUrl}/api/publico/ficha/${encodeURIComponent(token)}`, {
-      headers: cajaHeaders(config.secret),
+      headers: cajaHeaders(config.secret, protectionBypass()),
       signal: AbortSignal.timeout(TIMEOUT_MS),
       cache: "no-store",
     });
@@ -114,7 +123,7 @@ export async function identificarFicha(
   try {
     const response = await fetch(`${config.apiUrl}/api/publico/ficha/${encodeURIComponent(token)}/identificar`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", ...cajaHeaders(config.secret) },
+      headers: { "Content-Type": "application/json", ...cajaHeaders(config.secret, protectionBypass()) },
       body: JSON.stringify({ telefono }),
       signal: AbortSignal.timeout(TIMEOUT_MS),
       cache: "no-store",
@@ -142,7 +151,7 @@ export async function enviarFicha(token: string, payload: EnviarFichaPayload): P
   try {
     const response = await fetch(`${config.apiUrl}/api/publico/ficha/${encodeURIComponent(token)}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", ...cajaHeaders(config.secret) },
+      headers: { "Content-Type": "application/json", ...cajaHeaders(config.secret, protectionBypass()) },
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(TIMEOUT_MS),
       cache: "no-store",

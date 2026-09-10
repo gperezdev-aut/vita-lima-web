@@ -28,15 +28,34 @@ test("la API real exige URL y secreto y normaliza la barra final", () => {
   );
 });
 
-test("el secreto permanece en el módulo server-side y nunca usa NEXT_PUBLIC", async () => {
+test("el bypass de Vercel es opcional y se lee solo desde el cliente server-side", async () => {
+  assert.deepEqual(
+    resolveCajaConfig({ NODE_ENV: "production", CAJA_API_URL: "https://caja.example", CAJA_API_SECRET: "caja-secret" }),
+    { mode: "api", apiUrl: "https://caja.example", secret: "caja-secret" },
+  );
   const client = await readFile(new URL("../lib/caja/client.ts", import.meta.url), "utf8");
+  assert.match(client, /process\.env\.CAJA_VERCEL_PROTECTION_BYPASS\?\.trim\(\) \|\| undefined/);
+  assert.match(client, /\.\.\.\(protectionBypass \? \{ "x-vercel-protection-bypass": protectionBypass \} : \{\}\)/);
+});
+
+test("los secretos de Caja, incluido el bypass, permanecen en el módulo server-side", async () => {
+  const [client, wizard] = await Promise.all([
+    readFile(new URL("../lib/caja/client.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/cita/[token]/FichaWizard.tsx", import.meta.url), "utf8"),
+  ]);
   const sources = await Promise.all([
     readFile(new URL("../lib/caja/config.ts", import.meta.url), "utf8"),
     readFile(new URL("../.env.example", import.meta.url), "utf8"),
   ]);
   assert.match(client, /import "server-only"/);
   assert.match(client, /"X-Caja-Secret"/);
-  assert.doesNotMatch([client, ...sources].join("\n"), /NEXT_PUBLIC_CAJA/);
+  assert.match(client, /"x-vercel-protection-bypass"/);
+  assert.match(client, /\.\.\.\(protectionBypass \? \{ "x-vercel-protection-bypass": protectionBypass \} : \{\}\)/);
+  assert.match(client, /cajaHeaders\(config\.secret, protectionBypass\(\)\)/);
+  assert.equal(client.match(/cajaHeaders\(config\.secret, protectionBypass\(\)\)/g)?.length, 3);
+  assert.doesNotMatch([client, ...sources].join("\n"), /NEXT_PUBLIC_CAJA|NEXT_PUBLIC.*BYPASS/);
+  assert.doesNotMatch([client, ...sources].join("\n"), /[?&]x-vercel-protection-bypass=/);
+  assert.doesNotMatch(wizard, /CAJA_VERCEL_PROTECTION_BYPASS|x-vercel-protection-bypass/);
 });
 
 test("GET, POST e identificación fuerzan no-store y la página impide indexación", async () => {
