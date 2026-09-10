@@ -75,7 +75,7 @@ export default function ServicesCatalog() {
           </Link>
           <div className="catalogNavActions">
             <button type="button" className="langToggle" onClick={toggleLanguage} aria-label={language === "es" ? "Switch to English" : "Cambiar a español"}>
-              {language === "es" ? "EN" : "ES"}
+              {language === "es" ? "🇺🇸 EN" : "🇵🇪 ES"}
             </button>
             <Link className="catalogBackLink" href={href("/")}>{t.backHome}</Link>
           </div>

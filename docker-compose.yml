@@ -29,6 +29,12 @@ services:
       # se exponen con prefijo NEXT_PUBLIC_.
       CAJA_API_URL: ${CAJA_API_URL:?CAJA_API_URL is required}
       CAJA_API_SECRET: ${CAJA_API_SECRET:?CAJA_API_SECRET is required}
+      # Bienestar corporativo: solo para la API server-side.
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      CORPORATE_LEADS_TO: ${CORPORATE_LEADS_TO:-info@vitalimaspa.com}
+      CORPORATE_LEADS_FROM: ${CORPORATE_LEADS_FROM:-}
+      # Opcional y solo server-side para previews protegidos de Caja.
+      CAJA_VERCEL_PROTECTION_BYPASS: ${CAJA_VERCEL_PROTECTION_BYPASS:-}
     volumes:
       # Cache de next/image. Sin volumen, cada `docker compose up --build`
       # recrea el contenedor y nace vacio: los primeros visitantes tras cada
