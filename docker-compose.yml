@@ -24,6 +24,9 @@ services:
       # que vive en el servidor— para no versionar el secreto aqui.
       N8N_RESERVAS_WEBHOOK_URL: ${N8N_RESERVAS_WEBHOOK_URL:-}
       N8N_RESERVAS_WEBHOOK_SECRET: ${N8N_RESERVAS_WEBHOOK_SECRET:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      CORPORATE_LEADS_TO: ${CORPORATE_LEADS_TO:-info@vitalimaspa.com}
+      CORPORATE_LEADS_FROM: ${CORPORATE_LEADS_FROM:-}
     volumes:
       # Cache de next/image. Sin volumen, cada `docker compose up --build`
       # recrea el contenedor y nace vacio: los primeros visitantes tras cada
