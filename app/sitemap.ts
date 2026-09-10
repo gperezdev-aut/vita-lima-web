@@ -8,7 +8,7 @@ import { toEnglishPath } from "@/lib/i18n/routes";
  * El sitemap publica cada página traducida dos veces —español e inglés— con
  * el bloque `alternates.languages`, que es la forma en que Google entiende
  * que son la misma página en dos idiomas. Las páginas que todavía no están
- * traducidas (empresas, gift cards, legales) aparecen solo en español.
+ * traducidas (empresas, gift cards y privacidad) aparecen solo en español.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = process.env.NEXT_PUBLIC_SITE_URL || "https://www.vitalimaspa.com";
@@ -42,6 +42,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/empresas`, lastModified, priority: 0.6 },
     { url: `${base}/regalos`, lastModified, priority: 0.6 },
     { url: `${base}/politica-de-privacidad`, lastModified, priority: 0.3 },
-    { url: `${base}/terminos-y-condiciones`, lastModified, priority: 0.3 },
+    ...bilingual("/terminos-y-condiciones", 0.3),
   ];
 }

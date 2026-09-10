@@ -27,6 +27,7 @@ export const EN_PREFIX = "/en";
  * "/servicios" y no la de "/".
  */
 const ROUTE_PAIRS: { es: string; en: string }[] = [
+  { es: "/terminos-y-condiciones", en: "/en/terms-and-conditions" },
   { es: "/servicios", en: "/en/services" },
   { es: "/san-borja", en: "/en/san-borja" },
   { es: "/miraflores", en: "/en/miraflores" },
@@ -35,7 +36,7 @@ const ROUTE_PAIRS: { es: string; en: string }[] = [
 
 /**
  * Páginas que todavía no están traducidas (guías, empresas, gift cards y
- * las legales). No tienen versión bajo `/en`: desde el sitio en inglés se enlaza
+ * privacidad). No tienen versión bajo `/en`: desde el sitio en inglés se enlaza
  * directamente a la versión en español, que es lo honesto — publicar una URL
  * en inglés con contenido en español sería contenido duplicado y una mala
  * experiencia. Cuando se traduzcan, basta agregarlas a ROUTE_PAIRS.
@@ -45,7 +46,6 @@ export const UNTRANSLATED_PATHS = [
   "/empresas",
   "/regalos",
   "/politica-de-privacidad",
-  "/terminos-y-condiciones",
 ];
 
 function splitPath(path: string) {
