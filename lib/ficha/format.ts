@@ -47,3 +47,15 @@ export function formatearMoneda(monto: number, moneda: string): string {
   const valor = Number.isInteger(monto) ? String(monto) : monto.toFixed(2);
   return `${simbolo}${valor}`;
 }
+
+/** Presentación sin año para un cumpleaños almacenado como día y mes. */
+export function formatearCumple(cumple: { dia: number; mes: number }, idioma: Idioma): string {
+  const valor = new Date(Date.UTC(2000, cumple.mes - 1, cumple.dia));
+  return normalizarEspacios(
+    new Intl.DateTimeFormat(localeDe(idioma), {
+      day: "numeric",
+      month: "long",
+      timeZone: "UTC",
+    }).format(valor),
+  );
+}

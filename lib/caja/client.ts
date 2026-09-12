@@ -102,8 +102,9 @@ export async function getFicha(token: string): Promise<FichaResult> {
     const validado = validarFichaGet(body);
     if (validado.ok === false) return contratoIncompatible(validado.motivo);
     return { ok: true, data: validado.data };
-  } catch (error) {
-    console.error("[ficha] fallo al pedir la ficha a caja:", error);
+  } catch {
+    // No registrar el error de fetch: puede incluir la URL con el token.
+    console.error("[ficha] fallo al pedir la ficha a caja");
     return { ok: false, status: 502, error: { error: "caja_no_disponible" } };
   }
 }
@@ -166,8 +167,9 @@ export async function enviarFicha(token: string, payload: EnviarFichaPayload): P
     const validado = validarFichaPost(body);
     if (validado.ok === false) return contratoIncompatible(validado.motivo);
     return { ok: true, data: validado.data };
-  } catch (error) {
-    console.error("[ficha] fallo al mandar la ficha a caja:", error);
+  } catch {
+    // No registrar el error de fetch: puede incluir la URL con el token.
+    console.error("[ficha] fallo al mandar la ficha a caja");
     return { ok: false, status: 502, error: { error: "caja_no_disponible" } };
   }
 }

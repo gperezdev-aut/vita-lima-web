@@ -30,5 +30,11 @@ export default async function Page({ params }: PageProps) {
     return <ErrorScreen codigo={resultado.error.error} />;
   }
 
+  // Defensa adicional ante una respuesta equivocada o cacheada aguas arriba:
+  // nunca renderizar datos cuyo token no sea exactamente el de esta URL.
+  if (resultado.data.token !== token) {
+    return <ErrorScreen codigo="contrato_incompatible" />;
+  }
+
   return <FichaWizard ficha={resultado.data} token={token} />;
 }

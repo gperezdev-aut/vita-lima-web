@@ -173,3 +173,25 @@ test("cliente Caja permanece solo server-side y usa endpoint identificar con no-
   assert.match(action, /"use server"/);
   assert.doesNotMatch([client, action].join("\n"), /NEXT_PUBLIC_CAJA/);
 });
+
+test("la ficha no registra tokens, PII ni errores de fetch que puedan contener la URL", async () => {
+  const [client, wizard] = await Promise.all([
+    readFile(new URL("../lib/caja/client.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/cita/[token]/FichaWizard.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.doesNotMatch(client, /console\.(?:log|error|warn)\([^\n]*(?:token|payload|telefono|salud|error\))/i);
+  assert.doesNotMatch(wizard, /localStorage|sessionStorage/);
+  assert.doesNotMatch([client, wizard].join("\n"), /service_role|SUPABASE_SERVICE/i);
+});
+
+test("el wizard bloquea doble identificación y doble envío", async () => {
+  const wizard = await readFile(new URL("../app/cita/[token]/FichaWizard.tsx", import.meta.url), "utf8");
+  assert.match(wizard, /if \(identificandoRef\.current\) return/);
+  assert.match(wizard, /if \(enviandoRef\.current \|\| !paso3Valido\) return/);
+});
+
+test("la ruta rechaza una respuesta de Caja vinculada a otro token", async () => {
+  const page = await readFile(new URL("../app/cita/[token]/page.tsx", import.meta.url), "utf8");
+  assert.match(page, /resultado\.data\.token !== token/);
+  assert.match(page, /ErrorScreen codigo="contrato_incompatible"/);
+});

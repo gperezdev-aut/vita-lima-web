@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { enviarFichaAction, identificarFichaAction } from "./actions";
 import PantallaFinal from "./PantallaFinal";
 import { site } from "@/content/site";
 import { correoValido, perfilRapidoValido } from "@/lib/ficha/email";
 import { codigoCuponParaPayload, comprobanteValido } from "@/lib/ficha/comprobante";
-import { formatearFecha, formatearHora, formatearMoneda } from "@/lib/ficha/format";
+import { formatearCumple, formatearFecha, formatearHora, formatearMoneda } from "@/lib/ficha/format";
 import { consentimientoSaludParaPayload, consentimientoSaludValido, tieneDatosSalud } from "@/lib/ficha/health";
 import { formatearMientrasEscribe, paisesOrdenados, telefonoValido, type CountryCode } from "@/lib/ficha/phone";
 import { fichaText, textoCabeceraPendiente } from "@/lib/ficha/text";
 import { ubicacionVisible } from "@/lib/ficha/resumen";
+import { nombreServicioVisible, nombresServiciosVisibles } from "@/lib/ficha/presentation";
 import {
   esExito,
   type EnviarFichaData,
@@ -81,6 +82,8 @@ export default function FichaWizard({ ficha, token }: Props) {
 
   const [enviando, setEnviando] = useState(false);
   const [errorEnvio, setErrorEnvio] = useState<string | null>(null);
+  const identificandoRef = useRef(false);
+  const enviandoRef = useRef(false);
 
   const t = fichaText[idioma];
   const cabecera = ficha.requiere.confirmacionManual
@@ -181,27 +184,35 @@ export default function FichaWizard({ ficha, token }: Props) {
   }
 
   async function identificar() {
+    if (identificandoRef.current) return;
     if (!telefonoOk) {
       setMostrarErroresPaso1(true);
       return;
     }
+    identificandoRef.current = true;
     setIdentificando(true);
     setErrorIdentificacion(null);
-    const respuesta: IdentificarFichaResult = await identificarFichaAction(token, { crudo: telefonoCrudo, pais });
-    setIdentificando(false);
-    if (!esExito(respuesta)) {
-      setErrorIdentificacion(textoErrorIdentificacion(respuesta.error.error));
-      return;
+    try {
+      const respuesta: IdentificarFichaResult = await identificarFichaAction(token, { crudo: telefonoCrudo, pais });
+      if (!esExito(respuesta)) {
+        setErrorIdentificacion(textoErrorIdentificacion(respuesta.error.error));
+        return;
+      }
+      aplicarIdentificacion(respuesta.data);
+      const perfilCompleto = perfilRapidoValido({
+        nombre: respuesta.data.cliente.nombre,
+        correo: respuesta.data.cliente.correo,
+        correoObligatorio: ficha.requiere.correoObligatorio,
+      });
+      setPerfilIncompleto(respuesta.data.clienteRecurrente && !perfilCompleto);
+      setFlujo(respuesta.data.clienteRecurrente && perfilCompleto ? "decision" : "completa");
+      setPaso(1);
+    } catch {
+      setErrorIdentificacion(t.identificar.error.generico);
+    } finally {
+      identificandoRef.current = false;
+      setIdentificando(false);
     }
-    aplicarIdentificacion(respuesta.data);
-    const perfilCompleto = perfilRapidoValido({
-      nombre: respuesta.data.cliente.nombre,
-      correo: respuesta.data.cliente.correo,
-      correoObligatorio: ficha.requiere.correoObligatorio,
-    });
-    setPerfilIncompleto(respuesta.data.clienteRecurrente && !perfilCompleto);
-    setFlujo(respuesta.data.clienteRecurrente && perfilCompleto ? "decision" : "completa");
-    setPaso(1);
   }
 
   function cambiarUsoComprobanteAnterior(usar: boolean) {
@@ -221,13 +232,14 @@ export default function FichaWizard({ ficha, token }: Props) {
   }
 
   async function enviar() {
-    if (!paso3Valido) return;
+    if (enviandoRef.current || !paso3Valido) return;
     if (flujo === "rapida" && !rutaRapidaValida) {
       setPerfilIncompleto(true);
       setFlujo("completa");
       setPaso(1);
       return;
     }
+    enviandoRef.current = true;
     setErrorEnvio(null);
     setEnviando(true);
 
@@ -252,28 +264,32 @@ export default function FichaWizard({ ficha, token }: Props) {
       idioma,
     };
 
-    const respuesta: EnviarFichaResult = await enviarFichaAction(token, payload);
-    setEnviando(false);
-
-    if (!esExito(respuesta)) {
-      if (respuesta.error.error === "cupon_ya_usado") {
-        if (flujo === "completa") setPaso(2);
-        setErrorEnvio(t.errorEnvio.cupon_ya_usado);
+    try {
+      const respuesta: EnviarFichaResult = await enviarFichaAction(token, payload);
+      if (!esExito(respuesta)) {
+        if (respuesta.error.error === "cupon_ya_usado") {
+          if (flujo === "completa") setPaso(2);
+          setErrorEnvio(t.errorEnvio.cupon_ya_usado);
+          return;
+        }
+        if (respuesta.error.error === "validacion") {
+          setErrorEnvio(t.errorEnvio.validacion);
+          return;
+        }
+        if (respuesta.error.error === "contrato_incompatible") {
+          setErrorEnvio(t.errorEnvio.contrato_incompatible);
+          return;
+        }
+        setErrorEnvio(t.errorEnvio.generico);
         return;
       }
-      if (respuesta.error.error === "validacion") {
-        setErrorEnvio(t.errorEnvio.validacion);
-        return;
-      }
-      if (respuesta.error.error === "contrato_incompatible") {
-        setErrorEnvio(t.errorEnvio.contrato_incompatible);
-        return;
-      }
+      setResultado(respuesta.data);
+    } catch {
       setErrorEnvio(t.errorEnvio.generico);
-      return;
+    } finally {
+      enviandoRef.current = false;
+      setEnviando(false);
     }
-
-    setResultado(respuesta.data);
   }
 
   if (resultado) {
@@ -312,7 +328,7 @@ export default function FichaWizard({ ficha, token }: Props) {
               {formatearFecha(ficha.cita.fecha, idioma)}, {formatearHora(ficha.cita.hora, idioma)} · {ubicacion}
             </p>
             <p>
-              {ficha.cita.servicios.map((servicio) => servicio.nombre).join(", ")}, {ficha.cita.duracionTotalMin} min ·{" "}
+              {nombresServiciosVisibles(ficha.cita.servicios)}, {ficha.cita.duracionTotalMin} min ·{" "}
               {ficha.pago.leyenda} {formatearMoneda(ficha.pago.adelantoRecibido, ficha.pago.moneda)}
             </p>
             <p>{cabecera.subtitulo}</p>
@@ -323,7 +339,7 @@ export default function FichaWizard({ ficha, token }: Props) {
           <section className="fichaCard fichaPersonalizada" aria-label="Atención personalizada">
             <h2>{idioma === "es" ? "Atención personalizada" : "Personalized appointment"}</h2>
             <p>{ficha.cita.personas} {idioma === "es" ? "personas" : "people"} · {ficha.cita.modalidad === "simultanea" ? (idioma === "es" ? "Atención simultánea" : "Simultaneous appointment") : (idioma === "es" ? "Atención consecutiva" : "Consecutive appointment")}</p>
-            {ficha.cita.componentesPorPersona.map((persona) => <div className="fichaReviewCard" key={persona.persona}><strong>{idioma === "es" ? `Persona ${persona.persona}` : `Person ${persona.persona}`}</strong>{persona.componentes.map((componente) => <span key={`${persona.persona}-${componente.nombre}`}>{componente.nombre}</span>)}</div>)}
+            {ficha.cita.componentesPorPersona.map((persona) => <div className="fichaReviewCard" key={persona.persona}><strong>{idioma === "es" ? `Persona ${persona.persona}` : `Person ${persona.persona}`}</strong>{persona.componentes.map((componente) => <span key={`${persona.persona}-${componente.nombre}`}>{nombreServicioVisible(componente.nombre)}</span>)}</div>)}
             <div className="fichaSummaryRow"><span>{idioma === "es" ? "Duración total" : "Total duration"}</span><strong>{ficha.cita.duracionTotalMin} min</strong></div>
             <div className="fichaSummaryRow"><span>{idioma === "es" ? "Precio total" : "Total price"}</span><strong>{formatearMoneda(ficha.cita.precioTotal, ficha.pago.moneda)}</strong></div>
           </section>
@@ -372,7 +388,7 @@ export default function FichaWizard({ ficha, token }: Props) {
               <div className="fichaReviewCard">
                 <strong>{identificacion.cliente.nombre ?? "—"}</strong>
                 {identificacion.cliente.correo && <span>{identificacion.cliente.correo}</span>}
-                {identificacion.cliente.cumple && <span>{identificacion.cliente.cumple.dia}/{identificacion.cliente.cumple.mes}</span>}
+                {identificacion.cliente.cumple && <span>{formatearCumple(identificacion.cliente.cumple, idioma)}</span>}
               </div>
               <div className="fichaReviewCard">
                 <strong>{t.identificar.resumenSalud}</strong>
@@ -541,7 +557,7 @@ export default function FichaWizard({ ficha, token }: Props) {
                 <strong>{t.paso2.personas(ficha.cita.personas)}</strong>
               </div>
               <div className="fichaSummaryRow">
-                <span>{ficha.cita.servicios.map((servicio) => servicio.nombre).join(", ")}</span>
+                <span>{nombresServiciosVisibles(ficha.cita.servicios)}</span>
                 <strong>{ficha.cita.duracionTotalMin != null ? `${ficha.cita.duracionTotalMin} min` : "—"}</strong>
               </div>
               <div className="fichaSummaryRow">
