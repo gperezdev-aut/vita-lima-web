@@ -4096,7 +4096,7 @@ body:has(.cookieBanner) .cartTrigger {
 
 /* Ficha de cita (/cita/[token]). Página aparte, sin cabecera ni footer del
    sitio: es un enlace privado de un solo uso, no una página de navegación. */
-.fichaPage{min-height:100vh;background:var(--surface-sand);padding:28px 16px 56px;display:flex;justify-content:center}
+.fichaPage{min-height:100vh;min-height:100dvh;background:var(--surface-sand);padding:28px 16px calc(56px + env(safe-area-inset-bottom, 0px));display:flex;justify-content:center}
 .fichaShell{width:100%;max-width:480px}
 .fichaTopRow{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .fichaStepper{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-aa)}
@@ -4155,13 +4155,13 @@ body:has(.cookieBanner) .cartTrigger {
 .fichaFinalPolicy a{text-decoration:underline;text-underline-offset:3px;font-weight:700}
 .fichaLangToggle{font:inherit;font-size:11px;font-weight:800;letter-spacing:.04em;cursor:pointer;background:rgba(255,255,255,.14);color:inherit;border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:6px 13px}
 .fichaLangToggle:hover{background:var(--orange);border-color:var(--orange-text);color:var(--charcoal-deep)}
-.fichaErrorScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px 16px;background:var(--surface-sand)}
+.fichaErrorScreen{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:28px 16px calc(28px + env(safe-area-inset-bottom, 0px));background:var(--surface-sand)}
 .fichaErrorCard{max-width:420px;width:100%;text-align:center;background:var(--surface-ivory);border:1px solid var(--line);border-radius:20px;padding:36px 26px;box-shadow:var(--shadow)}
 .fichaErrorCard .fichaFinalCheck{background:var(--terracotta)}
 .fichaErrorCard h1{font-size:24px;margin-bottom:10px}
 .fichaErrorCard p{color:var(--muted-aa);line-height:1.6;margin-bottom:6px}
 .fichaErrorCard .fichaErrorEn{font-size:12px;color:var(--muted-aa);margin-top:14px;font-style:italic}
-@media(max-width:400px){.fichaPhoneRow{grid-template-columns:1fr}}
+@media(max-width:400px){.fichaPhoneRow{grid-template-columns:1fr}.fichaPage{padding-left:12px;padding-right:12px}.fichaCard{padding-left:16px;padding-right:16px}}
 /* Bienestar corporativo y ficha de propuesta. */
 .corporatePage {
   background: var(--surface-sand);

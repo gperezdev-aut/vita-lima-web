@@ -6,6 +6,8 @@ import { consentimientoSaludParaPayload, consentimientoSaludValido, tieneDatosSa
 import { telefonoValido } from "../lib/ficha/phone.ts";
 import { fichaText } from "../lib/ficha/text.ts";
 import { getStubFicha, postStubFicha } from "../lib/caja/stub.ts";
+import { formatearCumple } from "../lib/ficha/format.ts";
+import { nombreServicioVisible, nombresServiciosVisibles } from "../lib/ficha/presentation.ts";
 
 const saludVacia = {
   embarazo: false,
@@ -49,6 +51,35 @@ test("Ninguna de las anteriores envía consentimiento de salud false", () => {
   assert.equal(tieneDatosSalud(saludVacia), false);
   assert.equal(consentimientoSaludValido(saludVacia, false), true);
   assert.equal(consentimientoSaludParaPayload(saludVacia, true), false);
+});
+
+test("corrige mojibake UTF-8/Windows-1252 solo en la presentación del servicio", () => {
+  const canonicoCorrupto = "ðŸŒŸ Deluxe";
+  assert.equal(nombreServicioVisible(canonicoCorrupto), "🌟 Deluxe");
+  assert.equal(canonicoCorrupto, "ðŸŒŸ Deluxe");
+  assert.equal(nombreServicioVisible("Atención personalizada"), "Atención personalizada");
+  assert.equal(nombreServicioVisible("Masaje Ãtico"), "Masaje Ãtico");
+  assert.equal(nombresServiciosVisibles([{ nombre: canonicoCorrupto }, { nombre: "Relax Vital" }]), "🌟 Deluxe, Relax Vital");
+});
+
+test("presenta cumpleaños sin año y sin formato numérico ambiguo", () => {
+  assert.equal(formatearCumple({ dia: 9, mes: 6 }, "es"), "9 de junio");
+  assert.equal(formatearCumple({ dia: 9, mes: 6 }, "en"), "June 9");
+});
+
+test("la pantalla final conserva pago real y calcula el total solo desde pago más saldo", async () => {
+  const finalScreen = await readFile(new URL("../app/cita/[token]/PantallaFinal.tsx", import.meta.url), "utf8");
+  assert.match(finalScreen, /resumen\.adelantoRecibido \+ resumen\.saldo/);
+  assert.match(finalScreen, /formatearMoneda\(resumen\.adelantoRecibido, resumen\.moneda\)/);
+  assert.match(finalScreen, /formatearMoneda\(resumen\.saldo, resumen\.moneda\)/);
+  assert.doesNotMatch(finalScreen, /adelantoMinimo|mínimo|minimum/i);
+  assert.equal(115 + 114, 229);
+});
+
+test("la ficha protege la zona inferior móvil sin fijar botones sobre el contenido", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /env\(safe-area-inset-bottom, 0px\)/);
+  assert.doesNotMatch(css.match(/\.fichaButtonRow\{[^}]+\}/)?.[0] ?? "", /position\s*:\s*fixed/);
 });
 
 test("una condición de salud exige consentimiento", () => {

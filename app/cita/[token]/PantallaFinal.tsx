@@ -1,6 +1,7 @@
 import { formatearFecha, formatearHora, formatearMoneda } from "@/lib/ficha/format";
 import { fichaText, textoFinalPendiente } from "@/lib/ficha/text";
 import { duracionVisible, puedeMostrarMapaSede, ubicacionVisible } from "@/lib/ficha/resumen";
+import { nombresServiciosVisibles } from "@/lib/ficha/presentation";
 import type { EnviarFichaData, Idioma, MotivoConfirmacion } from "@/lib/caja/types";
 
 type Props = {
@@ -21,6 +22,7 @@ export default function PantallaFinal({ idioma, resultado, politicaCancelacionUr
   const encabezado = confirmacionManual ? textoFinalPendiente(idioma, motivoConfirmacion) : t;
   const { resumen } = resultado;
   const ubicacion = ubicacionVisible(resumen);
+  const total = resumen.adelantoRecibido + resumen.saldo;
 
   return (
     <div className="fichaCard fichaFinalCard">
@@ -41,8 +43,12 @@ export default function PantallaFinal({ idioma, resultado, politicaCancelacionUr
         <strong>{ubicacion}</strong>
       </div>
       <div className="fichaSummaryRow">
-        <span>{resumen.servicios.map((servicio) => servicio.nombre).join(", ")}</span>
+        <span>{nombresServiciosVisibles(resumen.servicios)}</span>
         <strong>{duracionVisible(resumen)} min</strong>
+      </div>
+      <div className="fichaSummaryRow">
+        <span>{t.total}</span>
+        <strong>{formatearMoneda(total, resumen.moneda)}</strong>
       </div>
       <div className="fichaSummaryRow">
         <span>{t.adelanto}</span>
