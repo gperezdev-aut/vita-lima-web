@@ -27,7 +27,11 @@ export function trackEvent(name: string, params?: Record<string, unknown>) {
 }
 
 export function trackWhatsappClick(source: WhatsappSource) {
-  trackEvent("whatsapp_click", { event_category: "engagement", event_label: source });
+  trackEvent("whatsapp_click", {
+    event_category: "engagement",
+    event_label: source,
+    wa_source: source,
+  });
 
   // Confirmación visual: cualquier CTA de WhatsApp del sitio (los <a> reales,
   // detectados abajo, y las llamadas explícitas desde ReserveForm/CartWidget

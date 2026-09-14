@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { trackEvent } from "./WhatsAppTracking";
 
 const modes = ["silla", "camilla", "ambas"] as const;
 type Status = "idle" | "sending" | "success" | "error";
@@ -32,6 +33,9 @@ export default function CorporateLeadForm() {
     event.preventDefault();
     const form = event.currentTarget;
     if (!form.reportValidity()) return;
+    const data = new FormData(form);
+    const modalidad = String(data.get("modalidad") || "sin_especificar");
+    const website = String(data.get("website") || "").trim();
 
     setStatus("sending");
     setError("");
@@ -40,7 +44,7 @@ export default function CorporateLeadForm() {
       const response = await fetch("/api/solicitudes-corporativas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        body: JSON.stringify(Object.fromEntries(data)),
       });
       if (!response.ok) {
         throw new Error(
@@ -49,6 +53,13 @@ export default function CorporateLeadForm() {
         );
       }
 
+      if (!website) {
+        trackEvent("generate_lead", {
+          event_category: "conversion",
+          lead_type: "corporativo",
+          modalidad,
+        });
+      }
       setStatus("success");
       form.reset();
     } catch (cause) {
