@@ -14,12 +14,16 @@ const whatsappTrackingUrl = new URL(
 test("el lead corporativo se registra solo después de una respuesta exitosa y sin PII", async () => {
   const source = await readFile(corporateFormUrl, "utf8");
   const successCheck = source.indexOf("if (!response.ok)");
+  const honeypotGuard = source.indexOf("if (!website)");
   const tracking = source.indexOf('trackEvent("generate_lead"');
   const successState = source.indexOf('setStatus("success")');
-  const trackingBlock = source.slice(tracking, successState);
+  const trackingBlock = source.slice(honeypotGuard, successState);
 
-  assert.ok(successCheck >= 0 && successCheck < tracking);
+  assert.ok(successCheck >= 0 && successCheck < honeypotGuard);
+  assert.ok(honeypotGuard < tracking);
   assert.ok(tracking < successState);
+  assert.match(source, /const website = String\(data\.get\("website"\) \|\| ""\)\.trim\(\)/);
+  assert.match(trackingBlock, /if \(!website\) \{/);
   assert.match(trackingBlock, /event_category: "conversion"/);
   assert.match(trackingBlock, /lead_type: "corporativo"/);
   assert.match(trackingBlock, /modalidad,/);

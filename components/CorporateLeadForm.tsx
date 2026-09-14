@@ -35,6 +35,7 @@ export default function CorporateLeadForm() {
     if (!form.reportValidity()) return;
     const data = new FormData(form);
     const modalidad = String(data.get("modalidad") || "sin_especificar");
+    const website = String(data.get("website") || "").trim();
 
     setStatus("sending");
     setError("");
@@ -52,11 +53,13 @@ export default function CorporateLeadForm() {
         );
       }
 
-      trackEvent("generate_lead", {
-        event_category: "conversion",
-        lead_type: "corporativo",
-        modalidad,
-      });
+      if (!website) {
+        trackEvent("generate_lead", {
+          event_category: "conversion",
+          lead_type: "corporativo",
+          modalidad,
+        });
+      }
       setStatus("success");
       form.reset();
     } catch (cause) {
